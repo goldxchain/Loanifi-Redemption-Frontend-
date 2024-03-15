@@ -1,4 +1,4 @@
-const ENV = "dev";
+const ENV = "prod";
 const TEST_DB = "mongodb://localhost:27017/fusegbackend";
 const PRO_DB = `mongodb+srv://doadmin:k0P19s34E5em2H8U@pro-db-fusegold-54c0a5f4.mongo.ondigitalocean.com/admin?tls=true&authSource=admin`
 const express = require('express');
@@ -52,7 +52,7 @@ app.get('*', (req, res) => {
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });
-// getWGOLDXlogs()
-    // getNFTlogs()
-    // getPastTransactions()
+getWGOLDXlogs()
+    getNFTlogs()
+    getPastTransactions()
     // getUsers()
