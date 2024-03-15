@@ -8,7 +8,7 @@ const { getWGOLDXlogs,
     getPastTransactions, } = require('./helper');
     const path = require('path');
 const app = express();
-const port = (ENV == "dev") ? 3000 : 88080;
+const port = (ENV == "dev") ? 3000 : 8080;
 let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 app.use(express.static(path.join(__dirname, 'dist')));
