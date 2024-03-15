@@ -1,0 +1,32 @@
+{
+  "name": "loanifi",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
+  },
+  "dependencies": {
+    "bootstrap": "^4.5.2",
+    "bootstrap-vue": "^2.17.3",
+    "core-js": "^3.8.3",
+    "express": "^4.18.3",
+    "mongoose": "^8.2.1",
+    "popper.js": "^1.16.1",
+    "portal-vue": "^2.1.7",
+    "vue": "^2.6.14",
+    "vue-router": "^3.5.1",
+    "vuex": "^3.6.2",
+    "web3": "1.10.4"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-router": "~5.0.0",
+    "@vue/cli-plugin-vuex": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "sass": "^1.26.11",
+    "sass-loader": "^10.0.2",
+    "vue-cli-plugin-bootstrap-vue": "~0.8.2",
+    "vue-template-compiler": "^2.6.14"
+  }
+}
