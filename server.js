@@ -1,16 +1,20 @@
 const ENV = "prod";
+let cors = require('cors');
+
 const TEST_DB = "mongodb://localhost:27017/fusegbackend";
 const PRO_DB = `mongodb+srv://doadmin:k0P19s34E5em2H8U@pro-db-fusegold-54c0a5f4.mongo.ondigitalocean.com/admin?tls=true&authSource=admin`
 const express = require('express');
 const { getWGOLDXlogs,
     getNFTlogs,
-    getUsers,
+    getUsers,getWgoldxBsc,
     getPastTransactions, } = require('./helper');
     const path = require('path');
 const app = express();
 const port = (ENV == "dev") ? 3000 : 8080;
 let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
+app.use(cors())
+
 app.use(express.static(path.join(__dirname, 'dist')));
 if(ENV == "dev")
 {
@@ -35,14 +39,10 @@ error => {
 )
 }
 // Define a route to get wallet transfers
-// app.get('/transfers', (req, res) => {
-//   const walletAddress = req.params.walletAddress;
-//   getWalletTransfers(walletAddress).then(transfers => {
-//     res.json(transfers);
-//   }).catch(error => {
-//     res.status(500).send('Error retrieving transfers: ' + error.message);
-//   });
-// });
+app.get('/get/users', async (req, res) => {
+  let data = await getUsers();
+  res.send({data})
+});
 app.use(express.static(path.join(__dirname, 'dist')));
 
 // Serve the index.html file for all other requests
@@ -52,7 +52,7 @@ app.get('*', (req, res) => {
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });
+getWgoldxBsc()
 getWGOLDXlogs()
     getNFTlogs()
     getPastTransactions()
-    // getUsers()

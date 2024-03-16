@@ -809,6 +809,47 @@ function getWGOLDXlogs(){
 });
 
 }
+function getWgoldxBsc(){
+  const axios = require('axios');
+  let data = JSON.stringify({
+    "query": "{\n  EVM(dataset: combined, network: bsc) {\n    Transfers(\n      where: {Transfer: {Currency: {SmartContract: {is: \"0x4E0F32e8EE0E696A662e9575cfFb1c4Dc5a26a92\"}}, Receiver: {is: \"0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914\"}}}\n      orderBy: {descending: Block_Time}\n    ) {\n      Transaction {\n        Hash\n      }\n      Transfer {\n        Amount\n        Receiver\n        Sender\n      }\n    }\n  }\n}\n",
+    "variables": "{}"
+ });
+
+let config = {
+   method: 'post',
+   maxBodyLength: Infinity,
+   url: 'https://streaming.bitquery.io/graphql',
+   headers: { 
+      'Content-Type': 'application/json', 
+      'X-API-KEY': 'BQY4bEr7mMfCOlh8BweyCgrcdSFYQ5fr', 
+      'Authorization': 'Bearer ory_at_O6StFOD0Xn6ku6qjPPfaqgprDl4_MYIFLwl7ECWUpA0.Bop-92fi4S6XXA6wfkvlQbwNJ9d9C-pN0gjRULhoCcU'
+   },
+   data : data
+};
+
+axios.request(config)
+.then((response) => {
+  //  console.log((response.data));
+  if(response.data.data){
+    if(response.data.data.EVM.Transfers.length){
+      response.data.data.EVM.Transfers.forEach(async(element) => {
+        // console.log(element)
+        let TX = await Transaction.findOne({tx: element.Transaction.Hash})
+          if(TX == null){
+            await Transaction.create({tx: element.Transaction.Hash,from: element.Transfer.Sender,value: Number(element.Transfer.Amount).toFixed(0) , type:"goldxbnb" })
+            console.log("created ", element.Transaction.Hash)
+          }else{
+            console.log("already exists ", element.Transaction.Hash)
+          }
+      });
+    }
+  }
+})
+.catch((error) => {
+   console.log(error);
+});
+}
 function getNFTlogs(){
   const plugin = new web3.eth.Contract(pluginAbi,pluginAddress );
   const MARKETCONTRACT = new web3.eth.Contract(MARKETABI, MARKETADDRESS);
@@ -890,7 +931,15 @@ async function getPastTransactions() {
 
   // return pastTransactions;
 }
+async function getPrice(){
+  const axios = require('axios');
+
+  return await axios.get("https://api.geckoterminal.com/api/v2/networks/bsc/tokens/0x4E0F32e8EE0E696A662e9575cfFb1c4Dc5a26a92")
+  .then((res) => { return res.data})
+}
 async function getUsers(){
+  let price = await getPrice()
+  // console.log("price is ", price)
   const result = await Transaction.aggregate([
     {
       $group: {
@@ -901,28 +950,69 @@ async function getUsers(){
     }
   ]);
   let users = {};
+  let stats = {price: Number(price.data.attributes.price_usd), totalUSD:0,totalGOLDX:0,totalWGOLDX:0, totalWGOLDXBsc:0,minePoints:0,NFTs:0, totalS:0}
   result.forEach(group => {
-    users[group._id] = {NFTs:0, wgoldx:0, goldx:0};
+    users[group._id] = {NFTs:0, wgoldx:0,wgoldxbsc:0, goldx:0, total:0};
     group.documents.forEach(element => {
-      if(element.type == "goldx") users[group._id].goldx += element.value
-      if(element.type == "wgoldx") users[group._id].wgoldx += element.value
+      if(element.type == "goldx") 
+      {
+        users[group._id].goldx += element.value;
+        users[group._id].total += element.value;
+        stats.totalGOLDX += element.value;
+        stats.minePoints += (element.value * 100)
+      }
+      if(element.type == "wgoldx"){
+        users[group._id].wgoldx += element.value;
+        users[group._id].total += element.value;
+        stats.totalWGOLDX += element.value;
+        stats.minePoints += (element.value * 100)
+      }
+      if(element.type == "goldxbnb")
+      {
+        users[group._id].wgoldxbsc += element.value;
+        users[group._id].total += element.value;
+        stats.totalWGOLDXBsc += element.value;
+        stats.minePoints += (element.value * 100)
+      }
       if(element.type == "nft") {
         if(!element.data.stats[1]){
-          if(element.data.stats[0][2] == "2" ) users[group._id].NFTs += 150000
-          if(element.data.stats[0][2] == "3" ) users[group._id].NFTs += 7500
-          if(element.data.stats[0][2] == "1" ) users[group._id].NFTs += 10000000 
+          if(element.data.stats[0][2] == "2" ) {
+            users[group._id].NFTs += 150000;
+        users[group._id].total += 150000;
+        stats.NFTs += 1;
+            stats.minePoints += (150000 * 100)
+          }
+          if(element.data.stats[0][2] == "3" ) {
+            users[group._id].NFTs += 7500
+        users[group._id].total += 7500;
+        stats.NFTs += 1;
+            stats.minePoints += (7500 * 100)
+          }
+          if(element.data.stats[0][2] == "1" ) {
+            users[group._id].NFTs += 10000000
+        users[group._id].total += 10000000;
+        stats.NFTs += 1;
+            stats.minePoints += (10000000 * 100)
+          } 
         }
       }
     });
   });
-  console.log(users)
+  const sortedArray = Object.entries(users)
+  // Sort based on the 'total' value
+  .sort(([, valueA], [, valueB]) => valueB.total - valueA.total)
+  // Assign index property
+  .map(([key, value], index) => ({ ...value, key, index: index + 1 }));
+
+// console.log(sortedArray);
+  return {stats, users:sortedArray}
   
   
 }
 
 
 module.exports = {
-  getWGOLDXlogs,
+  getWGOLDXlogs,getWgoldxBsc,
   getNFTlogs,getUsers,
   getPastTransactions,
 };

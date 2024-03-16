@@ -135,66 +135,42 @@
         </div>
       </div>
       <div class="col-lg-10 main-cont">
-        <div class="row">
-          <div class="col-md-6 col-lg-4 p-3 my-2"> <div class="inner-section"> <h1 class="f-font text-center bold py-2">Sacrifice Now Live</h1> </div> </div>
-          <div class="col-md-6 col-lg-4 p-3 my-2"> <div class="inner-section"> <h1 class="f-font text-center thick py-2 f-3">Leaderboard</h1> </div> </div>
-          <div class="col-md-6 col-lg-4 p-3 my-2"> <div class="inner-section"> <h1 class="f-font text-center thick py-2 f-3">Accepted Currencies</h1> </div> </div>
-          <div class="col-md-6 col-lg-4 p-3 my-2"> <div class="text-center"> <span>Sacrifice Address</span> <b class="" style="font-size: 75%;">0xBbDC165A49D0eCc847D762A4310a268EC0294B44</b>  </div> </div>
-          <div class="col-md-6 col-lg-4 p-3 my-2"> <div class="inner-section"> <h1 class="f-font f-3 text-center thick py-2">Enter Wallet</h1> </div> </div>
-          <div class="col-md-6 col-lg-4 p-3 my-2"> 
-            <div class="inner-section inner-icons"> <img src="@/assets/currencies.jpg" style="    max-width: 97%;
-              margin-left: 1%;" alt="" srcset=""> </div>
-          </div>
-          <div class="col-md-6 col-lg-4 p-3 my-2"> 
-            <div class="inner-section inner-chart">  
+        <div class="row mt-5">
+          <div class="col-md-6 col-lg-4">
+            <div class="inner-section mb-5"> <h1 class="f-font text-center bold py-2">Sacrifice Now Live</h1> </div>
+            <div class="text-center mb-5"> <span>Sacrifice Address</span> <b class="" style="font-size: 75%;">0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914</b>  </div>
+            <div class="inner-section mb-5 inner-chart">  
               <div class="px-3 chart-items">
-                <div class="border-bottom LV"> <span class="leftee">Total Sacrificed</span> <span class="float-right"> <b>1,388,878.99 USD</b> </span>  </div>
-              <div class="border-bottom LV"> <span class="leftee">Total Sacrificed($)</span> <span class="float-right"> <b>633,837 K</b> </span>  </div>
-              <div class="border-bottom LV"> <span class="leftee">Rate per 1$ Sacrificed</span> <span class="float-right"> <b>100 Points</b> </span>  </div>
-              <div class="border-bottom LV"> <span class="leftee">Number of Sacrificers</span> <span class="float-right"> <b>3183</b> </span>  </div>
+                <div class="border-bottom LV"> <span class="leftee">Sacrificed($)</span> <span class="float-right"> <b>{{totalSacUSD}}</b> </span>  </div>
+                <div class="border-bottom LV"> <span class="leftee">GOLDX</span> <span class="float-right"> <b>{{totalSac}} GOLDX</b> </span>  </div>
+                <div class="border-bottom LV"> <span class="leftee">WGOLDX-BNB</span> <span class="float-right"> <b>{{stats.totalWGOLDXBsc}} GOLDX</b> </span>  </div>
+                <div class="border-bottom LV"> <span class="leftee">WGOLDX-GOLDXCHAIN</span> <span class="float-right"> <b>{{stats.totalWGOLDX}} GOLDX</b> </span>  </div>
+                <div class="border-bottom LV"> <span class="leftee">Mine Points</span> <span class="float-right"> <b>{{stats.minePoints}} GOLDX</b> </span>  </div>
+              <div class="border-bottom LV"> <span class="leftee">Unique Sacrificers </span> <span class="float-right"> <b>{{totalSacs}}</b> </span>  </div>
+              <div class="border-bottom LV"> <span class="leftee">NFT’s Sacrificed  </span> <span class="float-right"> <b>{{stats.NFTs}}</b> </span>  </div>
+              <!-- <div class="border-bottom LV"> <span class="leftee">Number of Sacrificers</span> <span class="float-right"> <b>{{totalSacs}}</b> </span>  </div> -->
               </div>
-            </div> </div>
-          <div class="col-md-6 col-lg-4 p-3 my-2"> 
-          <div class="inner-section inner-text"> 
-            <div><div class="d-inline-block tx-gold f-sizes">1</div> 
-            <div class="d-inline-block" style="font-size:75%;font-weight:500;">0xBbDC165A49D0eCc847D762A4310a268EC0294B44</div></div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="inner-section mb-5"> <h1 class="f-font text-center thick py-2 f-3">Leaderboard</h1> </div>
+            <div class="inner-section mb-5"> 
+              <input placeholder="Enter Wallet" class="" type="text" name="" id="msinp" style="">            
+            </div>
+            <div class="inner-section mb-5 inner-text"> 
+            <div v-for="user in users.slice(0, 10) " :key="user.index">
+              <div class="d-inline-block tx-gold f-sizes">{{user.index}}</div> 
+            <div class="d-inline-block" style="font-size:64%;font-weight:500;">{{user.key}} ({{user.total * 100 }})</div>
+          </div>
+          </div>
 
-            <div><div class="d-inline-block tx-gold f-sizes">2</div> 
-            <div class="d-inline-block" style="font-size:75%;font-weight:500;">0xBbDC165A49D0eCc847D762A4310a268EC0294B44</div></div>
-
-            <div><div class="d-inline-block tx-gold f-sizes">3</div> 
-            <div class="d-inline-block" style="font-size:75%;font-weight:500;">0xBbDC165A49D0eCc847D762A4310a268EC0294B44</div></div>
-
-            <div><div class="d-inline-block tx-gold f-sizes">4</div> 
-            <div class="d-inline-block" style="font-size:75%;font-weight:500;">0xBbDC165A49D0eCc847D762A4310a268EC0294B44</div></div>
-
-            <div><div class="d-inline-block tx-gold f-sizes">5</div> 
-            <div class="d-inline-block" style="font-size:75%;font-weight:500;">0xBbDC165A49D0eCc847D762A4310a268EC0294B44</div></div>
-
-            <div><div class="d-inline-block tx-gold f-sizes">6</div> 
-            <div class="d-inline-block" style="font-size:75%;font-weight:500;">0xBbDC165A49D0eCc847D762A4310a268EC0294B44</div></div>
-
-            <div><div class="d-inline-block tx-gold f-sizes">7</div> 
-            <div class="d-inline-block" style="font-size:75%;font-weight:500;">0xBbDC165A49D0eCc847D762A4310a268EC0294B44</div></div>
-
-            <div><div class="d-inline-block tx-gold f-sizes">8</div> 
-            <div class="d-inline-block" style="font-size:75%;font-weight:500;">0xBbDC165A49D0eCc847D762A4310a268EC0294B44</div></div>
-
-            <div><div class="d-inline-block tx-gold f-sizes">9</div> 
-            <div class="d-inline-block" style="font-size:75%;font-weight:500;">0xBbDC165A49D0eCc847D762A4310a268EC0294B44</div></div>
-
-            <div><div class="d-inline-block tx-gold f-sizes">10</div> 
-            <div class="d-inline-block" style="font-size:75%;font-weight:500;">0xBbDC165A49D0eCc847D762A4310a268EC0294B44</div></div>
-
-            <div><div class="d-inline-block tx-gold f-sizes">11</div> 
-            <div class="d-inline-block" style="font-size:75%;font-weight:500;">0xBbDC165A49D0eCc847D762A4310a268EC0294B44</div></div>
-
-            <div><div class="d-inline-block tx-gold f-sizes">12</div> 
-            <div class="d-inline-block" style="font-size:75%;font-weight:500;">0xBbDC165A49D0eCc847D762A4310a268EC0294B44</div></div>
-
-          </div> 
-        </div> 
-        <div class="col-md-6 col-lg-4 p-3 my-2"> <div class="inner-section inner-table"> 
+          </div>
+          <div class="col-md-6 col-lg-4"> 
+            <div class="mb-5 inner-section"> <h1 class="f-font text-center thick py-2 f-3">Accepted Currencies</h1> </div>
+            <div class="mb-5 inner-section inner-icons"> <img src="@/assets/currencies.jpg" style="    max-width: 97%;
+              margin-left: 1%;" alt="" srcset=""> 
+            </div>
+            <div class="mb-5 inner-section inner-table"> 
         <p class="text-center py-4 para"> <b>Loanifi</b> is the first truely <br> decentarlized lending protocol built <br> specially for goldxchain <br> <br> 
         <b>Fully backed</b> stable coin 
         <br> <br> 
@@ -203,7 +179,8 @@
         <b>No repayment </b> schedule  
 
         </p>  
-        </div> </div>
+        </div> 
+          </div>
         </div>
         </div>
       </div>
@@ -212,10 +189,55 @@
 
 <script>
 // @ is an alias to /src
-
+import axios from 'axios'
 export default {
   name: 'HomeView',
+  data(){
+    return {
+      users:[],
+      stats:{totalGOLDX:0,totalWGOLDX:0, totalWGOLDXBsc:0}
+    }
+  },
   components: {
+  },
+  computed:{
+    totalSac(){
+      return (
+         this.stats.totalGOLDX
+        +
+        this.stats.totalWGOLDX
+        +
+        this.stats.totalWGOLDXBsc
+      )
+    },
+    totalSacUSD(){
+      // if( isNaN(this.stats.price) ){
+        // return 0
+      // }else{
+        return (this.totalSac * this.stats.price).toFixed(0)
+      // }
+    },
+    totalSacs(){
+      if(this.users){
+        return this.users.length
+      }else{
+        return 0
+      }
+    },
+  },
+  mounted(){
+    console.log("i am mounted")
+    this.loadData()
+  },
+  methods:{
+    loadData(){
+      console.log("i am load data")
+      axios.get("/get/users")
+      .then((res) => {
+        this.users = res.data.data.users;
+        this.stats = res.data.data.stats;
+      })
+    }
   }
 }
 </script>
@@ -334,5 +356,21 @@ export default {
     display: inline-block;
     width:23px;
   }
+ 
+#msinp {
+  background: inherit;
+    border: none;
+    width: 100%;
+    color: #FFFFFF;
+    font-size: 88%;
+    text-align: center;
+    padding: 11px 0px;
+}
 
+/* Styling the input placeholder text */
+#msinp::placeholder {
+  font-family:LV;
+  font-size:25px;
+    color:#c6c1c1;
+}
 </style>
