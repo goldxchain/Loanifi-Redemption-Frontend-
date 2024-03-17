@@ -137,17 +137,49 @@
         </div>
       </div>
       <div class="col-lg-10 main-cont">
-        <div class="row mt-5">
+        <div class="row">
+          <div class="col-12" style="height:140px;">
+      <CountComp :startDate="'2024-03-17'" />
+
+          </div>
           <div class="col-md-6 col-lg-4">
             <div class="inner-section mb-5"> <h1 class="f-font text-center bold py-2">Sacrifice Now Live</h1> </div>
-            <div class="text-center mb-5"> <span>Sacrifice Address</span> <b class="" style="font-size: 75%;">0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914</b>  </div>
+            <!-- <div class="text-center mb-5"> <span>Sacrifice Address</span> <b class="" style="font-size: 75%;">0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914</b>  </div> -->
+            <div class="inner-section mb-5">
+              <b-button v-b-toggle.collapse-1 style="background: inherit;
+    border: none;
+    overflow-anchor: none;
+    font-size: 81%;
+    max-width: 100%;
+    width:100%;
+    padding:13px 0px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;">How to enter the Loanifi Redemption Phase 1</b-button>
+              <b-collapse id="collapse-1" class="mt-2">
+                <b-card style="background: inherit;">
+                  1. Deposit any Gold X Chain or BNB version of w/GOLDX or GOLDX NFT Mining Contracts to the official Loanifi Redemption address:<br> 
+<span class="d-block btn btn-secondary mx-auto" style="font-size:74%;" @click="copyWallet('0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914')">0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914</span>
+
+
+2. Earn 100 MINE Points per GOLDX Redeemed. <br>
+
+3. Follow the statistics until the end of Phase 2 to see your position in MINE Points <br>
+
+4. Claim Your MINE Points at the end of phase 2 <br>
+
+5. Use The Loanifi Protocol as decentralised lending platform to borrow against your GOLDX assets whilst still being able to claim your rewards
+                </b-card>
+              </b-collapse>
+            </div>
             <div class="inner-section mb-5 inner-chart">  
               <div class="px-3 chart-items">
                 <div class="border-bottom LV"> <span class="leftee">Sacrificed($)</span> <span class="float-right"> <b>{{totalSacUSD}}</b> </span>  </div>
                 <div class="border-bottom LV"> <span class="leftee">GOLDX</span> <span class="float-right"> <b>{{totalSac}} GOLDX</b> </span>  </div>
                 <div class="border-bottom LV"> <span class="leftee">WGOLDX-BNB</span> <span class="float-right"> <b>{{stats.totalWGOLDXBsc}} GOLDX</b> </span>  </div>
                 <div class="border-bottom LV"> <span class="leftee">WGOLDX-GOLDXCHAIN</span> <span class="float-right"> <b>{{stats.totalWGOLDX}} GOLDX</b> </span>  </div>
-                <div class="border-bottom LV"> <span class="leftee">Mine Points</span> <span class="float-right"> <b>{{stats.minePoints}} GOLDX</b> </span>  </div>
+                <div class="border-bottom LV"> <span class="leftee">Mine Points</span> <span class="float-right"> <b>{{stats.minePoints}}</b> </span>  </div>
               <div class="border-bottom LV"> <span class="leftee">Unique Sacrificers </span> <span class="float-right"> <b>{{totalSacs}}</b> </span>  </div>
               <div class="border-bottom LV"> <span class="leftee">NFT’s Sacrificed  </span> <span class="float-right"> <b>{{stats.NFTs}}</b> </span>  </div>
               <!-- <div class="border-bottom LV"> <span class="leftee">Number of Sacrificers</span> <span class="float-right"> <b>{{totalSacs}}</b> </span>  </div> -->
@@ -162,7 +194,7 @@
             <div class="inner-section mb-5 inner-text"> 
             <div v-for="user in usersFiltered.slice(0, 10) " :key="user.index">
               <div class="d-inline-block tx-gold f-sizes">{{user.index}}</div> 
-            <div class="d-inline-block" style="font-size:64%;font-weight:500;">{{user.key}} ({{user.total * 100 }})</div>
+            <div class="d-inline-block textt" style="font-weight:500;">{{user.key}} ({{user.total * 100 }})</div>
           </div>
           </div>
 
@@ -176,7 +208,7 @@
         <p class="text-center py-4 para"> <b>Loanifi</b> is the first truely <br> decentarlized lending protocol built <br> specially for goldxchain <br> <br> 
         <b>Fully backed</b> stable coin 
         <br> <br> 
-        Low <b>110% collateral </b> ratio
+        High <b> LTV ratio </b> 
         <br> <br> 
         <b>No repayment </b> schedule  
 
@@ -191,7 +223,9 @@
 
 <script>
 // @ is an alias to /src
+import CountComp from './CountComp.vue'
 import axios from 'axios'
+// import CountCompVue from './CountComp.vue'
 export default {
   name: 'HomeView',
   data(){
@@ -203,6 +237,7 @@ export default {
     }
   },
   components: {
+    CountComp
   },
   computed:{
     userWalletFormatted(){
@@ -257,6 +292,15 @@ export default {
     this.loadData()
   },
   methods:{
+    copyWallet(text){
+      navigator.clipboard.writeText(text)
+    .then(() => {
+      console.log('Text copied to clipboard: ' + text);
+    })
+    .catch(err => {
+      console.error('Could not copy text: ', err);
+    });
+    },
     async connectWallet(){
       if (window.ethereum) {
     let wallets = await window.ethereum.request({method: 'eth_requestAccounts'});
@@ -266,7 +310,7 @@ export default {
     },
     loadData(){
       console.log("i am load data")
-      axios.get("/get/users")
+      axios.get("https://loanifi.org/get/users")
       .then((res) => {
         this.users = res.data.data.users;
         this.stats = res.data.data.stats;
@@ -408,4 +452,12 @@ export default {
     color:#c6c1c1;
 }
 .clicker{ cursor: pointer;}
+.textt{
+  font-size: 64%;
+}
+@media screen and (min-width: 992px) and (max-width: 1280px) {
+  .textt {
+    font-size: 47%; /* Adjust font size as needed */
+  }
+}
 </style>
