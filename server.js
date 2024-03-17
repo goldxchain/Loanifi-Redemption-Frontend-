@@ -52,7 +52,11 @@ app.get('*', (req, res) => {
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });
-getWgoldxBsc()
-getWGOLDXlogs()
-    getNFTlogs()
-    getPastTransactions()
+
+    const intervalTime = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
+    setInterval(() => {
+      getWgoldxBsc()
+      getWGOLDXlogs()
+      getNFTlogs()
+      getPastTransactions()
+    }, intervalTime);

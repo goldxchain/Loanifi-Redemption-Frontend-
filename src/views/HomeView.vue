@@ -26,9 +26,11 @@
           <p class="float-right mb-0 px-3 lh-20"><b>USDX</b> <br> <span>0.00</span> </p>
           <span class="float-right"> <img src="@/assets/wallet.png" style="max-width: 20px;
             margin-top: 0px;" alt=""> </span>
-          <span class="float-right px-3 lh-20 d-none d-md-inline-block"> Connected as <br> 0Xdsg..sdf6 <span class="bg-white sc-icon">&#x00d7;</span> </span>  
-          <span class="px-3 lh-20 d-block d-md-none"> Connected as 0Xdsg..sdf6 <span class="bg-white sc-icon">&#x00d7;</span> </span>  
-          <span class="float-right d-none d-md-inline-block">
+          <span v-if="userWallet" class="float-right px-3 lh-20 d-none d-md-inline-block"> Connected as <br> {{userWalletFormatted}} <span class="bg-white sc-icon">&#x00d7;</span> </span>  
+          <span v-else class="float-right px-3 lh-20 d-none d-md-inline-block clicker" @click="connectWallet"> Connect<br> Wallet </span>  
+          <span v-if="userWallet" class="px-3 lh-20 d-block d-md-none"> Connected as {{userWalletFormatted}} <span class="bg-white sc-icon">&#x00d7;</span> </span>  
+          <span v-else class="px-3 lh-20 d-block d-md-none clicker" @click="connectWallet"> Connect Wallet </span>  
+          <span v-if="userWallet" class="float-right d-none d-md-inline-block">
             <img src="@/assets/user.png" style="max-width: 20px;margin-top: 0px;" alt="">
           </span>
         </div>
@@ -155,10 +157,10 @@
           <div class="col-md-6 col-lg-4">
             <div class="inner-section mb-5"> <h1 class="f-font text-center thick py-2 f-3">Leaderboard</h1> </div>
             <div class="inner-section mb-5"> 
-              <input placeholder="Enter Wallet" class="" type="text" name="" id="msinp" style="">            
+              <input placeholder="Enter Wallet" v-model="search" class="" type="text" name="" id="msinp" style="">            
             </div>
             <div class="inner-section mb-5 inner-text"> 
-            <div v-for="user in users.slice(0, 10) " :key="user.index">
+            <div v-for="user in usersFiltered.slice(0, 10) " :key="user.index">
               <div class="d-inline-block tx-gold f-sizes">{{user.index}}</div> 
             <div class="d-inline-block" style="font-size:64%;font-weight:500;">{{user.key}} ({{user.total * 100 }})</div>
           </div>
@@ -194,13 +196,38 @@ export default {
   name: 'HomeView',
   data(){
     return {
+      search:"",
       users:[],
+      userWallet:null,
       stats:{totalGOLDX:0,totalWGOLDX:0, totalWGOLDXBsc:0}
     }
   },
   components: {
   },
   computed:{
+    userWalletFormatted(){
+      if (!this.userWallet) return ''; // Return empty string if originalString is empty or undefined
+      if (this.userWallet.length <= 6) return this.userWallet; // Return original string if it has 6 or fewer characters
+      
+      // Split the original string into parts
+      const firstPart = this.userWallet.substring(0, 6);
+      const lastPart = this.userWallet.substring(this.userWallet.length - 4);
+
+      // Create the formatted string with 5 dots in the middle
+      return `${firstPart}.....${lastPart}`;
+    },
+    usersFiltered(){
+      if(this.search.length){
+        let users = [];
+        this.users.forEach(element => {
+          if(this.search == element.key){ users = [element] }
+        });
+        if(users.length) return users
+        else return this.users
+      }else{
+        return this.users
+      }
+    },
     totalSac(){
       return (
          this.stats.totalGOLDX
@@ -230,6 +257,13 @@ export default {
     this.loadData()
   },
   methods:{
+    async connectWallet(){
+      if (window.ethereum) {
+    let wallets = await window.ethereum.request({method: 'eth_requestAccounts'});
+    this.userWallet = wallets[0]
+
+  }
+    },
     loadData(){
       console.log("i am load data")
       axios.get("/get/users")
@@ -373,4 +407,5 @@ export default {
   font-size:25px;
     color:#c6c1c1;
 }
+.clicker{ cursor: pointer;}
 </style>
