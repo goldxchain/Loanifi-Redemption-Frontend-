@@ -176,12 +176,14 @@
             <div class="inner-section mb-5 inner-chart">  
               <div class="px-3 chart-items">
                 <div class="border-bottom LV"> <span class="leftee">Sacrificed($)</span> <span class="float-right"> <b>{{totalSacUSD}}</b> </span>  </div>
-                <div class="border-bottom LV"> <span class="leftee">GOLDX</span> <span class="float-right"> <b>{{totalSac}} GOLDX</b> </span>  </div>
-                <div class="border-bottom LV"> <span class="leftee">WGOLDX-BNB</span> <span class="float-right"> <b>{{stats.totalWGOLDXBsc}} GOLDX</b> </span>  </div>
-                <div class="border-bottom LV"> <span class="leftee">WGOLDX-GOLDXCHAIN</span> <span class="float-right"> <b>{{stats.totalWGOLDX}} GOLDX</b> </span>  </div>
+                <div class="border-bottom LV"> <span class="leftee">GOLDX</span> <span class="float-right"> <b>{{stats.balance}} </b> </span>  </div>
+                <div class="border-bottom LV"> <span class="leftee">WGOLDX-BNB</span> <span class="float-right"> <b>{{stats.totalWGOLDXBsc}} </b> </span>  </div>
+                <div class="border-bottom LV"> <span class="leftee">WGOLDX-GOLDXCHAIN</span> <span class="float-right"> <b>{{stats.totalWGOLDX}} </b> </span>  </div>
                 <div class="border-bottom LV"> <span class="leftee">Mine Points</span> <span class="float-right"> <b>{{stats.minePoints}}</b> </span>  </div>
               <div class="border-bottom LV"> <span class="leftee">Unique Sacrificers </span> <span class="float-right"> <b>{{totalSacs}}</b> </span>  </div>
               <div class="border-bottom LV"> <span class="leftee">NFT’s Sacrificed  </span> <span class="float-right"> <b>{{stats.NFTs}}</b> </span>  </div>
+              <div class="border-bottom LV"> <span class="leftee">NFT’s GOLDX Value  </span> <span class="float-right"> <b>{{stats.NFTsGOLDX}}</b> </span>  </div>
+              <div class="border-bottom LV" style="font-size:80%;"> <span class="leftee">Classes of NFT’s sacrificed  </span> <span class="float-right"> <b>{{stats.NFTsCLS}}</b> </span>  </div>
               <!-- <div class="border-bottom LV"> <span class="leftee">Number of Sacrificers</span> <span class="float-right"> <b>{{totalSacs}}</b> </span>  </div> -->
               </div>
             </div>
@@ -225,6 +227,9 @@
 // @ is an alias to /src
 import CountComp from './CountComp.vue'
 import axios from 'axios'
+// const Web3 = require('web3');
+import Web3 from 'web3'
+const web3 = new Web3();
 // import CountCompVue from './CountComp.vue'
 export default {
   name: 'HomeView',
@@ -255,7 +260,9 @@ export default {
       if(this.search.length){
         let users = [];
         this.users.forEach(element => {
-          if(this.search == element.key){ users = [element] }
+          const checksumAddress1 = web3.utils.toChecksumAddress(element.key);
+          const checksumAddress2 = web3.utils.toChecksumAddress(this.search);
+          if(checksumAddress1 == checksumAddress2){ users = [element] }
         });
         if(users.length) return users
         else return this.users

@@ -937,8 +937,14 @@ async function getPrice(){
   return await axios.get("https://api.geckoterminal.com/api/v2/networks/bsc/tokens/0x4E0F32e8EE0E696A662e9575cfFb1c4Dc5a26a92")
   .then((res) => { return res.data})
 }
+async function getBalance(){
+var web3 = new Web3("https://rpc2.goldxscan.com/");
+return await web3.eth.getBalance("0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914")
+.then((res) => {return Number(res) / 10**18} );
+}
 async function getUsers(){
   let price = await getPrice()
+  let balance = await getBalance()
   // console.log("price is ", price)
   const result = await Transaction.aggregate([
     {
@@ -950,7 +956,9 @@ async function getUsers(){
     }
   ]);
   let users = {};
-  let stats = {price: Number(price.data.attributes.price_usd), totalUSD:0,totalGOLDX:0,totalWGOLDX:0, totalWGOLDXBsc:0,minePoints:0,NFTs:0, totalS:0}
+  let stats = {balance,
+    price: Number(price.data.attributes.price_usd), 
+    totalUSD:0,totalGOLDX:0,totalWGOLDX:0, totalWGOLDXBsc:0,minePoints:0,NFTs:0,NFTsGOLDX:0,NFTsCLS:[], totalS:0}
   result.forEach(group => {
     users[group._id] = {NFTs:0, wgoldx:0,wgoldxbsc:0, goldx:0, total:0};
     group.documents.forEach(element => {
@@ -979,12 +987,16 @@ async function getUsers(){
           if(element.data.stats[0][2] == "2" ) {
             users[group._id].NFTs += 150000;
         users[group._id].total += 150000;
+        stats.NFTsGOLDX += 150000;
+        stats.NFTsCLS.push("Miner")
         stats.NFTs += 1;
             stats.minePoints += (150000 * 100)
           }
           if(element.data.stats[0][2] == "3" ) {
             users[group._id].NFTs += 7500
         users[group._id].total += 7500;
+        stats.NFTsCLS.push("Prospectors")
+        stats.NFTsGOLDX += 7500;
         stats.NFTs += 1;
             stats.minePoints += (7500 * 100)
           }
@@ -992,6 +1004,8 @@ async function getUsers(){
             users[group._id].NFTs += 10000000
         users[group._id].total += 10000000;
         stats.NFTs += 1;
+        stats.NFTsCLS.push("Refiner")
+        stats.NFTsGOLDX += 10000000;
             stats.minePoints += (10000000 * 100)
           } 
         }
@@ -1005,6 +1019,7 @@ async function getUsers(){
   .map(([key, value], index) => ({ ...value, key, index: index + 1 }));
 
 // console.log(sortedArray);
+stats.NFTsCLS = [...new Set(stats.NFTsCLS)]
   return {stats, users:sortedArray}
   
   
