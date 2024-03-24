@@ -1,9 +1,9 @@
 <template>
 
 <div class="">
-    <b-navbar toggleable="lg" style="background-color: #1E1E1E;">
+    <b-navbar toggleable="lg" style="background-color: #000000;">
       
-    <b-navbar-toggle target="nav-side"></b-navbar-toggle>
+    <b-navbar-toggle target="nav-side" style="background: antiquewhite;"></b-navbar-toggle>
 
     <b-navbar-brand href="#"><img src="@/assets/logo.png" alt="" style="max-height: 30px;
         margin-left: 10px;"></b-navbar-brand>      
@@ -11,15 +11,15 @@
       <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button> -->
-      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+      <b-navbar-toggle target="nav-collapse" style="background: antiquewhite;"></b-navbar-toggle>
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav class="ml-auto">
-          <ul class="navbar-nav mr-auto">
+          <!-- <ul class="navbar-nav mr-auto mlr">
           
           <p class="float-right mb-0 px-3 lh-20"><b>Other Assets</b> <br> <span>0.00</span> </p>
           <p class="float-right mb-0 px-3 lh-20"><b>MINE</b> <br> <span>0.00</span> </p>
           <p class="float-right mb-0 px-3 lh-20"><b>USDX</b> <br> <span>0.00</span> </p>
-        </ul>
+        </ul> -->
         <div class="right-items">
           <p class="float-right mb-0 px-3 lh-20"><b>Other Assets</b> <br> <span>0.00</span> </p>
           <p class="float-right mb-0 px-3 lh-20"><b>MINE</b> <br> <span>0.00</span> </p>
@@ -89,61 +89,81 @@
         </div>
       </b-collapse>
       <!-- </div> -->
-      
-      <div class="col-lg-2 bg-sidebar px-0 d-none d-lg-block">
-        <div class="sidebar-icons">
-          <span class="icon">
+     <div class="col-12 p-0 m-0">
+       
+      <div class="bg-sidebar px-0 d-none d-lg-inline-block" style="width:4%;">
+        <div class="sidebar-icons" @mouseover="titleWindow = true">
+          <div >
+            <span class="icon">
             <span class="imgc"> <img class="ic-img" src="@/assets/dashboard.png" alt="" style="height: 15px;
               width: 18px;"> </span>
-            <span class="title">Dashboard</span>
           </span>
+
           <span class="icon">
             <span class="imgc"> <img class="ic-img" src="@/assets/farm.png" alt="" style="    height: 20px;
               width: 15px;
               margin-bottom: 1px;"> </span>
-            <span class="title">Farm</span>
           </span>
           <span class="icon">
             <span class="imgc"> <img class="ic-img" src="@/assets/risky.png" alt="" style="height: 20px;
               width: 21px;
               margin-bottom: 3px;"> </span>
-            <span class="title">Risky Trove</span>
           </span>
           <span class="icon actives">
             <span class="imgcs"> <img class="ic-img" src="@/assets/sacrifice.png" alt="" style="height: 28px;
               width: 22px;margin-bottom: -1px;"> </span>
-            <span class="title active">Sacrifice</span>
           </span>
           <span class="icon">
             <span > ... </span>
+          </span>
+          <span class="icon">
+          </span>
+          <span class="icon">
+          </span>
+          <span class="icon">
+          </span>
+          <span class="icon">
+            
+          </span>
+          </div>
+          <div @mouseover="titleWindow = true" @mouseleave="titleWindow = false" v-if="titleWindow" class="title-window">
+            <span class="title">Dashboard</span>
+            <span class="title">Farm</span>
+            <span class="title">Risky Trove</span>
+
+            <span class="title active">Sacrifice</span>
             <span class="title">More Info</span>
-          </span>
-          <span class="icon">
+
             <span class="title">Voting </span>
-          </span>
-          <span class="icon">
             <span class="title">Github </span>
-          </span>
-          <span class="icon">
             <span class="title">Docs </span>
-          </span>
-          <span class="icon">
+
+
+
             <span class="title"> Blog </span>
-          </span>
-          <span class="footer-icon" style="position: absolute;
-          bottom: 75px;">
+            
+            <span class="footer-icon" style="position: absolute;
+          bottom: 5px;">
             <img src="@/assets/footer.png" alt="" style="max-width:71%;" class="d-block mx-auto">
           </span>
+            
+            
+            
+            
+            
+          </div>
+          
+          
         </div>
       </div>
-      <div class="col-lg-10 main-cont">
+      <div class="main-cont d-inline-block mct">
         <div class="row">
           <div class="col-12" style="height:140px;">
       <CountComp :startDate="'2024-03-17'" />
 
           </div>
           <div class="col-md-6 col-lg-4">
-            <div class="inner-section mb-5"> <h1 class="f-font text-center bold py-2">Sacrifice Now Live</h1> </div>
+            <div class="inner-section mb-5 maxh"> <h1 class="f-font text-center bold py-2">Sacrifice Now Live</h1> </div>
             <!-- <div class="text-center mb-5"> <span>Sacrifice Address</span> <b class="" style="font-size: 75%;">0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914</b>  </div> -->
             <div class="inner-section mb-5">
               <b-button v-b-toggle.collapse-1 style="background: inherit;
@@ -173,7 +193,7 @@
                 </b-card>
               </b-collapse>
             </div>
-            <div class="inner-section mb-5 inner-chart">  
+            <div class="inner-section mb-5 inner-chart minh" >  
               <div class="px-3 chart-items">
                 <div class="border-bottom LV"> <span class="leftee">Sacrificed($)</span> <span class="float-right"> <b>{{totalSacUSD}}</b> </span>  </div>
                 <div class="border-bottom LV"> <span class="leftee">GOLDX</span> <span class="float-right"> <b>{{stats.balance}} </b> </span>  </div>
@@ -189,24 +209,27 @@
             </div>
           </div>
           <div class="col-md-6 col-lg-4">
-            <div class="inner-section mb-5"> <h1 class="f-font text-center thick py-2 f-3">Leaderboard</h1> </div>
-            <div class="inner-section mb-5"> 
+            <div class="inner-section mb-5 maxh"> <h1 class="f-font text-center thick py-2 f-3">Leaderboard</h1> </div>
+            <div class="inner-section mb-5 maxh"> 
               <input placeholder="Enter Wallet" v-model="search" class="" type="text" name="" id="msinp" style="">            
             </div>
-            <div class="inner-section mb-5 inner-text"> 
-            <div v-for="user in usersFiltered.slice(0, 10) " :key="user.index">
-              <div class="d-inline-block tx-gold f-sizes">{{user.index}}</div> 
-            <div class="d-inline-block textt" style="font-weight:500;">{{user.key}} ({{user.total * 100 }})</div>
+            <div class="inner-section mb-5 inner-text minh px-2"> 
+            <div v-for="user in usersFiltered.slice(0, 10) " :key="user.index" class="text" v-auto-resize>
+              <span class="tx-gold">{{user.index}}</span> {{user.key}}  <span class="tx-gold"> <b>({{ millify(user.total * 100) }})</b> </span> 
+              <!-- <div class="d-inline-block tx-gold f-sizes">{{user.index}}</div>  -->
+              <!-- <div > </div> -->
+            <!-- <div class="d-inline-block textt" style="font-weight:500;">{{user.key}} ({{(user.total * 100).toFixed(0) }})</div> -->
           </div>
           </div>
 
           </div>
           <div class="col-md-6 col-lg-4"> 
-            <div class="mb-5 inner-section"> <h1 class="f-font text-center thick py-2 f-3">Accepted Currencies</h1> </div>
-            <div class="mb-5 inner-section inner-icons"> <img src="@/assets/currencies.jpg" style="    max-width: 97%;
-              margin-left: 1%;" alt="" srcset=""> 
+            <div class="mb-5 inner-section maxh"> <h1 class="f-font text-center thick py-2 f-3">Accepted Currencies</h1> </div>
+            <div class="mb-5 inner-section maxh inner-icons"> 
+              <img src="@/assets/currencies.jpg" class="d-block mx-auto" style="height:40px;" alt="" srcset=""> 
+              
             </div>
-            <div class="mb-5 inner-section inner-table"> 
+            <div class="mb-5 inner-section inner-table minh"> 
         <p class="text-center py-4 para"> <b>Loanifi</b> is the first truely <br> decentarlized lending protocol built <br> specially for goldxchain <br> <br> 
         <b>Fully backed</b> stable coin 
         <br> <br> 
@@ -219,6 +242,7 @@
           </div>
         </div>
         </div>
+     </div>
       </div>
 </div>
 </template>
@@ -236,9 +260,28 @@ export default {
   data(){
     return {
       search:"",
+      titleWindow:false,
       users:[],
       userWallet:null,
       stats:{totalGOLDX:0,totalWGOLDX:0, totalWGOLDXBsc:0}
+    }
+  },
+  directives:{
+    autoResize: {
+      inserted(el) {
+        const resizeText = () => {
+          const containerWidth = el.clientWidth;
+          const text = el.innerText;
+          const maxFontSize = 24; // Set your maximum font size here
+          const fontSize = Math.min((containerWidth / text.length) * 1.9, maxFontSize);
+          el.style.fontSize = fontSize + "px";
+        };
+        resizeText();
+        window.addEventListener("resize", resizeText);
+      },
+      unbind() {
+        window.removeEventListener("resize", resizeText);
+      }
     }
   },
   components: {
@@ -299,6 +342,21 @@ export default {
     this.loadData()
   },
   methods:{
+    millify(number) {
+    const absNumber = Math.abs(number);
+    const million = 1000000;
+    const billion = 1000000000;
+    
+    if (absNumber >= billion) {
+      return Math.floor(number / billion) + ' B';
+    } else if (absNumber >= million) {
+      return Math.floor(number / million) + ' M';
+    } else if (absNumber >= 1000) {
+      return Math.floor(number / 1000) + ' K';
+    } else {
+      return number.toString();
+    }
+  },
     copyWallet(text){
       navigator.clipboard.writeText(text)
     .then(() => {
@@ -339,6 +397,9 @@ export default {
   font-weight: normal;
   font-style: normal;
 }
+body, html {
+background: #000000 !important;
+}
   .right-items{
     color: #FFFFFF;
     font-family:BrandingSF;
@@ -369,7 +430,7 @@ export default {
     height: 13px;
   }
   .bg-sidebar{
-    background-color: #111111;
+    background-color: #000000;
     min-height: 100vh;
   }
   .ic-img{
@@ -398,14 +459,14 @@ export default {
   }
   .icon{
     display: block;
-    padding-left: 20px;
+    padding-left: 17px;
     padding-top: 10px;
     padding-bottom: 10px; 
   }
   .actives{
     border-left: 5px solid #B99653;
-    padding-left:13px;
-    background: #281818;
+    padding-left:8px;
+    background: #000000;
   }
   .inner-section{
     padding: 3px 0px;
@@ -466,5 +527,49 @@ export default {
   .textt {
     font-size: 47%; /* Adjust font size as needed */
   }
+  
+}
+@media screen and (max-width: 992px) {
+  .main-cont{
+    width:100% !important;
+  } 
+}
+@media screen and (min-width: 992px) {
+  .mlr{
+    display: none;
+  }
+}
+.title-window span{
+  display: block;
+  margin-bottom: 24px;
+}
+.title-window{
+  position: absolute;
+    width: 170px;
+    background: #000000;
+    top: 0px;
+    left: 39px;
+    padding-top: 62px;
+    padding-left: 15px;
+    z-index: 5555555;
+    height: 90vh 
+
+}
+.minh{
+  min-height: 292px;
+}
+.maxh{
+  max-height: 55px;
+}
+.text {
+  white-space: nowrap;
+  overflow: hidden;
+  padding:3px 0px;
+  /* width:95%; */
+  /* display: inline-block; */
+}
+.mct{
+  padding-left:5px;width:95%;float:right;min-height:100vh;
+      box-shadow: 0px 1px 4px -1px #B99653;
 }
 </style>
