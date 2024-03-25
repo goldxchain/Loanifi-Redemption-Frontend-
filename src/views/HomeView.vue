@@ -1,9 +1,9 @@
 <template>
 
 <div class="">
-    <b-navbar toggleable="lg" style="background-color: #000000;">
+    <b-navbar toggleable="lg" style="background-color: #000000 !important;" type="dark" variant="info">
       
-    <b-navbar-toggle target="nav-side" style="background: antiquewhite;"></b-navbar-toggle>
+    <b-navbar-toggle target="nav-side" ></b-navbar-toggle>
 
     <b-navbar-brand href="#"><img src="@/assets/logo.png" alt="" style="max-height: 30px;
         margin-left: 10px;"></b-navbar-brand>      
@@ -11,7 +11,7 @@
       <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button> -->
-      <b-navbar-toggle target="nav-collapse" style="background: antiquewhite;"></b-navbar-toggle>
+      <b-navbar-toggle target="nav-collapse" ></b-navbar-toggle>
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav class="ml-auto">
           <!-- <ul class="navbar-nav mr-auto mlr">
@@ -163,7 +163,7 @@
 
           </div>
           <div class="col-md-6 col-lg-4">
-            <div class="inner-section mb-5 maxh"> <h1 class="f-font text-center bold py-2">Sacrifice Now Live</h1> </div>
+            <div class="inner-section mb-5 maxh"> <h1 class="f-font text-center bold py-2">Sacrifice Phase 1/3 Now Live</h1> </div>
             <!-- <div class="text-center mb-5"> <span>Sacrifice Address</span> <b class="" style="font-size: 75%;">0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914</b>  </div> -->
             <div class="inner-section mb-5">
               <b-button v-b-toggle.collapse-1 style="background: inherit;
@@ -214,12 +214,22 @@
               <input placeholder="Enter Wallet" v-model="search" class="" type="text" name="" id="msinp" style="">            
             </div>
             <div class="inner-section mb-5 inner-text minh px-2"> 
-            <div v-for="user in usersFiltered.slice(0, 10) " :key="user.index" class="text" v-auto-resize>
-              <span class="tx-gold">{{user.index}}</span> {{user.key}}  <span class="tx-gold"> <b>({{ millify(user.total * 100) }})</b> </span> 
-              <!-- <div class="d-inline-block tx-gold f-sizes">{{user.index}}</div>  -->
-              <!-- <div > </div> -->
-            <!-- <div class="d-inline-block textt" style="font-weight:500;">{{user.key}} ({{(user.total * 100).toFixed(0) }})</div> -->
-          </div>
+            <div class="d-inline-block " style="min-height: 280px;width: 50%;border-right:5px solid #B99653;" >
+              <div> <span class="px-3"> Address </span> </div>
+              <div v-for="user in usersFiltered.slice(0, 10) " :key="user.index" class="text" v-auto-resize>
+
+                <span class="px-3">{{user.key.slice(0, 6)+'....'+user.key.substring(user.key.length - 6) }}</span>
+              </div>
+            </div>  
+
+            <div class="d-inline-block "  style="min-height: 280px;width: 50%;float: right;">
+              <div>  <span class="px-2">Points</span></div>
+              <div v-for="user in usersFiltered.slice(0, 10) " :key="user.index" class="text" v-auto-resizer> 
+                
+                <span class="tx-gold px-2"> 
+                <b>({{ (user.total * 100).toFixed(0) }})</b> </span> 
+              </div>
+            </div>  
           </div>
 
           </div>
@@ -273,7 +283,7 @@ export default {
           const containerWidth = el.clientWidth;
           const text = el.innerText;
           const maxFontSize = 24; // Set your maximum font size here
-          const fontSize = Math.min((containerWidth / text.length) * 1.9, maxFontSize);
+          const fontSize = Math.min((containerWidth / text.length) * 1.23, maxFontSize);
           el.style.fontSize = fontSize + "px";
         };
         resizeText();
@@ -282,7 +292,23 @@ export default {
       unbind() {
         window.removeEventListener("resize", resizeText);
       }
-    }
+    },
+    autoResizer: {
+      inserted(el) {
+        const resizeText = () => {
+          const containerWidth = el.clientWidth;
+          const text = el.innerText;
+          const maxFontSize = 24; // Set your maximum font size here
+          const fontSize = Math.min((containerWidth / text.length) * 0.8, maxFontSize);
+          el.style.fontSize = fontSize + "px";
+        };
+        resizeText();
+        window.addEventListener("resize", resizeText);
+      },
+      unbind() {
+        window.removeEventListener("resize", resizeText);
+      }
+    },
   },
   components: {
     CountComp
@@ -564,7 +590,7 @@ background: #000000 !important;
 .text {
   white-space: nowrap;
   overflow: hidden;
-  padding:3px 0px;
+  padding:0px 0px;
   /* width:95%; */
   /* display: inline-block; */
 }
