@@ -822,8 +822,8 @@ let config = {
    url: 'https://streaming.bitquery.io/graphql',
    headers: { 
       'Content-Type': 'application/json', 
-      'X-API-KEY': 'BQY4bEr7mMfCOlh8BweyCgrcdSFYQ5fr', 
-      'Authorization': 'Bearer ory_at_O6StFOD0Xn6ku6qjPPfaqgprDl4_MYIFLwl7ECWUpA0.Bop-92fi4S6XXA6wfkvlQbwNJ9d9C-pN0gjRULhoCcU'
+      'X-API-KEY': 'BG0l70RiO7exN4Jro6t_JAUAoH', 
+      'Authorization': 'Bearer ory_at_zSrwTOETNQ3Z7ukYGfZNGMKcAn0k1CI2H_jBDYdHes4.AQ0Bbb2mNjBl6WlngWzxzaEF9Rb_eeRb0-e8YoDKmPE'
    },
    data : data
 };
