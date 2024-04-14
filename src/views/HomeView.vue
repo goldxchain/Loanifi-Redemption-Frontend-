@@ -299,7 +299,7 @@ export default {
           const containerWidth = el.clientWidth;
           const text = el.innerText;
           const maxFontSize = 24; // Set your maximum font size here
-          const fontSize = Math.min((containerWidth / text.length) * 0.8, maxFontSize);
+          const fontSize = Math.min((containerWidth / text.length) * 0.85, maxFontSize);
           el.style.fontSize = fontSize + "px";
         };
         resizeText();
