@@ -949,7 +949,7 @@ async function getUsers(){
   const result = await Transaction.aggregate([
     {
       $group: {
-        _id: '$from', // Group by the 'from' field
+        _id: { $toLower: '$from' }, // Group by the 'from' field
         count: { $sum: 1 }, // Count the number of records for each 'from' value
         documents: { $push: '$$ROOT' } // Store all documents belonging to each 'from' value
       }
