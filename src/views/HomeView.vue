@@ -501,7 +501,7 @@ background: #000000 !important;
     box-shadow: 0px 1px 4px 2px #B99653;
   }
   .f-font{
-    font-size: 27px; 
+    font-size: 23px; 
     /* white-space: nowrap; */
   }
   .main-cont{
