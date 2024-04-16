@@ -160,7 +160,15 @@
         <div class="row">
           <div class="col-12" style="height:140px;">
       <CountComp :startDate="'2024-03-24'" />
-
+          </div>
+          <div class="col-12">
+      <!-- <div class="border-bottom LV"> <span class="leftee">Sacrificed($)</span> <span > <b>{{totalSacUSD}}</b> </span>  </div> -->
+       <p class="text-center glow-text-small mb-0">
+        Total $USD Value Sacrificed
+       </p>
+<h3 class="glow-text text-center">
+  <b>$ {{addCommasToNumber(totalSacUSD) }}</b> 
+</h3>
           </div>
           <div class="col-md-6 col-lg-4">
             <div class="inner-section mb-5 maxh"> <h1 class="f-font text-center bold py-2">Sacrifice Phase 1/3 Now Live</h1> </div>
@@ -195,7 +203,6 @@
             </div>
             <div class="inner-section mb-5 inner-chart minh" >  
               <div class="px-3 chart-items">
-                <div class="border-bottom LV"> <span class="leftee">Sacrificed($)</span> <span class="float-right"> <b>{{totalSacUSD}}</b> </span>  </div>
                 <div class="border-bottom LV"> <span class="leftee">GOLDX</span> <span class="float-right"> <b>{{stats.balance}} </b> </span>  </div>
                 <div class="border-bottom LV"> <span class="leftee">WGOLDX-BNB</span> <span class="float-right"> <b>{{stats.totalWGOLDXBsc}} </b> </span>  </div>
                 <div class="border-bottom LV"> <span class="leftee">WGOLDX-GOLDXCHAIN</span> <span class="float-right"> <b>{{stats.totalWGOLDX}} </b> </span>  </div>
@@ -216,9 +223,9 @@
             <div class="inner-section mb-5 inner-text minh px-2"> 
             <div class="d-inline-block " style="min-height: 280px;width: 50%;border-right:5px solid #B99653;" >
               <div> <span class="px-3"> Address </span> </div>
-              <div v-for="user in usersFiltered.slice(0, 10) " :key="user.index" class="text" v-auto-resize>
+              <div v-for="(user, index) in usersFiltered.slice(0, 10) " :key="user.index" class="text" v-auto-resize>
 
-                <span class="px-3">{{user.key.slice(0, 6)+'....'+user.key.substring(user.key.length - 6) }}</span>
+                <span class="px-3"> <b>{{(index+1)}}:</b> {{user.key.slice(0, 6)+'....'+user.key.substring(user.key.length - 6) }}</span>
               </div>
             </div>  
 
@@ -283,7 +290,7 @@ export default {
           const containerWidth = el.clientWidth;
           const text = el.innerText;
           const maxFontSize = 24; // Set your maximum font size here
-          const fontSize = Math.min((containerWidth / text.length) * 1.23, maxFontSize);
+          const fontSize = Math.min((containerWidth / text.length) * 1.488, maxFontSize);
           el.style.fontSize = fontSize + "px";
         };
         resizeText();
@@ -344,8 +351,10 @@ export default {
          this.stats.totalGOLDX
         +
         this.stats.totalWGOLDX
-        // +
-        // this.stats.totalWGOLDXBsc
+        +
+        this.stats.totalWGOLDXBsc
+        +
+        this.stats.NFTsGOLDX
       )
     },
     totalSacUSD(){
@@ -368,6 +377,13 @@ export default {
     this.loadData()
   },
   methods:{
+    addCommasToNumber(number) {
+    // Convert number to string
+    let numberStr = number.toString();
+    
+    // Add commas using regular expression
+    return numberStr.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+},
     millify(number) {
     const absNumber = Math.abs(number);
     const million = 1000000;
@@ -405,6 +421,10 @@ export default {
       .then((res) => {
         this.users = res.data.data.users;
         this.stats = res.data.data.stats;
+        axios.get("https://goldx.io/api/goldx-price")
+        .then((res) => {
+          this.stats.price = res.data.price
+        })
       })
     }
   }
@@ -597,5 +617,28 @@ background: #000000 !important;
 .mct{
   padding-left:5px;width:95%;float:right;min-height:100vh;
       box-shadow: 0px 1px 4px -1px #B99653;
+}
+.glow-text {
+  font-size: 48px;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  animation: glow 1.5s ease-in-out infinite alternate;
+}
+.glow-text-small {
+  font-size: 24px;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  animation: glow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  0% {
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #B99653, 0 0 40px #B99653, 0 0 50px #B99653, 0 0 60px #B99653, 0 0 70px #B99653;
+  }
+  100% {
+    text-shadow: 0 0 20px #fff, 0 0 30px #B99653, 0 0 40px #B99653, 0 0 50px #B99653, 0 0 60px #B99653, 0 0 70px #B99653, 0 0 80px #B99653;
+  }
 }
 </style>

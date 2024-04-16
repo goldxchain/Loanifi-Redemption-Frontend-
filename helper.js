@@ -1,7 +1,7 @@
 const Transaction = require('./Models/Transaction');
 const Web3 = require('web3');
 // const Web3 = require('web3');
-
+const { ethers } = require('ethers');
 // const web3 = new Web3('https://rpc2.goldxscan.com/');
 var pluginAbi = [
   {
@@ -942,10 +942,31 @@ var web3 = new Web3("https://rpc2.goldxscan.com/");
 return await web3.eth.getBalance("0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914")
 .then((res) => {return Number(res) / 10**18} );
 }
+async function getBalanceWB(){
+  const tokenAddress = '0x4E0F32e8EE0E696A662e9575cfFb1c4Dc5a26a92';
+const walletAddress = '0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914';
+const web3 = new Web3('https://bsc-dataseed.binance.org/');
+const tokenContract = new web3.eth.Contract([
+  {
+    "constant": true,
+    "inputs": [{"name": "_owner", "type": "address"}],
+    "name": "balanceOf",
+    "outputs": [{"name": "balance", "type": "uint256"}],
+    "type": "function"
+  }
+], tokenAddress);
+let res = await tokenContract.methods.balanceOf(walletAddress).call()
+// return res
+return Number(res) / 10**18
+  // var web3 = new Web3("https://rpc2.goldxscan.com/");
+  // return await web3.eth.getBalance("0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914")
+  // .then((res) => {return Number(res) / 10**18} );
+  }
 async function getUsers(){
-  let price = await getPrice()
+  let price = null
   let balance = await getBalance()
-  // console.log("price is ", price)
+  let WBbalance = await getBalanceWB()
+  console.log("price is ", WBbalance, balance, price)
   const result = await Transaction.aggregate([
     {
       $group: {
@@ -1020,6 +1041,7 @@ async function getUsers(){
 
 // console.log(sortedArray);
 stats.NFTsCLS = [...new Set(stats.NFTsCLS)]
+stats.WBbalance = WBbalance
   return {stats, users:sortedArray}
   
   
