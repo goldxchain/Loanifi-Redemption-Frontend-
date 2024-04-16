@@ -159,7 +159,7 @@
       <div class="main-cont d-inline-block mct">
         <div class="row">
           <div class="col-12" style="height:140px;">
-      <CountComp :startDate="'2024-03-17'" />
+      <CountComp :startDate="'2024-03-24'" />
 
           </div>
           <div class="col-md-6 col-lg-4">
@@ -344,8 +344,8 @@ export default {
          this.stats.totalGOLDX
         +
         this.stats.totalWGOLDX
-        +
-        this.stats.totalWGOLDXBsc
+        // +
+        // this.stats.totalWGOLDXBsc
       )
     },
     totalSacUSD(){
