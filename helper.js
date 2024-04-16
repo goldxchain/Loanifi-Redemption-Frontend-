@@ -934,7 +934,7 @@ async function getPastTransactions() {
 async function getPrice(){
   const axios = require('axios');
 
-  return await axios.get("https://goldx.io.api/goldx-price")
+  return await axios.get("https://goldx.io/api/goldx-price")
   // return await axios.get("https://api.geckoterminal.com/api/v2/networks/bsc/tokens/0x4E0F32e8EE0E696A662e9575cfFb1c4Dc5a26a92")
   .then((res) => { return res.data.price})
 }
