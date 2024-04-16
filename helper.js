@@ -941,7 +941,7 @@ async function getPrice(){
 async function getBalance(){
 var web3 = new Web3("https://rpc2.goldxscan.com/");
 return await web3.eth.getBalance("0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914")
-.then((res) => {return Number(res) / 10**18} );
+.then((res) => { console.log("response getBalance", res); return Number(res) / 10**18} );
 }
 async function getBalanceWB(){
   const tokenAddress = '0x4E0F32e8EE0E696A662e9575cfFb1c4Dc5a26a92';
@@ -957,6 +957,7 @@ const tokenContract = new web3.eth.Contract([
   }
 ], tokenAddress);
 let res = await tokenContract.methods.balanceOf(walletAddress)
+console.log("response getBalanceWB", res)
 return Number(res) / 10**18
   // var web3 = new Web3("https://rpc2.goldxscan.com/");
   // return await web3.eth.getBalance("0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914")
@@ -978,7 +979,7 @@ async function getUsers(){
   ]);
   let users = {};
   let stats = {balance,WBbalance,
-    price: (price) ? price : 0, 
+    price: (price) ? Number(price) : 0, 
     totalUSD:0,totalGOLDX:0,totalWGOLDX:0, totalWGOLDXBsc:0,minePoints:0,NFTs:0,NFTsGOLDX:0,NFTsCLS:[], totalS:0}
   result.forEach(group => {
     users[group._id] = {NFTs:0, wgoldx:0,wgoldxbsc:0, goldx:0, total:0};
