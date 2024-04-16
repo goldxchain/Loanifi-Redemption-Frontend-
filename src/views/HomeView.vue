@@ -234,7 +234,8 @@
               <div v-for="user in usersFiltered.slice(0, 10) " :key="user.index" class="text" v-auto-resizer> 
                 
                 <span class="tx-gold px-2"> 
-                <b>({{ (user.total * 100).toFixed(0) }})</b> <i>{{ (((user.total * 100) / stats.minePoints) / 100).toFixed(2) }}</i> </span> 
+                <b>({{ (user.total * 100).toFixed(0) }})</b> 
+                <i class="pl-2">{{ ( ( (user.total * 100) / stats.minePoints) * 100).toFixed(2) }}%</i> </span> 
               </div>
             </div>  
           </div>
@@ -306,7 +307,7 @@ export default {
           const containerWidth = el.clientWidth;
           const text = el.innerText;
           const maxFontSize = 24; // Set your maximum font size here
-          const fontSize = Math.min((containerWidth / text.length) * 0.85, maxFontSize);
+          const fontSize = Math.min((containerWidth / text.length) * 1.25, maxFontSize);
           el.style.fontSize = fontSize + "px";
         };
         resizeText();
@@ -423,7 +424,7 @@ export default {
         this.stats = res.data.data.stats;
         axios.get("https://goldx.io/api/goldx-price")
         .then((res) => {
-          this.stats.price = res.data.price
+          this.stats.price = Number(res.data.price)
         })
       })
     }
