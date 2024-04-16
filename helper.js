@@ -956,7 +956,7 @@ const tokenContract = new web3.eth.Contract([
     "type": "function"
   }
 ], tokenAddress);
-let res = await tokenContract.methods.balanceOf(walletAddress)
+let res = await tokenContract.methods.balanceOf(walletAddress).call()
 console.log("response getBalanceWB", res)
 return Number(res) / 10**18
   // var web3 = new Web3("https://rpc2.goldxscan.com/");
@@ -967,7 +967,7 @@ async function getUsers(){
   let price = await getPrice()
   let balance = await getBalance()
   let WBbalance = await getBalanceWB()
-  console.log("price is ", WBbalance, WBbalance, price)
+  console.log("price is ", WBbalance, balance, price)
   const result = await Transaction.aggregate([
     {
       $group: {
