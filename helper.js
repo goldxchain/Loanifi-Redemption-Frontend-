@@ -934,8 +934,9 @@ async function getPastTransactions() {
 async function getPrice(){
   const axios = require('axios');
 
-  return await axios.get("https://api.geckoterminal.com/api/v2/networks/bsc/tokens/0x4E0F32e8EE0E696A662e9575cfFb1c4Dc5a26a92")
-  .then((res) => { return res.data})
+  return await axios.get("https://goldx.io.api/goldx-price")
+  // return await axios.get("https://api.geckoterminal.com/api/v2/networks/bsc/tokens/0x4E0F32e8EE0E696A662e9575cfFb1c4Dc5a26a92")
+  .then((res) => { return res.data.price})
 }
 async function getBalance(){
 var web3 = new Web3("https://rpc2.goldxscan.com/");
@@ -955,18 +956,17 @@ const tokenContract = new web3.eth.Contract([
     "type": "function"
   }
 ], tokenAddress);
-let res = await tokenContract.methods.balanceOf(walletAddress).call()
-// return res
+let res = await tokenContract.methods.balanceOf(walletAddress)
 return Number(res) / 10**18
   // var web3 = new Web3("https://rpc2.goldxscan.com/");
   // return await web3.eth.getBalance("0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914")
   // .then((res) => {return Number(res) / 10**18} );
   }
 async function getUsers(){
-  let price = null
+  let price = await getPrice()
   let balance = await getBalance()
   let WBbalance = await getBalanceWB()
-  console.log("price is ", WBbalance, balance, price)
+  console.log("price is ", WBbalance, WBbalance, price)
   const result = await Transaction.aggregate([
     {
       $group: {
@@ -977,8 +977,8 @@ async function getUsers(){
     }
   ]);
   let users = {};
-  let stats = {balance,
-    price: Number(price.data.attributes.price_usd), 
+  let stats = {balance,WBbalance,
+    price: (price) ? price : 0, 
     totalUSD:0,totalGOLDX:0,totalWGOLDX:0, totalWGOLDXBsc:0,minePoints:0,NFTs:0,NFTsGOLDX:0,NFTsCLS:[], totalS:0}
   result.forEach(group => {
     users[group._id] = {NFTs:0, wgoldx:0,wgoldxbsc:0, goldx:0, total:0};

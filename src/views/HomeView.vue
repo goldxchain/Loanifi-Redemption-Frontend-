@@ -234,7 +234,7 @@
               <div v-for="user in usersFiltered.slice(0, 10) " :key="user.index" class="text" v-auto-resizer> 
                 
                 <span class="tx-gold px-2"> 
-                <b>({{ (user.total * 100).toFixed(0) }})</b> </span> 
+                <b>({{ (user.total * 100).toFixed(0) }})</b> <i>{{ (((user.total * 100) / stats.minePoints) / 100).toFixed(2) }}</i> </span> 
               </div>
             </div>  
           </div>
