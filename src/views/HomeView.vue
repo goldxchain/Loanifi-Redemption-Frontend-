@@ -158,6 +158,9 @@
       </div>
       <div class="main-cont d-inline-block mct">
         <div class="row">
+          <div class="col-12">
+<coingecko-coin-price-marquee-widget  coin-ids="bitcoin,ethereum,ripple,binancecoin,tether,chainlink,usd-coin" currency="usd" background-color="#050505" locale="en" font-color="#f2eded"></coingecko-coin-price-marquee-widget>
+          </div>
           <div class="col-12" style="height:140px;">
       <CountComp :startDate="'2024-03-24'" />
           </div>
