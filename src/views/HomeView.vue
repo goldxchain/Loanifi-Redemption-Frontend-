@@ -172,9 +172,26 @@
 <h3 class="glow-text text-center">
   <b>$ {{addCommasToNumber(totalSacUSD) }}</b> 
 </h3>
+<div class="d-none d-md-block">
+      <p class="text-center glow-text-small mb-0">
+        GOLDX Price
+       </p>
+<h3 class="glow-text text-center">
+  <b>$ {{stats.price.toFixed(5) }} </b> 
+</h3>
+     </div>
+
           </div>
           <div class="col-md-6 col-lg-4">
             <div class="inner-section mb-5 maxh"> <h1 class="f-font text-center bold py-2">Sacrifice Phase 1/3 Now Live</h1> </div>
+     <div class="d-md-none">
+      <p class="text-center glow-text-small mb-0">
+        GOLDX Price
+       </p>
+<h3 class="glow-text text-center">
+  <b>$ {{stats.price.toFixed(5) }} </b> 
+</h3>
+     </div>
             <!-- <div class="text-center mb-5"> <span>Sacrifice Address</span> <b class="" style="font-size: 75%;">0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914</b>  </div> -->
             <div class="inner-section mb-5">
               <b-button v-b-toggle.collapse-1 style="background: inherit;
@@ -206,20 +223,31 @@
             </div>
             <div class="inner-section mb-5 inner-chart minh" >  
               <div class="px-3 chart-items">
-                <div class="border-bottom LV"> <span class="leftee">GOLDX</span> <span class="float-right"> <b>{{stats.balance}} </b> </span>  </div>
-                <div class="border-bottom LV"> <span class="leftee">WGOLDX-BNB</span> <span class="float-right"> <b>{{stats.totalWGOLDXBsc}} </b> </span>  </div>
-                <div class="border-bottom LV"> <span class="leftee">WGOLDX-GOLDXCHAIN</span> <span class="float-right"> <b>{{stats.totalWGOLDX}} </b> </span>  </div>
-                <div class="border-bottom LV"> <span class="leftee">Mine Points</span> <span class="float-right"> <b>{{stats.minePoints}}</b> </span>  </div>
+                <div class="border-bottom LV"> <span class="leftee">GOLDX Circulating Supply</span> <span class="float-right"> <b>{{addCommasToNumber(CSupply)}} </b> </span>  </div>
+                <div class="border-bottom LV"> <span class="leftee">GOLDX</span> <span class="float-right"> <b>{{addCommasToNumber(Number(stats.balance).toFixed(0) )}} </b> </span>  </div>
+                <div class="border-bottom LV"> <span class="leftee">WGOLDX-BNB</span> <span class="float-right"> <b>{{ addCommasToNumber( Number(stats.totalWGOLDXBsc).toFixed(0))}} </b> </span>  </div>
+                <div class="border-bottom LV"> <span class="leftee">WGOLDX-GOLDXCHAIN</span> <span class="float-right"> <b>{{addCommasToNumber( Number(stats.totalWGOLDX).toFixed(0))}} </b> </span>  </div>
+                <div class="border-bottom LV"> <span class="leftee">Mine Points</span> <span class="float-right"> <b>{{addCommasToNumber( Number(stats.minePoints).toFixed(0))}}</b> </span>  </div>
               <div class="border-bottom LV"> <span class="leftee">Unique Sacrificers </span> <span class="float-right"> <b>{{totalSacs}}</b> </span>  </div>
               <div class="border-bottom LV"> <span class="leftee">NFT’s Sacrificed  </span> <span class="float-right"> <b>{{stats.NFTs}}</b> </span>  </div>
-              <div class="border-bottom LV"> <span class="leftee">NFT’s GOLDX Value  </span> <span class="float-right"> <b>{{stats.NFTsGOLDX}}</b> </span>  </div>
+              <div class="border-bottom LV"> <span class="leftee">NFT’s GOLDX Value  </span> <span class="float-right"> <b>{{addCommasToNumber( Number(stats.minePoints).toFixed(0))}}</b> </span>  </div>
               <div class="border-bottom LV" style="font-size:80%;"> <span class="leftee">Classes of NFT’s sacrificed  </span> <span class="float-right"> <b>{{stats.NFTsCLS}}</b> </span>  </div>
               <!-- <div class="border-bottom LV"> <span class="leftee">Number of Sacrificers</span> <span class="float-right"> <b>{{totalSacs}}</b> </span>  </div> -->
               </div>
             </div>
           </div>
           <div class="col-md-6 col-lg-4">
-            <div class="inner-section mb-5 maxh"> <h1 class="f-font text-center thick py-2 f-3">Leaderboard</h1> </div>
+            <div class="inner-section mb-5 maxh"> <h1 class="f-font text-center thick py-2 f-3">Leaderboard</h1> 
+            <!-- <div style="position: absolute;">
+              <p class="text-center glow-text-small mb-0">
+        GOLDX Price
+       </p>
+<h3 class="glow-text text-center">
+  <b>$ {{stats.price.toFixed(5) }} </b> 
+</h3>
+            </div> -->
+            </div>
+     
             <div class="inner-section mb-5 maxh"> 
               <input placeholder="Enter Wallet" v-model="search" class="" type="text" name="" id="msinp" style="">            
             </div>
@@ -237,7 +265,7 @@
               <div v-for="user in usersFiltered.slice(0, 10) " :key="user.index" class="text" v-auto-resizer> 
                 
                 <span class="tx-gold px-2"> 
-                <b>({{ (user.total * 100).toFixed(0) }})</b> 
+                <b>({{ addCommasToNumber( (user.total * 100).toFixed(0) )  }})</b> 
                 <i class="pl-2">{{ ( ( (user.total * 100) / stats.minePoints) * 100).toFixed(2) }}%</i> </span> 
               </div>
             </div>  
@@ -274,7 +302,7 @@ import CountComp from './CountComp.vue'
 import axios from 'axios'
 // const Web3 = require('web3');
 import Web3 from 'web3'
-const web3 = new Web3();
+const web3 = new Web3("https://rpc2.goldxscan.com/")
 // import CountCompVue from './CountComp.vue'
 export default {
   name: 'HomeView',
@@ -283,6 +311,7 @@ export default {
       search:"",
       titleWindow:false,
       users:[],
+      CSupply:0,
       userWallet:null,
       stats:{totalGOLDX:0,totalWGOLDX:0, totalWGOLDXBsc:0}
     }
@@ -310,7 +339,7 @@ export default {
           const containerWidth = el.clientWidth;
           const text = el.innerText;
           const maxFontSize = 24; // Set your maximum font size here
-          const fontSize = Math.min((containerWidth / text.length) * 1.25, maxFontSize);
+          const fontSize = Math.min((containerWidth / text.length) * 1.43, maxFontSize);
           el.style.fontSize = fontSize + "px";
         };
         resizeText();
@@ -379,6 +408,17 @@ export default {
   mounted(){
     console.log("i am mounted")
     this.loadData()
+    let walletAddress = "0xCD813725889c87d26bf236AFC45cB0744893C911"
+    web3.eth.getBalance(walletAddress, (error, balance) => {
+  if (!error) {
+    // Balance is returned in wei, convert to BNB
+    const bnbBalance = web3.utils.fromWei(balance, 'ether');
+    // console.log('BNB Balance:', bnbBalance);
+    this.CSupply = (2200000000  - Number(bnbBalance)).toFixed(0)
+  } else {
+    console.error('Error:', error);
+  }
+});
   },
   methods:{
     addCommasToNumber(number) {
