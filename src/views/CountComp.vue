@@ -8,16 +8,6 @@
     <li>Secs</li>
   </div>
 </div>
-    <!-- <div id="countdown" class="d-inline-block mx-auto" v-if="countdown.days > 0">
-    <ul>
-      <li><span id="days">  {{ countdown.days }}</span>days</li>
-      <li><span id="hours">{{(countdown.hours < 10) ? 0 : ""}}{{ countdown.hours }}</span>Hours</li>
-      <li><span id="minutes">{{ countdown.minutes }}</span>Minutes</li>
-      <li><span id="seconds">{{countdown.seconds}}</span>Seconds</li>
-    </ul>
-  </div>
-      <div v-else>30 days have passed!
-    </div> -->
   </template>
   
   <script>
@@ -46,24 +36,51 @@
     },
     methods: {
       calculateCountdown() {
-        const start = new Date(this.startDate);
-        const endDate = new Date(start.getTime() + (30 * 24 * 60 * 60 * 1000));
-        const now = new Date();
-        const difference = endDate.getTime() - now.getTime();
-        if (difference > 0) {
-          this.countdown.days = Math.floor(difference / (1000 * 60 * 60 * 24));
-          this.countdown.hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-          this.countdown.minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-          this.countdown.seconds = Math.floor((difference % (1000 * 60)) / 1000);
-        } else {
-          this.countdown = {
+    const start = new Date(this.startDate);
+    
+    // Set endDate to tonight at midnight UTC
+    const now = new Date();
+    const endDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+    
+    // Add 1 day to endDate to make it tomorrow at midnight UTC
+    endDate.setUTCDate(endDate.getUTCDate() + 1);
+    
+    const difference = endDate.getTime() - now.getTime();
+    
+    if (difference > 0) {
+        this.countdown.days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        this.countdown.hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        this.countdown.minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        this.countdown.seconds = Math.floor((difference % (1000 * 60)) / 1000);
+    } else {
+        this.countdown = {
             days: 0,
             hours: 0,
             minutes: 0,
             seconds: 0
-          };
-        }
-      }
+        };
+    }
+}
+
+      // calculateCountdown() {
+      //   const start = new Date(this.startDate);
+      //   const endDate = new Date(start.getTime() + (30 * 24 * 60 * 60 * 1000));
+      //   const now = new Date();
+      //   const difference = endDate.getTime() - now.getTime();
+      //   if (difference > 0) {
+      //     this.countdown.days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      //     this.countdown.hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      //     this.countdown.minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      //     this.countdown.seconds = Math.floor((difference % (1000 * 60)) / 1000);
+      //   } else {
+      //     this.countdown = {
+      //       days: 0,
+      //       hours: 0,
+      //       minutes: 0,
+      //       seconds: 0
+      //     };
+      //   }
+      // }
     }
   };
   </script>

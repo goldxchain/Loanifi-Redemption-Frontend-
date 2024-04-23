@@ -165,7 +165,10 @@
       <CountComp :startDate="'2024-03-24'" />
           </div>
           <div class="col-12">
-      <!-- <div class="border-bottom LV"> <span class="leftee">Sacrificed($)</span> <span > <b>{{totalSacUSD}}</b> </span>  </div> -->
+            <p class="text-center glow-text-small mb-0">
+              Until Loanifi Phase 2 starts
+       </p>
+            <!-- <div class="border-bottom LV"> <span class="leftee">Sacrificed($)</span> <span > <b>{{totalSacUSD}}</b> </span>  </div> -->
        <p class="text-center glow-text-small mb-0">
         Total $USD Value Sacrificed
        </p>
