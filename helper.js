@@ -1039,14 +1039,25 @@ async function getUsers(){
         stats.NFTs += 1;
             stats.minePoints += (7500 * 100)
           }
-          if(element.data.stats[0][2] == "1" ) {
-            users[group._id].NFTs += 10000000
-        users[group._id].total += 10000000;
+           
+        }else{
+          if(element.data.stats[0][2] == "2" ) {
+            users[group._id].NFTs += (150000 * Number(element.data.stats[3]));
+        users[group._id].total += (150000 * Number(element.data.stats[3]));
+        stats.NFTsGOLDX += (150000 * Number(element.data.stats[3]));
+        stats.NFTsCLS.push("Custom")
         stats.NFTs += 1;
-        stats.NFTsCLS.push("Refiner")
-        stats.NFTsGOLDX += 10000000;
-            stats.minePoints += (10000000 * 100)
-          } 
+            stats.minePoints += ((150000 * Number(element.data.stats[3])) * 100)
+          }
+          if(element.data.stats[0][2] == "3" ) {
+            users[group._id].NFTs += (7500 * Number(element.stata.stats[4]))
+        users[group._id].total += (7500 * Number(element.stata.stats[4]));
+        stats.NFTsCLS.push("Custom")
+        stats.NFTsGOLDX += (7500 * Number(element.stata.stats[4]));
+        stats.NFTs += 1;
+            stats.minePoints += ((7500 * Number(element.stata.stats[4])) * 100)
+          }
+          
         }
       }
     });
