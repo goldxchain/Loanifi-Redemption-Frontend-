@@ -1050,12 +1050,12 @@ async function getUsers(){
             stats.minePoints += ((150000 * Number(element.data.stats[3])) * 100)
           }
           if(element.data.stats[0][2] == "3" ) {
-            users[group._id].NFTs += (7500 * Number(element.stata.stats[4]))
-        users[group._id].total += (7500 * Number(element.stata.stats[4]));
+            users[group._id].NFTs += (7500 * Number(element.data.stats[4]))
+        users[group._id].total += (7500 * Number(element.data.stats[4]));
         stats.NFTsCLS.push("Custom")
-        stats.NFTsGOLDX += (7500 * Number(element.stata.stats[4]));
+        stats.NFTsGOLDX += (7500 * Number(element.data.stats[4]));
         stats.NFTs += 1;
-            stats.minePoints += ((7500 * Number(element.stata.stats[4])) * 100)
+            stats.minePoints += ((7500 * Number(element.data.stats[4])) * 100)
           }
           
         }
