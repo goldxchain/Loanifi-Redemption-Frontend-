@@ -230,7 +230,7 @@
                 <div class="border-bottom LV"> <span class="leftee">Mine Points</span> <span class="float-right"> <b>{{addCommasToNumber( Number(stats.minePoints).toFixed(0))}}</b> </span>  </div>
               <div class="border-bottom LV"> <span class="leftee">Unique Sacrificers </span> <span class="float-right"> <b>{{totalSacs}}</b> </span>  </div>
               <div class="border-bottom LV"> <span class="leftee">NFT’s Sacrificed  </span> <span class="float-right"> <b>{{stats.NFTs}}</b> </span>  </div>
-              <div class="border-bottom LV"> <span class="leftee">NFT’s GOLDX Value  </span> <span class="float-right"> <b>{{addCommasToNumber( Number(stats.minePoints).toFixed(0))}}</b> </span>  </div>
+              <div class="border-bottom LV"> <span class="leftee">NFT’s GOLDX Value  </span> <span class="float-right"> <b>{{addCommasToNumber( Number(stats.NFTsGOLDX).toFixed(0))}}</b> </span>  </div>
               <div class="border-bottom LV" style="font-size:80%;"> <span class="leftee">Classes of NFT’s sacrificed  </span> <span class="float-right"> <b>{{stats.NFTsCLS}}</b> </span>  </div>
               <!-- <div class="border-bottom LV"> <span class="leftee">Number of Sacrificers</span> <span class="float-right"> <b>{{totalSacs}}</b> </span>  </div> -->
               </div>

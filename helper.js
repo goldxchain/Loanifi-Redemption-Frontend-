@@ -884,9 +884,10 @@ function getNFTlogs(){
 
           }
           await Transaction.create({data: NFT,tx: element.transactionHash,from: element.returnValues['from'],value: ID, type:"nft" })
+          console.log("created, ",element.returnValues['tokenId'])
 
           }else{
-            console.log("already exists ", element.transactionHash)
+            console.log("already exists ", element.returnValues['tokenId'])
           }
     });
 });
@@ -963,6 +964,10 @@ return Number(res) / 10**18
   // return await web3.eth.getBalance("0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914")
   // .then((res) => {return Number(res) / 10**18} );
   }
+async function getNLogs (){
+  let txs = await Transaction.find({type:"nft"});
+  return txs;
+}  
 async function getUsers(){
   let price = await getPrice()
   let balance = await getBalance()
@@ -1052,5 +1057,5 @@ stats.WBbalance = WBbalance
 module.exports = {
   getWGOLDXlogs,getWgoldxBsc,
   getNFTlogs,getUsers,
-  getPastTransactions,
+  getPastTransactions,getNLogs
 };
