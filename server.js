@@ -5,7 +5,7 @@ const TEST_DB = "mongodb://localhost:27017/fusegbackend";
 const PRO_DB = `mongodb+srv://doadmin:k0P19s34E5em2H8U@pro-db-fusegold-54c0a5f4.mongo.ondigitalocean.com/admin?tls=true&authSource=admin`
 const express = require('express');
 const { getWGOLDXlogs,
-    getNFTlogs,
+    getNFTlogs,getUsersRaw,
     getNLogs,getUsers,getWgoldxBsc,
     getPastTransactions, } = require('./helper');
     const path = require('path');
@@ -43,6 +43,10 @@ app.get('/get/users', async (req, res) => {
   let data = await getUsers();
   res.send({data})
 });
+app.get('/get/users-raw', async (req, res) => {
+  let data = await getUsersRaw();
+  res.send({data})
+});
 app.get('/get/nft-logs', async (req, res) => {
   let data = await getNLogs();
   res.send({data})
@@ -57,7 +61,7 @@ app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });
 // getWGOLDXlogs()
-getNFTlogs()
+// getNFTlogs()
 
 const intervalTime24Hours = 24 * 60 * 60 * 1000;
     const intervalTime = 3 * 60 * 60 * 1000; // 3 hours in milliseconds

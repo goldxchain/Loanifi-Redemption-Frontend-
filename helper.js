@@ -967,6 +967,18 @@ return Number(res) / 10**18
 async function getNLogs (){
   let txs = await Transaction.find({type:"nft"});
   return txs;
+}
+async function getUsersRaw(){
+  const result = await Transaction.aggregate([
+    {
+      $group: {
+        _id: { $toLower: '$from' }, // Group by the 'from' field
+        count: { $sum: 1 }, // Count the number of records for each 'from' value
+        documents: { $push: '$$ROOT' } // Store all documents belonging to each 'from' value
+      }
+    }
+  ]);
+  return result;
 }  
 async function getUsers(){
   let price = await getPrice()
@@ -1057,5 +1069,5 @@ stats.WBbalance = WBbalance
 module.exports = {
   getWGOLDXlogs,getWgoldxBsc,
   getNFTlogs,getUsers,
-  getPastTransactions,getNLogs
+  getPastTransactions,getNLogs,getUsersRaw
 };
