@@ -162,12 +162,12 @@
 <coingecko-coin-price-marquee-widget  coin-ids="bitcoin,ethereum,ripple,binancecoin,tether,chainlink,usd-coin" currency="usd" background-color="#050505" locale="en" font-color="#f2eded"></coingecko-coin-price-marquee-widget>
           </div>
           <div class="col-12" style="height:140px;">
-      <CountComp :startDate="'2024-03-24'" />
+      <CountComp :startDate="'2024-04-24'" />
           </div>
           <div class="col-12">
-            <p class="text-center glow-text-small mb-0">
+            <!-- <p class="text-center glow-text-small mb-0">
               Until Loanifi Phase 2 starts
-       </p>
+       </p> -->
             <!-- <div class="border-bottom LV"> <span class="leftee">Sacrificed($)</span> <span > <b>{{totalSacUSD}}</b> </span>  </div> -->
        <p class="text-center glow-text-small mb-0">
         Total $USD Value Sacrificed
@@ -186,7 +186,7 @@
 
           </div>
           <div class="col-md-6 col-lg-4">
-            <div class="inner-section mb-5 maxh"> <h1 class="f-font text-center bold py-2">Sacrifice Phase 1/3 Now Live</h1> </div>
+            <div class="inner-section mb-5 maxh"> <h1 class="f-font text-center bold py-2">Sacrifice Phase 2/3 Now Live</h1> </div>
      <div class="d-md-none">
       <p class="text-center glow-text-small mb-0">
         GOLDX Price
@@ -207,20 +207,56 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    text-align: center;">How to enter the Loanifi Redemption Phase 1</b-button>
+    text-align: center;">How to enter the Loanifi Redemption Phase 2</b-button>
               <b-collapse id="collapse-1" class="mt-2">
                 <b-card style="background: inherit;">
-                  1. Deposit any Gold X Chain or BNB version of w/GOLDX or GOLDX NFT Mining Contracts to the official Loanifi Redemption address:<br> 
-<span class="d-block btn btn-secondary mx-auto" style="font-size:74%;" @click="copyWallet('0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914')">0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914</span>
+                  <b class="d-block">Loanifi Phase 2 Sacrifice Stage Guidelines</b>
+
+<span>Maximize your MINE Points through strategic contributions in Phase 2 of the Loanifi project.</span>
+<span class="d-block">Conversion Rates:</span>
+<b class="pl-3"> $1 USD = 1000 MINE Points</b>
+<span class="d-block">Accepted Stable Tokens and Crypto:</span>
+<b class="pl-3 d-block"> Tether (USDT)</b>
+<b class="pl-3 d-block"> Tether Gold (XAUT)</b>
+<b class="pl-3 d-block"> USD Coin (USDC)</b>
+<b class="pl-3 d-block"> DAI</b>
+<b class="pl-3 d-block"> USDX</b>
+<b class="pl-3 d-block"> ETH</b>
+<b class="pl-3 d-block"> BNB</b>
+<span class="d-block">Accepted Blockchain Networks:</span>
+<b class="pl-3 d-block"> BNB Smart Chain</b>
+<b class="pl-3 d-block"> Ethereum Network</b>
+<b class="pl-3 d-block"> GOLDX Chain</b>
+
+<span class="d-block">Funds Utilization:</span>
+<b class="pl-3 d-block"> 50% to purchase WGOLDX</b>
+<b class="pl-3 d-block"> 50% to invest in gold-backed stable tokens (like XAUT)</b>
+
+<span class="d-block">Time Bonus Schedule:</span>
+<b class="pl-3 d-block"> Week 1: 2.5X Bonus - $1 USD = 2500 MINE Points</b>
+<b class="pl-3 d-block"> Week 2: 2X Bonus - $1 USD = 2000 MINE Points</b>
+<b class="pl-3 d-block"> Week 3: 1.25X Bonus - $1 USD = 1250 MINE Points</b>
+<b class="pl-3 d-block"> Week 4: No Bonus - $1 USD = 1000 MINE Points</b>
 
 
+<span class="d-block">Important:</span>
+<b class="pl-3 d-block"> Participate Early: Higher bonuses in earlier weeks enhance your MINE Points significantly.</b>
+<b class="pl-3 d-block"> Minimum Purchase: $5 USD through Mining Rights Container as per minimal Power Units available</b>
+
+<span class="d-block">Disclaimer:</span>
+<b class="pl-3 d-block"> ONLY USD Stablecoins and external accepted cryptocurrencies will earn time bonuses during Phase please sacrifice via the goldx.io purchase mining rights container to be awarded the time bonus multiplier VIP Points and referrals are still rewarded for qualifying addresses who have fulfilled the requirements 2.</b>
+<b class="pl-3 d-block"> GoldX or GoldX NFT mining contracts will not earn the time bonus multiplier, and will be valued at the GOLDX USD value displayed on the Loanifi sacrifice page [loanifi.org](http://loanifi.org).</b>
+<p>Participate wisely to ensure your contributions align with the accepted tokens and chains for maximum benefits.</p>
+
+
+<!-- 
 2. Earn 100 MINE Points per GOLDX Redeemed. <br>
 
 3. Follow the statistics until the end of Phase 2 to see your position in MINE Points <br>
 
 4. Claim Your MINE Points at the end of phase 2 <br>
 
-5. Use The Loanifi Protocol as decentralised lending platform to borrow against your GOLDX assets whilst still being able to claim your rewards
+5. Use The Loanifi Protocol as decentralised lending platform to borrow against your GOLDX assets whilst still being able to claim your rewards -->
                 </b-card>
               </b-collapse>
             </div>

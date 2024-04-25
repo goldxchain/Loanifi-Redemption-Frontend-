@@ -40,10 +40,10 @@
     
     // Set endDate to tonight at midnight UTC
     const now = new Date();
-    const endDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+    const endDate = new Date(start);
     
     // Add 1 day to endDate to make it tomorrow at midnight UTC
-    endDate.setUTCDate(endDate.getUTCDate() + 1);
+    endDate.setUTCDate(endDate.getUTCDate() + 31);
     
     const difference = endDate.getTime() - now.getTime();
     
