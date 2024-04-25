@@ -997,7 +997,7 @@ async function getUsers(){
   let users = {};
   let stats = {balance,WBbalance,
     price: (price) ? Number(price) : 0, 
-    totalUSD:0,totalGOLDX:0,totalWGOLDX:0, totalWGOLDXBsc:0,minePoints:0,NFTs:0,NFTsGOLDX:0,NFTsCLS:[], totalS:0}
+    totalUSD:0,totalGOLDX:0,totalWGOLDX:0, totalWGOLDXBsc:0,minePoints:0,NFTs:0,NFTsGOLDX:0,NFTsCLS:{Miners:0, Pros:0}, totalS:0}
   result.forEach(group => {
     users[group._id] = {NFTs:0, wgoldx:0,wgoldxbsc:0, goldx:0, total:0};
     group.documents.forEach(element => {
@@ -1027,14 +1027,14 @@ async function getUsers(){
             users[group._id].NFTs += 150000;
         users[group._id].total += 150000;
         stats.NFTsGOLDX += 150000;
-        stats.NFTsCLS.push("Miner")
+        stats.NFTsCLS.Miners ++
         stats.NFTs += 1;
             stats.minePoints += (150000 * 100)
           }
           if(element.data.stats[0][2] == "3" ) {
             users[group._id].NFTs += 7500
         users[group._id].total += 7500;
-        stats.NFTsCLS.push("Prospectors")
+        stats.NFTsCLS.Pros++
         stats.NFTsGOLDX += 7500;
         stats.NFTs += 1;
             stats.minePoints += (7500 * 100)
@@ -1045,14 +1045,14 @@ async function getUsers(){
             users[group._id].NFTs += (150000 * Number(element.data.stats[3]));
         users[group._id].total += (150000 * Number(element.data.stats[3]));
         stats.NFTsGOLDX += (150000 * Number(element.data.stats[3]));
-        stats.NFTsCLS.push("Custom")
+        stats.NFTsCLS.Miners += Number(element.data.stats[3])
         stats.NFTs += 1;
             stats.minePoints += ((150000 * Number(element.data.stats[3])) * 100)
           }
           if(element.data.stats[0][2] == "3" ) {
             users[group._id].NFTs += (7500 * Number(element.data.stats[4]))
         users[group._id].total += (7500 * Number(element.data.stats[4]));
-        stats.NFTsCLS.push("Custom")
+        stats.NFTsCLS.Pros += Number(element.data.stats[4])
         stats.NFTsGOLDX += (7500 * Number(element.data.stats[4]));
         stats.NFTs += 1;
             stats.minePoints += ((7500 * Number(element.data.stats[4])) * 100)
