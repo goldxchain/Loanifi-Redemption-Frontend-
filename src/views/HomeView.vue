@@ -269,7 +269,8 @@
                 <div class="border-bottom LV"> <span class="leftee">Mine Points</span> <span class="float-right"> <b>{{addCommasToNumber( Number(stats.minePoints).toFixed(0))}}</b> </span>  </div>
               <div class="border-bottom LV"> <span class="leftee">Unique Sacrificers </span> <span class="float-right"> <b>{{totalSacs}}</b> </span>  </div>
               <div class="border-bottom LV"> <span class="leftee">NFT’s Sacrificed  </span> <span class="float-right"> <b>{{stats.NFTs}}</b> </span>  </div>
-              <div class="border-bottom LV"> <span class="leftee">NFT’s GOLDX Value  </span> <span class="float-right"> <b>{{addCommasToNumber( Number(stats.NFTsGOLDX).toFixed(0))}}</b> </span>  </div>
+              <div class="border-bottom LV"> <span class="leftee">Promo GOLDX $USD Value  </span> <span class="float-right"> <b>16,902,000</b> </span>  </div>
+              <div class="border-bottom LV"> <span class="leftee">Actual Mining Power GOLDX $USD Value  </span> <span class="float-right"> <b>{{addCommasToNumber( Number(NFTsGOLDXVal).toFixed(0))}}</b> </span>  </div>
               <div class="border-bottom LV" style="font-size:80%;"> <span class="leftee">Classes of NFT’s sacrificed  </span> <span class="float-right"> <b>{{stats.NFTsCLS}}</b> </span>  </div>
               <!-- <div class="border-bottom LV"> <span class="leftee">Number of Sacrificers</span> <span class="float-right"> <b>{{totalSacs}}</b> </span>  </div> -->
               </div>
@@ -418,6 +419,18 @@ export default {
         return this.users
       }
     },
+    NFTsGOLDXVal(){
+      
+      let units = 0;
+      if(this.stats.NFTsCLS){
+        units += (this.stats.NFTsCLS.Pros ) * 99
+      units += (this.stats.NFTsCLS.Miners ) * 1980
+      return units;
+        }else{
+          return units
+        }
+      
+    },
     totalSac(){
       return (
          this.stats.totalGOLDX
@@ -426,7 +439,7 @@ export default {
         +
         this.stats.totalWGOLDXBsc
         +
-        this.stats.NFTsGOLDX
+        16902000
       )
     },
     totalSacUSD(){
