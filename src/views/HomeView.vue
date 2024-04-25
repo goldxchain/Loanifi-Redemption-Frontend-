@@ -439,7 +439,7 @@ export default {
         +
         this.stats.totalWGOLDXBsc
         +
-        16902000
+        (this.NFTsGOLDXVal)
       )
     },
     totalSacUSD(){
