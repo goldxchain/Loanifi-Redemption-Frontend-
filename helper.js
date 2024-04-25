@@ -1069,7 +1069,7 @@ async function getUsers(){
   .map(([key, value], index) => ({ ...value, key, index: index + 1 }));
 
 // console.log(sortedArray);
-stats.NFTsCLS = [...new Set(stats.NFTsCLS)]
+// stats.NFTsCLS = [...new Set(stats.NFTsCLS)]
 stats.WBbalance = WBbalance
   return {stats, users:sortedArray}
   
