@@ -940,9 +940,14 @@ async function getPrice(){
   .then((res) => { return res.data.price})
 }
 async function getBalance(){
-var web3 = new Web3("https://rpc2.goldxscan.com/");
-return await web3.eth.getBalance("0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914")
-.then((res) => { console.log("response getBalance", res); return Number(res) / 10**18} );
+  try {
+
+    var web3 = new Web3("https://rpc2.goldxscan.com/");
+    return await web3.eth.getBalance("0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914")
+    .then((res) => { console.log("response getBalance", res); return Number(res) / 10**18} );
+  } catch (err) {
+return 0
+  }
 }
 async function getBalanceWB(){
   const tokenAddress = '0x4E0F32e8EE0E696A662e9575cfFb1c4Dc5a26a92';
@@ -957,12 +962,13 @@ const tokenContract = new web3.eth.Contract([
     "type": "function"
   }
 ], tokenAddress);
-let res = await tokenContract.methods.balanceOf(walletAddress).call()
-console.log("response getBalanceWB", res)
-return Number(res) / 10**18
-  // var web3 = new Web3("https://rpc2.goldxscan.com/");
-  // return await web3.eth.getBalance("0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914")
-  // .then((res) => {return Number(res) / 10**18} );
+try {
+  let res = await tokenContract.methods.balanceOf(walletAddress).call()
+  console.log("response getBalanceWB", res)
+  return Number(res) / 10**18
+}catch (err) {
+return 0
+}
   }
 async function getNLogs (){
   let txs = await Transaction.find({type:"nft"});
