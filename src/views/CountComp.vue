@@ -43,7 +43,7 @@
     const endDate = new Date(start);
     
     // Add 1 day to endDate to make it tomorrow at midnight UTC
-    endDate.setUTCDate(endDate.getUTCDate() + 31);
+    endDate.setUTCDate(endDate.getUTCDate() + 45);
     
     const difference = endDate.getTime() - now.getTime();
     
