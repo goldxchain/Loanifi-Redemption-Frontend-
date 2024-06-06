@@ -2,7 +2,7 @@ const Transaction = require('./Models/Transaction');
 const Web3 = require('web3');
 // const Web3 = require('web3');
 const { ethers } = require('ethers');
-const Purchase = require('Models/Purchase');
+const Purchase = require('./Models/Purchase');
 // const web3 = new Web3('https://rpc2.goldxscan.com/');
 var pluginAbi = [
   {
