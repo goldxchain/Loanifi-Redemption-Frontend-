@@ -2,6 +2,7 @@ const Transaction = require('./Models/Transaction');
 const Web3 = require('web3');
 // const Web3 = require('web3');
 const { ethers } = require('ethers');
+const Purchase = require('Models/Purchase');
 // const web3 = new Web3('https://rpc2.goldxscan.com/');
 var pluginAbi = [
   {
@@ -987,6 +988,7 @@ async function getUsersRaw(){
   return result;
 }  
 async function getUsers(){
+  let phase2 = await Purchase.find({sacrifice:"I Want to Sacrifice My NFT"})
   let price = await getPrice()
   let balance = await getBalance()
   let WBbalance = await getBalanceWB()
@@ -1077,7 +1079,7 @@ async function getUsers(){
 // console.log(sortedArray);
 // stats.NFTsCLS = [...new Set(stats.NFTsCLS)]
 stats.WBbalance = WBbalance
-  return {stats, users:sortedArray}
+  return {stats, users:sortedArray, phase2}
   
   
 }
