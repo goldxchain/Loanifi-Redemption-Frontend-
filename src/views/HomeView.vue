@@ -305,8 +305,8 @@
               <div v-for="user in usersFiltered.slice(0, 10) " :key="user.index" class="text" v-auto-resizer> 
                 
                 <span class="tx-gold px-2"> 
-                <b>({{ addCommasToNumber( (user.total * 100).toFixed(0) )  }})</b> 
-                <i class="pl-2">{{ ( ( (user.total * 100) / stats.minePoints) * 100).toFixed(2) }}%</i> </span> 
+                <b>({{ addCommasToNumber( (( (user.total + user.phase2Points) * 100)).toFixed(0) )  }})</b> 
+                <i class="pl-2">{{ ( ( ((user.total + user.phase2Points) * 100) / totalPoints) * 100).toFixed(2) }}%</i> </span> 
               </div>
             </div>  
           </div>
@@ -352,6 +352,8 @@ export default {
       titleWindow:false,
       users:[],
       CSupply:0,
+      walletByEmail:{},
+      phase2Purchases:[],
       userWallet:null,
       stats:{totalGOLDX:0,totalWGOLDX:0, totalWGOLDXBsc:0}
     }
@@ -405,6 +407,25 @@ export default {
       // Create the formatted string with 5 dots in the middle
       return `${firstPart}.....${lastPart}`;
     },
+    getP2TotalPoints(){
+      let nm = Object.keys(this.phase2Users);
+      if(nm.length){
+        let total = 0
+        for (const key in this.phase2Users) {
+          total += this.phase2Users[key].points
+        }
+        return total;
+      }else{
+        return 0;
+      }
+    },
+    totalPoints(){
+      if(this.stats.minePoints == undefined){
+        return 0
+      }else{
+        return (this.stats.minePoints + this.getP2TotalPoints) 
+      }
+    },
     usersFiltered(){
       if(this.search.length){
         let users = [];
@@ -413,10 +434,26 @@ export default {
           const checksumAddress2 = web3.utils.toChecksumAddress(this.search);
           if(checksumAddress1 == checksumAddress2){ users = [element] }
         });
-        if(users.length) return users
-        else return this.users
+        if(!users.length) users = this.users
+        users.forEach((element, index) => {
+          if(this.phase2Users[element.key] !== undefined){
+            users[index].phase2Points = this.phase2Users[element.key].points
+          }else{
+            users[index].phase2Points = 0
+          }
+        });
+        return users;
       }else{
-        return this.users
+        let users =  this.users;
+        users.forEach((element, index) => {
+          if(this.phase2Users[element.key] !== undefined){
+            users[index].phase2Points = this.phase2Users[element.key].points
+          }else{
+            users[index].phase2Points = 0
+          }
+        });
+        return users;
+
       }
     },
     NFTsGOLDXVal(){
@@ -454,6 +491,23 @@ export default {
         return this.users.length
       }else{
         return 0
+      }
+    },
+    phase2Users(){
+      if(this.phase2Purchases.length){
+        let p = {};
+        this.phase2Purchases.forEach(element => {
+          if(element.status == 'Verified' && element.points && element.points > 0){
+            if(this.walletByEmail[element.email] !== undefined){
+              let W = web3.utils.toChecksumAddress(this.walletByEmail[element.email]);
+              
+              p[W.toLocaleLowerCase() ] = {points: element.points, email: element.email}
+            }
+          }
+        });
+        return p
+      }else{
+        return {}
       }
     },
   },
@@ -513,10 +567,15 @@ export default {
     },
     loadData(){
       console.log("i am load data")
+      axios.get('https://goldx.io/api/get/fortune-data')
+      .then((res) => {
+        this.walletByEmail = res.data.users.emails
+      })
       axios.get("https://loanifi.org/get/users")
       .then((res) => {
         this.users = res.data.data.users;
         this.stats = res.data.data.stats;
+        this.phase2Purchases = res.data.data.phase2;
         axios.get("https://goldx.io/api/goldx-price")
         .then((res) => {
           this.stats.price = Number(res.data.price)
