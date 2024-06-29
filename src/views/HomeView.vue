@@ -328,11 +328,19 @@
 
         </p>  
         </div> 
+        
           </div>
         </div>
         </div>
      </div>
       </div>
+      <div>
+        <div class="row justify-content-center">
+          <div class="col-lg-5">
+            <apexchart type="pie" height="380" :options="chartOptions" :series="series"></apexchart>
+          </div>
+        </div>
+  </div>
 </div>
 </template>
 
@@ -348,6 +356,17 @@ export default {
   name: 'HomeView',
   data(){
     return {
+      allocations:{
+"Community": 30666667, 
+"Community Locked for 1 Year": 30666667, 
+"LP Allocation": 1333333,
+"Decentralized Redemption Contract": 4000000,
+"Marketing": 6000000,
+"Mining Rights Purchasers": 15000000,
+"Frontend Providers": 1000000,
+"XBridge": 10000000
+      },
+      
       search:"",
       titleWindow:false,
       users:[],
@@ -396,6 +415,54 @@ export default {
     CountComp
   },
   computed:{
+    asome(){
+return (
+  this.allocations["Community"]+ 
+  this.allocations["Community Locked for 1 Year"]+ 
+  this.allocations["LP Allocation"]+ 
+  this.allocations["Decentralized Redemption Contract"]+ 
+  this.allocations["Marketing"]+ 
+  this.allocations["XBridge"]+ 
+  this.allocations["Frontend Providers"]+ 
+  this.allocations["Mining Rights Purchasers"]
+  )
+    },
+    allPerc(){
+      return {
+        "Community": ( 28664000/ this.asome) *100, 
+"Community Locked for 1 Year": ( 30666667/ this.asome) *100, 
+"LP Allocation":   ( (1333333)/ this.asome) *100,
+"Decentralized Redemption Contract":   ( 4000000/ this.asome) *100,
+"Marketing":   ( 6000000 / this.asome) *100,
+"Mining Rights Purchasers":   ( 15000000 / this.asome) *100,
+"Frontend Providers":   ( 1000000/ this.asome) *100,
+"XBridge":  ( 10000000/ this.asome) *100
+      }
+    },
+    series(){
+      return Object.values(this.allPerc)
+    } ,
+      chartOptions() {
+        return {
+          chart: {
+          width: 380,
+          type: 'pie'
+        },
+        labels: Object.keys(this.allPerc),
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200
+            },
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }]
+        }
+        
+      },
     userWalletFormatted(){
       if (!this.userWallet) return ''; // Return empty string if originalString is empty or undefined
       if (this.userWallet.length <= 6) return this.userWallet; // Return original string if it has 6 or fewer characters
