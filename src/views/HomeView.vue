@@ -294,7 +294,7 @@
             <div class="inner-section mb-5 inner-text minh px-2"> 
             <div class="d-inline-block " style="min-height: 280px;width: 50%;border-right:5px solid #B99653;" >
               <div> <span class="px-3"> Address </span> </div>
-              <div v-for="(user, index) in usersFiltered.slice(0, 10) " :key="user.index" class="text" >
+              <div v-for="(user, index) in usersFilteredCombined.slice(0, 10) " :key="user.index" class="text" >
 
                 <span class="px-3"> <b>{{(index+1)}}:</b> {{user.key.slice(0, 6)+'....'+user.key.substring(user.key.length - 6) }}</span>
               </div>
@@ -302,7 +302,7 @@
 
             <div class="d-inline-block "  style="min-height: 280px;width: 50%;float: right;">
               <div>  <span class="px-2">Points</span></div>
-              <div v-for="user in usersFiltered.slice(0, 10) " :key="user.index" class="text" > 
+              <div v-for="user in usersFilteredCombined.slice(0, 10) " :key="user.index" class="text" > 
                 
                 <span class="tx-gold px-2"> 
                 <b>({{ addCommasToNumber( (( (user.total + user.phase2Points) * 100)).toFixed(0) )  }})</b> 
