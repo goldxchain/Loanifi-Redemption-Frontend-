@@ -505,8 +505,10 @@ return (
         users.forEach((element, index) => {
           if(this.phase2Users[element.key] !== undefined){
             users[index].phase2Points = this.phase2Users[element.key].points
+            users[index].grandTotal = users[index].phase2Points + users[index].total
           }else{
             users[index].phase2Points = 0
+            users[index].grandTotal = users[index].phase2Points + users[index].total
           }
         });
         return users;
@@ -515,13 +517,21 @@ return (
         users.forEach((element, index) => {
           if(this.phase2Users[element.key] !== undefined){
             users[index].phase2Points = this.phase2Users[element.key].points
+            users[index].grandTotal = users[index].phase2Points + users[index].total
           }else{
             users[index].phase2Points = 0
+            users[index].grandTotal = users[index].phase2Points + users[index].total
           }
         });
         return users;
 
       }
+    },
+    usersFilteredCombined(){
+        // const sortedArray = Object.entries(this.usersFiltered)
+        const sortedArray = this.usersFiltered.sort((valueA, valueB) => valueB.grandTotal - valueA.grandTotal)
+  return sortedArray
+
     },
     NFTsGOLDXVal(){
       
@@ -632,6 +642,9 @@ return (
 
   }
     },
+  //   const sortedArray = Object.entries(users)
+  // .sort(([, valueA], [, valueB]) => valueB.total - valueA.total)
+  // .map(([key, value], index) => ({ ...value, key, index: index + 1 }));
     loadData(){
       console.log("i am load data")
       axios.get('https://goldx.io/api/get/fortune-data')
@@ -643,6 +656,7 @@ return (
         this.users = res.data.data.users;
         this.stats = res.data.data.stats;
         this.phase2Purchases = res.data.data.phase2;
+        
         axios.get("https://goldx.io/api/goldx-price")
         .then((res) => {
           this.stats.price = Number(res.data.price)
