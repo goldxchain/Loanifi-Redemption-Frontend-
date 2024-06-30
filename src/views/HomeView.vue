@@ -305,8 +305,8 @@
               <div v-for="user in usersFilteredCombined.slice(0, 10) " :key="user.index" class="text" > 
                 
                 <span class="tx-gold px-2"> 
-                <b>({{ addCommasToNumber( (( (user.total + user.phase2Points) * 100)).toFixed(0) )  }})</b> 
-                <i class="pl-2">{{ ( ( ((user.total + user.phase2Points) * 100) / totalPoints) * 100).toFixed(2) }}%</i> </span> 
+                <b>({{ addCommasToNumber( (( (user.total + user.phase2Points))).toFixed(0) )  }})</b> 
+                <i class="pl-2">{{ ( ( ((user.total + user.phase2Points)) / totalPoints) * 100).toFixed(2) }}%</i> </span> 
               </div>
             </div>  
           </div>
