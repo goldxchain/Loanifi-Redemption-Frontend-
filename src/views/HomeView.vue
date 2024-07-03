@@ -356,6 +356,8 @@ export default {
   name: 'HomeView',
   data(){
     return {
+      uWallet:"0x46d5aac901320d424306a6779c750f6f55f2976e",
+      rawUsers:null,
       allocations:{
 "Community": 30666667, 
 "Community Locked for 1 Year": 30666667, 
@@ -415,6 +417,19 @@ export default {
     CountComp
   },
   computed:{
+    pointsData(){
+      if(this.uWallet == null || this.rawUsers == null){
+        return null
+      }else{
+        let user = null;
+        this.rawUsers.forEach(element => {
+          if(this.uWallet.toLocaleLowerCase() == element._id.toLocaleLowerCase() ){
+            user = element
+          }
+        });
+        return user
+      }
+    },
     asome(){
 return (
   this.allocations["Community"]+ 
@@ -660,6 +675,10 @@ return (
         axios.get("https://goldx.io/api/goldx-price")
         .then((res) => {
           this.stats.price = Number(res.data.price)
+          axios.get("https://loanifi.org/get/users-raw")
+          .then((res) => {
+            this.rawUsers = res.data.data
+          })
         })
       })
     }

@@ -52,6 +52,7 @@ app.get('/get/nft-logs', async (req, res) => {
   let data = await getNLogs();
   res.send({data})
 });
+
 app.use(express.static(path.join(__dirname, 'dist')));
 
 // Serve the index.html file for all other requests
