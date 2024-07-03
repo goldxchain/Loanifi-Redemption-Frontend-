@@ -1031,11 +1031,11 @@ async function getUsers(){
     }
   ]);
   let users = {};
-  let stats = {balance,WBbalance,
+  let stats = {balance,WBbalance,totalUSDX:0,
     price: (price) ? Number(price) : 0, 
     totalUSD:0,totalGOLDX:0,totalWGOLDX:0, totalWGOLDXBsc:0,minePoints:0,NFTs:0,NFTsGOLDX:0,NFTsCLS:{Miners:0, Pros:0}, totalS:0}
   result.forEach(group => {
-    users[group._id] = {NFTs:0, wgoldx:0,wgoldxbsc:0, goldx:0, total:0};
+    users[group._id] = {NFTs:0, wgoldx:0,wgoldxbsc:0, goldx:0,usdx:0, total:0};
     group.documents.forEach(element => {
       if(element.type == "goldx") 
       {
@@ -1049,6 +1049,13 @@ async function getUsers(){
         users[group._id].total += element.value;
         stats.totalWGOLDX += element.value;
         stats.minePoints += (element.value * 1000)
+      }
+      if(element.type == "usdx"){
+        let v = element.value * 25
+        users[group._id].usdx += element.value;
+        users[group._id].total += (v * 1000)
+        stats.totalUSDX += element.value;
+        stats.minePoints += (v * 1000)
       }
       if(element.type == "goldxbnb")
       {
