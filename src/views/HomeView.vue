@@ -447,8 +447,8 @@ export default {
       if(element.type == "goldx") 
       {
         data['GOLDX_SACRIFICED'] += Number(element.value);
-        data['GOLDX_POINTS'] += ( Number(element.value * Number(this.stats.price)) * 1000);
-        data['TOTAL'] += ( Number(element.value * Number(this.stats.price)) * 1000)
+        data['GOLDX_POINTS'] += ( Number(element.value  ) * 100);
+        data['TOTAL'] += ( Number(element.value ) * 100)
         // stats.totalGOLDX += element.value;
         // stats.minePoints += (element.value * 1000)
       }
@@ -456,8 +456,8 @@ export default {
         // data[]wgoldx += element.value;
         // data[]total += element.value;
         data['WGOLDX_SACRIFICED'] += Number(element.value);
-        data['WGOLDX_POINTS'] += ( Number(element.value * Number(this.stats.price)) * 1000);
-        data['TOTAL'] += ( Number(element.value * Number(this.stats.price)) * 1000)
+        data['WGOLDX_POINTS'] += ( Number(element.value ) * 100);
+        data['TOTAL'] += ( Number(element.value ) * 100)
 
         // stats.totalWGOLDX += element.value;
         // stats.minePoints += (element.value * 1000)
@@ -472,24 +472,24 @@ export default {
       if(element.type == "goldxbnb")
       {
         data['WGOLDX_BNB_SACRIFICED'] += Number(element.value);
-        data['WGOLDX_BNB_POINTS'] += ( Number(element.value * Number(this.stats.price)) * 1000);
-        data['TOTAL'] += ( Number(element.value * Number(this.stats.price)) * 1000)
+        data['WGOLDX_BNB_POINTS'] += ( Number(element.value ) * 100);
+        data['TOTAL'] += ( Number(element.value ) * 100)
       }
       if(element.type == "nft") {
         if(!element.data.stats[1]){
           if(element.data.stats[0][2] == "2" ) 
           {
             data['NFT_GOLDX_SACRIFICED'] += 150000
-            data['NFT_SACRIFICED_POINTS'] += ((150000 * Number(this.stats.price)) * 1000);
-            data['TOTAL'] += ((150000 * Number(this.stats.price)) * 1000);
+            data['NFT_SACRIFICED_POINTS'] += ((150000 ) * 100);
+            data['TOTAL'] += ((150000 ) * 1000);
             data['NFT_SACRIFICED_POWER'] += 0.0072
             data['NFT_SACRIFICED_POWER_GLOBAL'] += 0.00009013 
           }
           if(element.data.stats[0][2] == "3" ) 
           {
             data['NFT_GOLDX_SACRIFICED'] += 7500
-            data['NFT_SACRIFICED_POINTS'] += ((7500 * Number(this.stats.price)) * 1000);
-            data['TOTAL'] += ((7500 * Number(this.stats.price)) * 1000);
+            data['NFT_SACRIFICED_POINTS'] += ((7500 ) * 100);
+            data['TOTAL'] += ((7500 ) * 100);
             data['NFT_SACRIFICED_POWER'] += 0.00036
             data['NFT_SACRIFICED_POWER_GLOBAL'] += 0.0000045
           }
@@ -498,15 +498,15 @@ export default {
           if(element.data.stats[0][2] == "2" ) 
           {
             data['NFT_GOLDX_SACRIFICED'] += (150000 * Number(element.data.stats[3]));
-            data['NFT_SACRIFICED_POINTS'] += (( (150000 * Number(this.stats.price)) * Number(element.data.stats[3])) * 1000) ;
-            data['TOTAL'] += (( (150000 * Number(this.stats.price)) * Number(element.data.stats[3])) * 1000) ;
+            data['NFT_SACRIFICED_POINTS'] += (( (150000 ) * Number(element.data.stats[3])) * 100) ;
+            data['TOTAL'] += (( (150000 ) * Number(element.data.stats[3])) * 100) ;
             data['NFT_SACRIFICED_POWER'] += (0.0072 * Number(element.data.stats[3])) 
             data['NFT_SACRIFICED_POWER_GLOBAL'] += (0.00009013 * Number(element.data.stats[3])) 
           }
           if(element.data.stats[0][2] == "3" ) {
             data['NFT_GOLDX_SACRIFICED'] += (7500 * Number(element.data.stats[4]));
-            data['NFT_SACRIFICED_POINTS'] += (( (7500 * Number(this.stats.price)) * Number(element.data.stats[4])) * 1000) ;
-            data['TOTAL'] += (( (7500 * Number(this.stats.price)) * Number(element.data.stats[4])) * 1000) ;
+            data['NFT_SACRIFICED_POINTS'] += (( (7500 ) * Number(element.data.stats[4])) * 100) ;
+            data['TOTAL'] += (( (7500 ) * Number(element.data.stats[4])) * 100) ;
             data['NFT_SACRIFICED_POWER'] += (0.00036 * Number(element.data.stats[4])) 
             data['NFT_SACRIFICED_POWER_GLOBAL'] += (0.0000045 * Number(element.data.stats[4]))
           }
@@ -755,7 +755,8 @@ return (
       })
       axios.get("https://loanifi.org/get/users")
       .then((res) => {
-        this.users = res.data.data.users;
+        this.users =  res.data.data.users.filter(item => item.key !== "0x53f7183168da4e317a2870c13c93c4fe63864889");
+        
         this.stats = res.data.data.stats;
         this.phase2Purchases = res.data.data.phase2;
         

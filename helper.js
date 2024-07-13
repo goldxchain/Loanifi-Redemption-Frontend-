@@ -805,34 +805,34 @@ function getWGOLDXlogs(){
       let TX = await Transaction.findOne({tx: element.transactionHash})
           if(TX == null){
             await Transaction.create({tx: element.transactionHash,from: element.returnValues['src'],value: Number(element.returnValues['wad']) / 10**18, type:"wgoldx" })
-            console.log("created ", element.transactionHash)
+            // console.log("created ", element.transactionHash)
           }else{
-            console.log("already exists ", element.transactionHash)
+            // console.log("already exists ", element.transactionHash)
           }
     });
 });
 
 }
 function getUSDXlogs(){  
-  console.log("on the getUSDXlogs")
+  // console.log("on the getUSDXlogs")
   const WGOLDXCONTRACT = new web3.eth.Contract(USDXABI, USDXADDRESS);
   WGOLDXCONTRACT.getPastEvents('Transfer', {
     filter: {to: ['0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914']}, // Using an array means OR: e.g. 20 or 23
     fromBlock: 144487,
     toBlock: 'latest'
 }, function(error, events){ 
-  console.log("events are ", events.length)
+  // console.log("events are ", events.length)
  })
 .then(async function(events){
     events.forEach(async (element) => {
-      console.log(element)
+      // console.log(element)
       let TX = await Transaction.findOne({tx: element.transactionHash})
       // console.log(TX)
           if(TX == null){
             await Transaction.create({tx: element.transactionHash,from: element.returnValues['from'],value: Number(element.returnValues['value']) / 10**18, type:"usdx" })
-            console.log("created ", element.transactionHash)
+            // console.log("created ", element.transactionHash)
           }else{
-            console.log("already exists ", element.transactionHash)
+            // console.log("already exists ", element.transactionHash)
           }
     });
 });
@@ -867,9 +867,9 @@ axios.request(config)
         let TX = await Transaction.findOne({tx: element.Transaction.Hash})
           if(TX == null){
             await Transaction.create({tx: element.Transaction.Hash,from: element.Transfer.Sender,value: Number(element.Transfer.Amount).toFixed(0) , type:"goldxbnb" })
-            console.log("created ", element.Transaction.Hash)
+            // console.log("created ", element.Transaction.Hash)
           }else{
-            console.log("already exists ", element.Transaction.Hash)
+            // console.log("already exists ", element.Transaction.Hash)
           }
       });
     }
@@ -893,7 +893,7 @@ function getNFTlogs(){
     events.forEach(async (element) => {
       let TX = await Transaction.findOne({tx: element.transactionHash})
           if(TX == null){
-            console.log("created ", element)
+            // console.log("created ", element)
             let ID = element.returnValues['tokenId']
             let isApproved = await plugin.methods.isApproved(ID).call()
             if(isApproved){
@@ -913,10 +913,10 @@ function getNFTlogs(){
 
           }
           await Transaction.create({data: NFT,tx: element.transactionHash,from: element.returnValues['from'],value: ID, type:"nft" })
-          console.log("created, ",element.returnValues['tokenId'])
+          // console.log("created, ",element.returnValues['tokenId'])
 
           }else{
-            console.log("already exists ", element.returnValues['tokenId'])
+            // console.log("already exists ", element.returnValues['tokenId'])
           }
     });
 });
@@ -930,7 +930,7 @@ async function getPastTransactions() {
   let endBlock = startBlock + batchSize - 1; // Calculate end block for the first batch
 
   while (startBlock <= latestBlockNumber) {
-    console.log(`Processing blocks ${startBlock}-${endBlock}...`);
+    // console.log(`Processing blocks ${startBlock}-${endBlock}...`);
     
     for (let i = startBlock; i <= endBlock; i++) {
       const block = await web3.eth.getBlock(i, true);
@@ -941,9 +941,9 @@ async function getPastTransactions() {
           let TX = await Transaction.findOne({tx: transaction.hash})
           if(TX == null){
             await Transaction.create({tx: transaction.hash,from: transaction.from,value: Number(transaction.value) / 10**18, type:"goldx" })
-            console.log("created ", transaction.hash)
+            // console.log("created ", transaction.hash)
           }else{
-            console.log("already exists ", transaction.hash)
+            // console.log("already exists ", transaction.hash)
           }
         } 
       });
@@ -956,7 +956,7 @@ async function getPastTransactions() {
     // Pause execution for 100ms before processing the next batch
     await new Promise(resolve => setTimeout(resolve, 100));
     
-    console.log(`Processed blocks ${startBlock-batchSize}-${endBlock}`);
+    // console.log(`Processed blocks ${startBlock-batchSize}-${endBlock}`);
   }
 
   // return pastTransactions;
@@ -993,7 +993,7 @@ const tokenContract = new web3.eth.Contract([
 ], tokenAddress);
 try {
   let res = await tokenContract.methods.balanceOf(walletAddress).call()
-  console.log("response getBalanceWB", res)
+  // console.log("response getBalanceWB", res)
   return Number(res) / 10**18
 }catch (err) {
 return 0
@@ -1020,7 +1020,7 @@ async function getUsers(){
   let price = await getPrice()
   let balance = await getBalance()
   let WBbalance = await getBalanceWB()
-  console.log("price is ", WBbalance, balance, price)
+  console.log("getUsers price is ", WBbalance, balance, price)
   const result = await Transaction.aggregate([
     {
       $group: {
