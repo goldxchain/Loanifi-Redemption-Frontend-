@@ -427,7 +427,94 @@ export default {
             user = element
           }
         });
-        return user
+        let data = {
+          GOLDX_POINTS:0,
+          GOLDX_SACRIFICED:0,
+          WGOLDX_POINTS:0,
+          WGOLDX_SACRIFICED:0,
+          WGOLDX_BNB_POINTS:0,
+          WGOLDX_BNB_SACRIFICED:0,
+          USDX_POINTS:0,
+          TOTAL:0,
+          USDX_SACRIFICED:0,
+          NFT_SACRIFICED_POWER:0,
+          NFT_GOLDX_SACRIFICED:0,
+          NFT_SACRIFICED_POWER_GLOBAL:0,
+          NFT_SACRIFICED_POINTS:0,
+        }
+
+        user.documents.forEach(element => {
+      if(element.type == "goldx") 
+      {
+        data['GOLDX_SACRIFICED'] += Number(element.value);
+        data['GOLDX_POINTS'] += ( Number(element.value * Number(this.stats.price)) * 1000);
+        data['TOTAL'] += ( Number(element.value * Number(this.stats.price)) * 1000)
+        // stats.totalGOLDX += element.value;
+        // stats.minePoints += (element.value * 1000)
+      }
+      if(element.type == "wgoldx"){
+        // data[]wgoldx += element.value;
+        // data[]total += element.value;
+        data['WGOLDX_SACRIFICED'] += Number(element.value);
+        data['WGOLDX_POINTS'] += ( Number(element.value * Number(this.stats.price)) * 1000);
+        data['TOTAL'] += ( Number(element.value * Number(this.stats.price)) * 1000)
+
+        // stats.totalWGOLDX += element.value;
+        // stats.minePoints += (element.value * 1000)
+      }
+      if(element.type == "usdx"){
+        let v = element.value * 25
+        data['USDX_SACRIFICED'] += Number(element.value);
+        data['USDX_POINTS'] += ( v * 1000);
+        data['TOTAL'] += ( v * 1000)
+
+      }
+      if(element.type == "goldxbnb")
+      {
+        data['WGOLDX_SACRIFICED'] += Number(element.value);
+        data['WGOLDX_POINTS'] += ( Number(element.value * Number(this.stats.price)) * 1000);
+        data['TOTAL'] += ( Number(element.value * Number(this.stats.price)) * 1000)
+      }
+      if(element.type == "nft") {
+        if(!element.data.stats[1]){
+          if(element.data.stats[0][2] == "2" ) 
+          {
+            data['NFT_GOLDX_SACRIFICED'] += 150000
+            data['NFT_SACRIFICED_POINTS'] += ((150000 * Number(this.stats.price)) * 1000);
+            data['TOTAL'] += ((150000 * Number(this.stats.price)) * 1000);
+            data['NFT_SACRIFICED_POWER'] += 0.0072
+            data['NFT_SACRIFICED_POWER_GLOBAL'] += 0.00009013 
+          }
+          if(element.data.stats[0][2] == "3" ) 
+          {
+            data['NFT_GOLDX_SACRIFICED'] += 7500
+            data['NFT_SACRIFICED_POINTS'] += ((7500 * Number(this.stats.price)) * 1000);
+            data['TOTAL'] += ((7500 * Number(this.stats.price)) * 1000);
+            data['NFT_SACRIFICED_POWER'] += 0.00036
+            data['NFT_SACRIFICED_POWER_GLOBAL'] += 0.0000045
+          }
+           
+        }else{
+          if(element.data.stats[0][2] == "2" ) 
+          {
+            data['NFT_GOLDX_SACRIFICED'] += (150000 * Number(element.data.stats[3]));
+            data['NFT_SACRIFICED_POINTS'] += (( (150000 * Number(this.stats.price)) * Number(element.data.stats[3])) * 1000) ;
+            data['TOTAL'] += (( (150000 * Number(this.stats.price)) * Number(element.data.stats[3])) * 1000) ;
+            data['NFT_SACRIFICED_POWER'] += (0.0072 * Number(element.data.stats[3])) 
+            data['NFT_SACRIFICED_POWER_GLOBAL'] += (0.00009013 * Number(element.data.stats[3])) 
+          }
+          if(element.data.stats[0][2] == "3" ) {
+            data['NFT_GOLDX_SACRIFICED'] += (7500 * Number(element.data.stats[4]));
+            data['NFT_SACRIFICED_POINTS'] += (( (7500 * Number(this.stats.price)) * Number(element.data.stats[4])) * 1000) ;
+            data['TOTAL'] += (( (7500 * Number(this.stats.price)) * Number(element.data.stats[4])) * 1000) ;
+            data['NFT_SACRIFICED_POWER'] += (0.00036 * Number(element.data.stats[4])) 
+            data['NFT_SACRIFICED_POWER_GLOBAL'] += (0.0000045 * Number(element.data.stats[4]))
+          }
+          
+        }
+      }
+    });
+        return data
       }
     },
     asome(){
