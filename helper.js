@@ -1035,70 +1035,70 @@ async function getUsers(){
     price: (price) ? Number(price) : 0, 
     totalUSD:0,totalGOLDX:0,totalWGOLDX:0, totalWGOLDXBsc:0,minePoints:0,NFTs:0,NFTsGOLDX:0,NFTsCLS:{Miners:0, Pros:0}, totalS:0}
   result.forEach(group => {
-    users[group._id] = {NFTs:0, wgoldx:0,wgoldxbsc:0, goldx:0,usdx:0, total:0};
+    users[group._id] = {NFTs:0, wgoldx:0,wgoldxbsc:0, goldx:0,usdx:0, total:0,gp:0,wgp:0,wgbp:0,up:0,};
     group.documents.forEach(element => {
       if(element.type == "goldx") 
       {
-        users[group._id].goldx += element.value;
-        users[group._id].total += element.value;
-        stats.totalGOLDX += element.value;
-        stats.minePoints += (element.value * 1000)
+        users[group._id].goldx += Number(element.value);
+        users[group._id].total += Number(element.value);
+        stats.totalGOLDX += Number(element.value);
+        stats.minePoints += ((Number(element.value)) * 100)
       }
       if(element.type == "wgoldx"){
-        users[group._id].wgoldx += element.value;
-        users[group._id].total += element.value;
-        stats.totalWGOLDX += element.value;
-        stats.minePoints += (element.value * 1000)
+        users[group._id].wgoldx += Number(element.value);
+        users[group._id].total += Number(element.value);
+        stats.totalWGOLDX += Number(element.value);
+        stats.minePoints += (Number(element.value) * 100)
       }
       if(element.type == "usdx"){
-        let v = element.value * 25
-        users[group._id].usdx += element.value;
+        let v = Number(element.value) * 25
+        users[group._id].usdx += Number(element.value);
         users[group._id].total += (v * 1000)
-        stats.totalUSDX += element.value;
+        stats.totalUSDX += Number(element.value);
         stats.minePoints += (v * 1000)
       }
       if(element.type == "goldxbnb")
       {
-        users[group._id].wgoldxbsc += element.value;
-        users[group._id].total += element.value;
-        stats.totalWGOLDXBsc += element.value;
-        stats.minePoints += (element.value * 1000)
+        users[group._id].wgoldxbsc += Number(element.value);
+        users[group._id].total += Number(element.value);
+        stats.totalWGOLDXBsc += Number(element.value);
+        stats.minePoints += (Number(element.value) * 100)
       }
       if(element.type == "nft") {
         if(!element.data.stats[1]){
           if(element.data.stats[0][2] == "2" ) {
             users[group._id].NFTs += 150000;
-        users[group._id].total += ((150000 * Number(price)) * 1000);
+        users[group._id].total += ((150000) * 100);
         stats.NFTsGOLDX += 150000;
         stats.NFTsCLS.Miners ++
         stats.NFTs += 1;
-            stats.minePoints += ((150000 * Number(price)) * 1000)
+            stats.minePoints += ((150000) * 100)
           }
           if(element.data.stats[0][2] == "3" ) {
             users[group._id].NFTs += 7500
-        users[group._id].total += ( (7500 * Number(price))  * 1000);
+        users[group._id].total += ( (7500 )  * 100);
         stats.NFTsCLS.Pros++
         stats.NFTsGOLDX += 7500;
         stats.NFTs += 1;
-            stats.minePoints += ( (7500 * Number(price))  * 1000)
+            stats.minePoints += ( (7500 )  * 100)
           }
            
         }else{
           if(element.data.stats[0][2] == "2" ) {
             users[group._id].NFTs += (150000 * Number(element.data.stats[3]));
-        users[group._id].total += (( (150000 * Number(price)) * Number(element.data.stats[3])) * 1000) ;
+        users[group._id].total += (( (150000) * Number(element.data.stats[3])) * 100) ;
         stats.NFTsGOLDX += (150000 * Number(element.data.stats[3]));
         stats.NFTsCLS.Miners += Number(element.data.stats[3])
         stats.NFTs += 1;
-            stats.minePoints += (( (150000 * Number(price)) * Number(element.data.stats[3])) * 1000)
+            stats.minePoints += (( (150000 ) * Number(element.data.stats[3])) * 100)
           }
           if(element.data.stats[0][2] == "3" ) {
             users[group._id].NFTs += (7500 * Number(element.data.stats[4]))
-        users[group._id].total += (( (7500 * Number(price)) * Number(element.data.stats[4])) * 1000)
+        users[group._id].total += (( (7500) * Number(element.data.stats[4])) * 100)
         stats.NFTsCLS.Pros += Number(element.data.stats[4])
         stats.NFTsGOLDX += (7500 * Number(element.data.stats[4]));
         stats.NFTs += 1;
-            stats.minePoints += (( (7500 * Number(price)) * Number(element.data.stats[4])) * 1000)
+            stats.minePoints += (( (7500 ) * Number(element.data.stats[4])) * 100)
           }
           
         }

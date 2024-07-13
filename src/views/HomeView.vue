@@ -463,7 +463,7 @@ export default {
         // stats.minePoints += (element.value * 1000)
       }
       if(element.type == "usdx"){
-        let v = element.value * 25
+        let v = Number(element.value) * 25
         data['USDX_SACRIFICED'] += Number(element.value);
         data['USDX_POINTS'] += ( v * 1000);
         data['TOTAL'] += ( v * 1000)
@@ -471,8 +471,8 @@ export default {
       }
       if(element.type == "goldxbnb")
       {
-        data['WGOLDX_SACRIFICED'] += Number(element.value);
-        data['WGOLDX_POINTS'] += ( Number(element.value * Number(this.stats.price)) * 1000);
+        data['WGOLDX_BNB_SACRIFICED'] += Number(element.value);
+        data['WGOLDX_BNB_POINTS'] += ( Number(element.value * Number(this.stats.price)) * 1000);
         data['TOTAL'] += ( Number(element.value * Number(this.stats.price)) * 1000)
       }
       if(element.type == "nft") {
