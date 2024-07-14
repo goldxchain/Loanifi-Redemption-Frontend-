@@ -26,6 +26,10 @@
           <p class="float-right mb-0 px-3 lh-20"><b>USDX</b> <br> <span>0.00</span> </p>
           <span class="float-right"> <img src="@/assets/wallet.png" style="max-width: 20px;
             margin-top: 0px;" alt=""> </span>
+          <span v-if="userWallet" @click="downloadCSV()" class="clicker float-right px-3 lh-20 d-none d-md-inline-block"> Download<br> Points Details <span style="float: right;padding: 0px 5px;
+    font-size: 38px;
+    display: inline-block;
+    margin-top: -9px;"> <b>&#10515;</b> </span>  </span>  
           <span v-if="userWallet" class="float-right px-3 lh-20 d-none d-md-inline-block"> Connected as <br> {{userWalletFormatted}} <span class="bg-white sc-icon">&#x00d7;</span> </span>  
           <span v-else class="float-right px-3 lh-20 d-none d-md-inline-block clicker" @click="connectWallet"> Connect<br> Wallet </span>  
           <span v-if="userWallet" class="px-3 lh-20 d-block d-md-none"> Connected as {{userWalletFormatted}} <span class="bg-white sc-icon">&#x00d7;</span> </span>  
@@ -33,6 +37,10 @@
           <span v-if="userWallet" class="float-right d-none d-md-inline-block">
             <img src="@/assets/user.png" style="max-width: 20px;margin-top: 0px;" alt="">
           </span>
+          <span v-if="userWallet" @click="downloadCSV()" class="clicker float-right px-3 lh-20 d-block d-md-none"> Download Points Details <span style="float: right;padding: 0px 5px;
+    font-size: 38px;
+    display: inline-block;
+    margin-top: -9px;"> <b>&#10515;</b> </span>  </span>
         </div>
         </b-navbar-nav>
       </b-collapse>
@@ -706,6 +714,58 @@ return (
 });
   },
   methods:{
+    findObjectByKey( key) {
+    const lowerCaseKey = key.toLowerCase();
+    return this.users.find(item => item.key.toLowerCase() === lowerCaseKey);
+},
+  convertObjectToCSV() {
+    let wallet = this.userWallet;
+    let obj = this.findObjectByKey(wallet);
+    if(obj == undefined){
+return null
+    }else{
+      let dataObj = {};
+// NFTs,NFTsGoldx,NFTsPoints,wgoldx,wgoldxbsc,goldx,usdx,total,gp,wgp,wgbp,up,nftPower,nftGPower,key,index,phase2Points,grandTotal
+dataObj["NFTs GOLDX"] = obj.NFTsGoldx
+dataObj["NFTs Points"] = obj.NFTsPoints
+dataObj["NFTs Power Sacrificed"] = obj.nftPower
+dataObj["NFTs Global Power Sacrificed"] = obj.nftGPower
+dataObj["GOLDX Sacrificed"] = obj.goldx
+dataObj["GOLDX Points"] = obj.gp
+dataObj["USDX Sacrificed"] = obj.usdx
+dataObj["USDX Points"] = obj.up
+dataObj["WGOLDX Sacrificed"] = obj.wgoldx
+dataObj["WGOLDX Points"] = obj.wgp
+dataObj["WGOLDX/BNB Sacrificed"] = obj.wgoldxbsc
+dataObj["WGOLDX/BNB Points"] = obj.wgbp
+dataObj["Phase 2 Points"] = obj.phase2Points
+dataObj["Total"] = obj.grandTotal
+    const headers = Object.keys(dataObj).join(",") + "\n";
+    const values = Object.values(dataObj).join(",") + "\n";
+    return headers + values;
+    }
+
+},
+
+// Create a CSV file and download it
+ downloadCSV() {
+    const csv = this.convertObjectToCSV();
+    if(csv !== null){
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'data.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }else{
+alert("points data not found")
+  }
+    
+},
+
     addCommasToNumber(number) {
     // Convert number to string
     let numberStr = number.toString();
