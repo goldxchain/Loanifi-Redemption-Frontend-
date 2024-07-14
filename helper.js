@@ -1036,95 +1036,98 @@ async function getUsers(){
     totalUSD:0,totalGOLDX:0,totalWGOLDX:0, totalWGOLDXBsc:0,minePoints:0,NFTs:0,NFTsGOLDX:0,NFTsCLS:{Miners:0, Pros:0}, totalS:0}
   result.forEach(group => {
     console.log("group._id ", group._id)
-    users[group._id] = {NFTs:0,NFTsGoldx:0, NFTsPoints:0, wgoldx:0,wgoldxbsc:0, goldx:0,usdx:0,
-       total:0,gp:0,wgp:0,wgbp:0,up:0,nftPower:0,nftGPower:0,};
-    group.documents.forEach(element => {
-      if(element.type == "goldx") 
-      {
-        users[group._id].gp += ((Number(element.value)) * 100)
-        users[group._id].goldx += Number(element.value);
-        users[group._id].total += ((Number(element.value)) * 100)
-        stats.totalGOLDX += Number(element.value);
-        stats.minePoints += ((Number(element.value)) * 100)
-      }
-      if(element.type == "wgoldx"){
-        users[group._id].wgoldx += Number(element.value);
-        users[group._id].wgp += (Number(element.value) * 100)
-        users[group._id].total += (Number(element.value) * 100)
-        stats.totalWGOLDX += Number(element.value);
-        stats.minePoints += (Number(element.value) * 100)
-      }
-      if(element.type == "usdx"){
-        let v = Number(element.value) * 25
-        users[group._id].usdx += Number(element.value);
-        users[group._id].total += (v * 1000)
-        users[group._id].up += (v * 1000)
-        stats.totalUSDX += Number(element.value);
-        stats.minePoints += (v * 1000)
-      }
-      if(element.type == "goldxbnb")
-      {
-        users[group._id].wgoldxbsc += Number(element.value);
-        users[group._id].total += (Number(element.value) * 100)
-        users[group._id].wgbp += (Number(element.value) * 100)
-        stats.totalWGOLDXBsc += Number(element.value);
-        stats.minePoints += (Number(element.value) * 100)
-      }
-      if(element.type == "nft") {
-        if(!element.data.stats[1]){
-          if(element.data.stats[0][2] == "2" ) {
-            users[group._id].NFTsGoldx += 150000;
-            users[group._id].NFTs += 150000;
-            users[group._id].nftPower += 0.0072;
-            users[group._id].nftGPower += 0.00009013;
-        users[group._id].total += ((150000) * 100);
-        users[group._id].NFTsPoints += ((150000) * 100)
-        stats.NFTsGOLDX += 150000;
-        stats.NFTsCLS.Miners ++
-        stats.NFTs += 1;
-            stats.minePoints += ((150000) * 100)
-          }
-          if(element.data.stats[0][2] == "3" ) {
-            users[group._id].NFTs += 7500
-            users[group._id].NFTsGoldx += 7500;
-        users[group._id].total += ( (7500 )  * 100);
-        users[group._id].nftPower += 0.00036;
-        users[group._id].nftGPower += 0.0000045;
-        users[group._id].NFTsPoints += ((7500) * 100)
-        stats.NFTsCLS.Pros++
-        stats.NFTsGOLDX += 7500;
-        stats.NFTs += 1;
-            stats.minePoints += ( (7500 )  * 100)
-          }
+    if(group._id !== "0x53f7183168da4e317a2870c13c93c4fe63864889"){
+      users[group._id] = {NFTs:0,NFTsGoldx:0, NFTsPoints:0, wgoldx:0,wgoldxbsc:0, goldx:0,usdx:0,
+        total:0,gp:0,wgp:0,wgbp:0,up:0,nftPower:0,nftGPower:0,};
+     group.documents.forEach(element => {
+       if(element.type == "goldx") 
+       {
+         users[group._id].gp += ((Number(element.value)) * 100)
+         users[group._id].goldx += Number(element.value);
+         users[group._id].total += ((Number(element.value)) * 100)
+         stats.totalGOLDX += Number(element.value);
+         stats.minePoints += ((Number(element.value)) * 100)
+       }
+       if(element.type == "wgoldx"){
+         users[group._id].wgoldx += Number(element.value);
+         users[group._id].wgp += (Number(element.value) * 100)
+         users[group._id].total += (Number(element.value) * 100)
+         stats.totalWGOLDX += Number(element.value);
+         stats.minePoints += (Number(element.value) * 100)
+       }
+       if(element.type == "usdx"){
+         let v = Number(element.value) * 25
+         users[group._id].usdx += Number(element.value);
+         users[group._id].total += (v * 1000)
+         users[group._id].up += (v * 1000)
+         stats.totalUSDX += Number(element.value);
+         stats.minePoints += (v * 1000)
+       }
+       if(element.type == "goldxbnb")
+       {
+         users[group._id].wgoldxbsc += Number(element.value);
+         users[group._id].total += (Number(element.value) * 100)
+         users[group._id].wgbp += (Number(element.value) * 100)
+         stats.totalWGOLDXBsc += Number(element.value);
+         stats.minePoints += (Number(element.value) * 100)
+       }
+       if(element.type == "nft") {
+         if(!element.data.stats[1]){
+           if(element.data.stats[0][2] == "2" ) {
+             users[group._id].NFTsGoldx += 150000;
+             users[group._id].NFTs += 150000;
+             users[group._id].nftPower += 0.0072;
+             users[group._id].nftGPower += 0.00009013;
+         users[group._id].total += ((150000) * 100);
+         users[group._id].NFTsPoints += ((150000) * 100)
+         stats.NFTsGOLDX += 150000;
+         stats.NFTsCLS.Miners ++
+         stats.NFTs += 1;
+             stats.minePoints += ((150000) * 100)
+           }
+           if(element.data.stats[0][2] == "3" ) {
+             users[group._id].NFTs += 7500
+             users[group._id].NFTsGoldx += 7500;
+         users[group._id].total += ( (7500 )  * 100);
+         users[group._id].nftPower += 0.00036;
+         users[group._id].nftGPower += 0.0000045;
+         users[group._id].NFTsPoints += ((7500) * 100)
+         stats.NFTsCLS.Pros++
+         stats.NFTsGOLDX += 7500;
+         stats.NFTs += 1;
+             stats.minePoints += ( (7500 )  * 100)
+           }
+            
+         }else{
+           if(element.data.stats[0][2] == "2" ) {
+             users[group._id].NFTs += (150000 * Number(element.data.stats[3]));
+             users[group._id].NFTsGoldx += (150000 * Number(element.data.stats[3]));
+         users[group._id].total += (( (150000) * Number(element.data.stats[3])) * 100) ;
+         users[group._id].NFTsPoints += (( (150000) * Number(element.data.stats[3])) * 100) ;
+         users[group._id].nftPower += (0.0072 * Number(element.data.stats[3]));
+         users[group._id].nftGPower += (0.00009013 * Number(element.data.stats[3])) ;
+         stats.NFTsGOLDX += (150000 * Number(element.data.stats[3]));
+         stats.NFTsCLS.Miners += Number(element.data.stats[3])
+         stats.NFTs += 1;
+             stats.minePoints += (( (150000 ) * Number(element.data.stats[3])) * 100)
+           }
+           if(element.data.stats[0][2] == "3" ) {
+             users[group._id].NFTs += (7500 * Number(element.data.stats[4]))
+             users[group._id].NFTsGoldx += (7500 * Number(element.data.stats[4]));
+             users[group._id].total += (( (7500) * Number(element.data.stats[4])) * 100)
+         users[group._id].nftPower += (0.00036 * Number(element.data.stats[4]));
+         users[group._id].nftGPower += (0.0000045 * Number(element.data.stats[4])) ;
+         stats.NFTsCLS.Pros += Number(element.data.stats[4])
+         stats.NFTsGOLDX += (7500 * Number(element.data.stats[4]));
+         stats.NFTs += 1;
+             stats.minePoints += (( (7500 ) * Number(element.data.stats[4])) * 100)
+           }
            
-        }else{
-          if(element.data.stats[0][2] == "2" ) {
-            users[group._id].NFTs += (150000 * Number(element.data.stats[3]));
-            users[group._id].NFTsGoldx += (150000 * Number(element.data.stats[3]));
-        users[group._id].total += (( (150000) * Number(element.data.stats[3])) * 100) ;
-        users[group._id].NFTsPoints += (( (150000) * Number(element.data.stats[3])) * 100) ;
-        users[group._id].nftPower += (0.0072 * Number(element.data.stats[3]));
-        users[group._id].nftGPower += (0.00009013 * Number(element.data.stats[3])) ;
-        stats.NFTsGOLDX += (150000 * Number(element.data.stats[3]));
-        stats.NFTsCLS.Miners += Number(element.data.stats[3])
-        stats.NFTs += 1;
-            stats.minePoints += (( (150000 ) * Number(element.data.stats[3])) * 100)
-          }
-          if(element.data.stats[0][2] == "3" ) {
-            users[group._id].NFTs += (7500 * Number(element.data.stats[4]))
-            users[group._id].NFTsGoldx += (7500 * Number(element.data.stats[4]));
-            users[group._id].total += (( (7500) * Number(element.data.stats[4])) * 100)
-        users[group._id].nftPower += (0.00036 * Number(element.data.stats[4]));
-        users[group._id].nftGPower += (0.0000045 * Number(element.data.stats[4])) ;
-        stats.NFTsCLS.Pros += Number(element.data.stats[4])
-        stats.NFTsGOLDX += (7500 * Number(element.data.stats[4]));
-        stats.NFTs += 1;
-            stats.minePoints += (( (7500 ) * Number(element.data.stats[4])) * 100)
-          }
-          
-        }
-      }
-    });
+         }
+       }
+     });
+    }
+    
   });
   const sortedArray = Object.entries(users)
   // Sort based on the 'total' value
