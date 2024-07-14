@@ -1035,7 +1035,7 @@ async function getUsers(){
     price: (price) ? Number(price) : 0, 
     totalUSD:0,totalGOLDX:0,totalWGOLDX:0, totalWGOLDXBsc:0,minePoints:0,NFTs:0,NFTsGOLDX:0,NFTsCLS:{Miners:0, Pros:0}, totalS:0}
   result.forEach(group => {
-    console.log("group._id ", group._id-)
+    console.log("group._id ", group._id)
     users[group._id] = {NFTs:0,NFTsGoldx:0, NFTsPoints:0, wgoldx:0,wgoldxbsc:0, goldx:0,usdx:0,
        total:0,gp:0,wgp:0,wgbp:0,up:0,nftPower:0,nftGPower:0,};
     group.documents.forEach(element => {
