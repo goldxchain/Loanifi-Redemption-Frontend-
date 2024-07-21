@@ -356,10 +356,10 @@
 // @ is an alias to /src
 import CountComp from './CountComp.vue'
 import axios from 'axios'
-// const Web3 = require('web3');
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpcCI6ImV4dHJhY3RlZC11c2VyLWlwIiwiaWF0IjoxNzIxNTg3MjYzLCJleHAiOjE3MjE1ODgxNjN9.1BN0O52IhWQU_ByhzLjc50ImIg4OMbP_nBNumL4TWSI"
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 import Web3 from 'web3'
 const web3 = new Web3("https://rpc2.goldxscan.com/")
-// import CountCompVue from './CountComp.vue'
 export default {
   name: 'HomeView',
   data(){
@@ -425,106 +425,7 @@ export default {
     CountComp
   },
   computed:{
-    pointsData(){
-      if(this.uWallet == null || this.rawUsers == null){
-        return null
-      }else{
-        let user = null;
-        this.rawUsers.forEach(element => {
-          if(this.uWallet.toLocaleLowerCase() == element._id.toLocaleLowerCase() ){
-            user = element
-          }
-        });
-        let data = {
-          GOLDX_POINTS:0,
-          GOLDX_SACRIFICED:0,
-          WGOLDX_POINTS:0,
-          WGOLDX_SACRIFICED:0,
-          WGOLDX_BNB_POINTS:0,
-          WGOLDX_BNB_SACRIFICED:0,
-          USDX_POINTS:0,
-          TOTAL:0,
-          USDX_SACRIFICED:0,
-          NFT_SACRIFICED_POWER:0,
-          NFT_GOLDX_SACRIFICED:0,
-          NFT_SACRIFICED_POWER_GLOBAL:0,
-          NFT_SACRIFICED_POINTS:0,
-        }
-
-        user.documents.forEach(element => {
-      if(element.type == "goldx") 
-      {
-        data['GOLDX_SACRIFICED'] += Number(element.value);
-        data['GOLDX_POINTS'] += ( Number(element.value  ) * 100);
-        data['TOTAL'] += ( Number(element.value ) * 100)
-        // stats.totalGOLDX += element.value;
-        // stats.minePoints += (element.value * 1000)
-      }
-      if(element.type == "wgoldx"){
-        // data[]wgoldx += element.value;
-        // data[]total += element.value;
-        data['WGOLDX_SACRIFICED'] += Number(element.value);
-        data['WGOLDX_POINTS'] += ( Number(element.value ) * 100);
-        data['TOTAL'] += ( Number(element.value ) * 100)
-
-        // stats.totalWGOLDX += element.value;
-        // stats.minePoints += (element.value * 1000)
-      }
-      if(element.type == "usdx"){
-        let v = Number(element.value) * 25
-        data['USDX_SACRIFICED'] += Number(element.value);
-        data['USDX_POINTS'] += ( v * 1000);
-        data['TOTAL'] += ( v * 1000)
-
-      }
-      if(element.type == "goldxbnb")
-      {
-        data['WGOLDX_BNB_SACRIFICED'] += Number(element.value);
-        data['WGOLDX_BNB_POINTS'] += ( Number(element.value ) * 100);
-        data['TOTAL'] += ( Number(element.value ) * 100)
-      }
-      if(element.type == "nft") {
-        if(!element.data.stats[1]){
-          if(element.data.stats[0][2] == "2" ) 
-          {
-            data['NFT_GOLDX_SACRIFICED'] += 150000
-            data['NFT_SACRIFICED_POINTS'] += ((150000 ) * 100);
-            data['TOTAL'] += ((150000 ) * 1000);
-            data['NFT_SACRIFICED_POWER'] += 0.0072
-            data['NFT_SACRIFICED_POWER_GLOBAL'] += 0.00009013 
-          }
-          if(element.data.stats[0][2] == "3" ) 
-          {
-            data['NFT_GOLDX_SACRIFICED'] += 7500
-            data['NFT_SACRIFICED_POINTS'] += ((7500 ) * 100);
-            data['TOTAL'] += ((7500 ) * 100);
-            data['NFT_SACRIFICED_POWER'] += 0.00036
-            data['NFT_SACRIFICED_POWER_GLOBAL'] += 0.0000045
-          }
-           
-        }else{
-          if(element.data.stats[0][2] == "2" ) 
-          {
-            data['NFT_GOLDX_SACRIFICED'] += (150000 * Number(element.data.stats[3]));
-            data['NFT_SACRIFICED_POINTS'] += (( (150000 ) * Number(element.data.stats[3])) * 100) ;
-            data['TOTAL'] += (( (150000 ) * Number(element.data.stats[3])) * 100) ;
-            data['NFT_SACRIFICED_POWER'] += (0.0072 * Number(element.data.stats[3])) 
-            data['NFT_SACRIFICED_POWER_GLOBAL'] += (0.00009013 * Number(element.data.stats[3])) 
-          }
-          if(element.data.stats[0][2] == "3" ) {
-            data['NFT_GOLDX_SACRIFICED'] += (7500 * Number(element.data.stats[4]));
-            data['NFT_SACRIFICED_POINTS'] += (( (7500 ) * Number(element.data.stats[4])) * 100) ;
-            data['TOTAL'] += (( (7500 ) * Number(element.data.stats[4])) * 100) ;
-            data['NFT_SACRIFICED_POWER'] += (0.00036 * Number(element.data.stats[4])) 
-            data['NFT_SACRIFICED_POWER_GLOBAL'] += (0.0000045 * Number(element.data.stats[4]))
-          }
-          
-        }
-      }
-    });
-        return data
-      }
-    },
+    
     asome(){
 return (
   this.allocations["Community"]+ 
