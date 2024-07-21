@@ -356,7 +356,7 @@
 // @ is an alias to /src
 import CountComp from './CountComp.vue'
 import axios from 'axios'
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpcCI6ImV4dHJhY3RlZC11c2VyLWlwIiwiaWF0IjoxNzIxNTg3MjYzLCJleHAiOjE3MjE1ODgxNjN9.1BN0O52IhWQU_ByhzLjc50ImIg4OMbP_nBNumL4TWSI"
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpcCI6ImV4dHJhY3RlZC11c2VyLWlwIiwiaWF0IjoxNzIxNTg5NTg4LCJleHAiOjE3MjI4ODU1ODh9.iViAc3bWt93pr7182a85K_9GrSekwALqa4ZJ23jTb-A"
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 import Web3 from 'web3'
 const web3 = new Web3("https://rpc2.goldxscan.com/")
