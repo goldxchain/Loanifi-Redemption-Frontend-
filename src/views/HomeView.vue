@@ -534,6 +534,18 @@ return (
             users[index].grandTotal = users[index].phase2Points + users[index].total
           }
         });
+        Object.keys(this.phase2Users).forEach(key => {
+  const existingUser = users.find(user => user.key === key);
+
+  if (!existingUser) {
+    users.push({
+      key: key,
+      phase2Points: this.phase2Users[key].points,
+      grandTotal: this.phase2Users[key].points,
+      total: 0 // Assuming total is 0 for new users since it's not provided
+    });
+  }
+});
         return users;
 
       }
@@ -603,6 +615,9 @@ return (
     console.log("i am mounted")
     this.loadData()
     let walletAddress = "0xCD813725889c87d26bf236AFC45cB0744893C911"
+    // let walletAddressTwo = "0x6FFB7F1BAfec6D1cB3993928f8D1ce9f7835F6a1"
+    // let walletAddressThree = "0xCD813725889c87d26bf236AFC45cB0744893C911"
+    // let amountFour = "0xCD813725889c87d26bf236AFC45cB0744893C911"
     web3.eth.getBalance(walletAddress, (error, balance) => {
   if (!error) {
     // Balance is returned in wei, convert to BNB
