@@ -304,7 +304,9 @@
               <div> <span class="px-3"> Address </span> </div>
               <div v-for="(user, index) in usersFilteredCombined.slice(0, 10) " :key="user.index" class="text" >
 
-                <span class="px-3"> <b>{{(index+1)}}:</b> {{user.key.slice(0, 6)+'....'+user.key.substring(user.key.length - 6) }}</span>
+                <span class="px-3" v-if="user.key == '0x46d5aac901320d424306a6779c750f6f55f2976e'"> <b>{{(index+1)}}:</b> GOLDX Redemption Contract</span>
+                <span class="px-3" v-else> <b>{{(index+1)}}:</b> {{user.key.slice(0, 6)+'....'+user.key.substring(user.key.length - 6) }}</span>
+                
               </div>
             </div>  
 
@@ -600,8 +602,12 @@ return (
           if(element.status == 'Verified' && element.points && element.points > 0){
             if(this.walletByEmail[element.email] !== undefined){
               let W = web3.utils.toChecksumAddress(this.walletByEmail[element.email]);
-              
-              p[W.toLocaleLowerCase() ] = {points: element.points, email: element.email}
+              if(p[W.toLocaleLowerCase() ] == undefined){
+                p[W.toLocaleLowerCase() ] = {points: element.points, email: element.email}
+              }else{
+                let d = { points: Number(p[W.toLocaleLowerCase()].points)+ Number(element.points), email: element.email}
+                p[W.toLocaleLowerCase() ] = d
+              }
             }
           }
         });
