@@ -273,13 +273,14 @@
                 <div class="border-bottom LV"> <span class="leftee">GOLDX Circulating Supply</span> <span class="float-right"> <b>{{addCommasToNumber(CSupply)}} </b> </span>  </div>
                 <div class="border-bottom LV"> <span class="leftee">GOLDX</span> <span class="float-right"> <b>{{addCommasToNumber(Number(stats.balance).toFixed(0) )}} </b> </span>  </div>
                 <div class="border-bottom LV"> <span class="leftee">WGOLDX-BNB</span> <span class="float-right"> <b>{{ addCommasToNumber( Number(stats.totalWGOLDXBsc).toFixed(0))}} </b> </span>  </div>
-                <div class="border-bottom LV"> <span class="leftee">WGOLDX-GOLDXCHAIN</span> <span class="float-right"> <b>{{addCommasToNumber( Number(stats.totalWGOLDX).toFixed(0))}} </b> </span>  </div>
-                <div class="border-bottom LV"> <span class="leftee">Mine Points</span> <span class="float-right"> <b>{{addCommasToNumber( Number(stats.minePoints).toFixed(0))}}</b> </span>  </div>
+                <div class="border-bottom LV"> <span class="leftee">WGOLDX-GOLDXCHAIN</span> <span class="float-right"> <b>{{addCommasToNumber( Number(stats.totalWGOLDX + phase2Sacrifices.curr["WGOLDX"] ).toFixed(0))}} </b> </span>  </div>
+                <div class="border-bottom LV"> <span class="leftee">USDX-GOLDXCHAIN</span> <span class="float-right"> <b>{{addCommasToNumber( Number(phase2Sacrifices.curr["USDX"] ).toFixed(0))}} </b> </span>  </div>
+                <div class="border-bottom LV"> <span class="leftee">Mine Points</span> <span class="float-right"> <b>{{addCommasToNumber( Number(stats.minePoints + getP2TotalPoints).toFixed(0))}}</b> </span>  </div>
               <div class="border-bottom LV"> <span class="leftee">Unique Sacrificers </span> <span class="float-right"> <b>{{totalSacs}}</b> </span>  </div>
-              <div class="border-bottom LV"> <span class="leftee">NFT’s Sacrificed  </span> <span class="float-right"> <b>{{stats.NFTs}}</b> </span>  </div>
+              <div class="border-bottom LV"> <span class="leftee">NFT’s Sacrificed  </span> <span class="float-right"> <b>{{addCommasToNumber(stats.NFTs + (phase2Sacrifices.miners + phase2Sacrifices.pros + phase2Sacrifices.refiners ))}}</b> </span>  </div>
               <div class="border-bottom LV"> <span class="leftee">Promo GOLDX $USD Value  </span> <span class="float-right"> <b>16,902,000</b> </span>  </div>
               <div class="border-bottom LV"> <span class="leftee">Actual Mining Power GOLDX $USD Value  </span> <span class="float-right"> <b>{{addCommasToNumber( Number(NFTsGOLDXVal).toFixed(0))}}</b> </span>  </div>
-              <div class="border-bottom LV" style="font-size:80%;"> <span class="leftee">Classes of NFT’s sacrificed  </span> <span class="float-right"> <b>{{stats.NFTsCLS}}</b> </span>  </div>
+              <!-- <div class="border-bottom LV" style="font-size:80%;"> <span class="leftee">Classes of NFT’s sacrificed  </span> <span class="float-right"> <b>{{stats.NFTsCLS}}</b> </span>  </div> -->
               <!-- <div class="border-bottom LV"> <span class="leftee">Number of Sacrificers</span> <span class="float-right"> <b>{{totalSacs}}</b> </span>  </div> -->
               </div>
             </div>
@@ -615,6 +616,56 @@ return (
       }else{
         return {}
       }
+    },
+    phase2Sacrifices(){
+      let pros = 0;
+      let miners = 0;
+      let refiners = 0;
+      let curr = {
+        USDX : 0,
+      WGOLDX : 0,
+      GOLDX : 0,
+      BNB : 0,
+      USDT : 0
+      }
+if(this.phase2Purchases.length){
+  this.phase2Purchases.forEach(element => {
+        if(element.status == "Verified" && element.sacrifice == "I Want to Sacrifice My NFT"){
+
+          if(element.type == "Miners") {
+          miners += Number(element.qty);
+          }
+
+          if(element.type == "Prospectors") {
+          pros += Number(element.qty);
+          }
+
+          if(element.type == "Refiners") {
+          refiners += Number(element.qty);
+          }
+
+          curr[element.crypto] += Number(element.priceCrypto)
+
+        }
+      });
+      return {pros, miners, refiners, curr}
+
+}else{
+  return {
+    pros : 0,
+      miners : 0,
+      refiners : 0,
+      curr : {
+        USDX : 0,
+      WGOLDX : 0,
+      GOLDX : 0,
+      BNB : 0,
+      USDT : 0
+      }
+  }
+}
+      
+
     },
   },
   mounted(){
