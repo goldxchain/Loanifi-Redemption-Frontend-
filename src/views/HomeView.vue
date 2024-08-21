@@ -169,9 +169,10 @@
           <div class="col-12">
 <coingecko-coin-price-marquee-widget  coin-ids="bitcoin,ethereum,ripple,binancecoin,tether,chainlink,usd-coin" currency="usd" background-color="#050505" locale="en" font-color="#f2eded"></coingecko-coin-price-marquee-widget>
           </div>
-          <div class="col-12" style="height:140px;">
-      <CountComp :startDate="'2024-04-24'" />
-          </div>
+          <!-- <div class="col-12" style="height:140px;"> -->
+     
+      <!-- <CountComp :startDate="'2024-04-24'" /> -->
+          <!-- </div> -->
           <div class="col-12">
             <!-- <p class="text-center glow-text-small mb-0">
               Until Loanifi Phase 2 starts
@@ -181,7 +182,7 @@
         Total $USD Value Sacrificed
        </p>
 <h3 class="glow-text text-center">
-  <b>$ {{addCommasToNumber(totalSacUSD) }}</b> 
+  <b>$ {{addCommasToNumber(Number(totalSacUSD) + Number(phase2Sacrifices.curr["USDX"] )) }}</b> 
 </h3>
 <div class="d-none d-md-block">
       <p class="text-center glow-text-small mb-0">
@@ -190,6 +191,13 @@
 <h3 class="glow-text text-center">
   <b>$ {{stats.price.toFixed(5) }} </b> 
 </h3>
+<h5 class="glow-text text-center">
+  <p style="font-size:60%;">The official Laonifi Sacrifice Address</p>
+</h5>
+<b @click="copyWallet(MWALLET)" style="cursor: pointer;font-size: 155%; 
+    margin-bottom: 14px;" class="d-block text-center"> {{MWALLET.slice(0, 6)+'....'+MWALLET.substring(MWALLET.length - 6) }}  <span>&#10063;</span> </b> 
+
+
      </div>
 
           </div>
@@ -202,6 +210,13 @@
 <h3 class="glow-text text-center">
   <b>$ {{stats.price.toFixed(5) }} </b> 
 </h3>
+
+<h5 class="glow-text text-center">
+  <p style="font-size:60%;">The official Laonifi Sacrifice Address</p>
+</h5>
+<b @click="copyWallet(MWALLET)" style="cursor:pointer; font-size: 155%;
+    margin-bottom: 14px;" class="d-block text-center"> {{MWALLET.slice(0, 6)+'....'+MWALLET.substring(MWALLET.length - 6) }}  <span>&#10063;</span> </b> 
+
      </div>
             <!-- <div class="text-center mb-5"> <span>Sacrifice Address</span> <b class="" style="font-size: 75%;">0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914</b>  </div> -->
             <div class="inner-section mb-5">
@@ -367,6 +382,7 @@ export default {
   name: 'HomeView',
   data(){
     return {
+      MWALLET:"0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914",
       uWallet:"0x46d5aac901320d424306a6779c750f6f55f2976e",
       rawUsers:null,
       allocations:{
