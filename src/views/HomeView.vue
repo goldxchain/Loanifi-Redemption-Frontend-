@@ -192,7 +192,7 @@
   <b>$ {{stats.price.toFixed(5) }} </b> 
 </h3>
 <h5 class="glow-text text-center">
-  <p style="font-size:60%;">The official Laonifi Sacrifice Address</p>
+  <p style="font-size:60%;">The official Loanifi Sacrifice Address</p>
 </h5>
 <b @click="copyWallet(MWALLET)" style="cursor: pointer;font-size: 155%; 
     margin-bottom: 14px;" class="d-block text-center"> {{MWALLET.slice(0, 6)+'....'+MWALLET.substring(MWALLET.length - 6) }}  <span>&#10063;</span> </b> 
@@ -212,7 +212,7 @@
 </h3>
 
 <h5 class="glow-text text-center">
-  <p style="font-size:60%;">The official Laonifi Sacrifice Address</p>
+  <p style="font-size:60%;">The official Loanifi Sacrifice Address</p>
 </h5>
 <b @click="copyWallet(MWALLET)" style="cursor:pointer; font-size: 155%;
     margin-bottom: 14px;" class="d-block text-center"> {{MWALLET.slice(0, 6)+'....'+MWALLET.substring(MWALLET.length - 6) }}  <span>&#10063;</span> </b> 
