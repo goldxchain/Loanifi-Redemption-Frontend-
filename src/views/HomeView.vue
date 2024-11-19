@@ -165,19 +165,12 @@
         </div>
       </div>
       <div class="main-cont d-inline-block mct">
-        <div class="row">
+        <div class="row justify-content-end">
           <div class="col-12">
 <coingecko-coin-price-marquee-widget  coin-ids="bitcoin,ethereum,ripple,binancecoin,tether,chainlink,usd-coin" currency="usd" background-color="#050505" locale="en" font-color="#f2eded"></coingecko-coin-price-marquee-widget>
           </div>
-          <!-- <div class="col-12" style="height:140px;"> -->
-     
-      <!-- <CountComp :startDate="'2024-04-24'" /> -->
           <!-- </div> -->
-          <div class="col-12">
-            <!-- <p class="text-center glow-text-small mb-0">
-              Until Loanifi Phase 2 starts
-       </p> -->
-            <!-- <div class="border-bottom LV"> <span class="leftee">Sacrificed($)</span> <span > <b>{{totalSacUSD}}</b> </span>  </div> -->
+          <div class="col-12 col-md-6">
        <p class="text-center glow-text-small mb-0">
         Total $USD Value Sacrificed
        </p>
@@ -201,6 +194,27 @@
      </div>
 
           </div>
+          <div class="col-12 col-md-3">
+            <div style="font-size: 10px;
+    color: rgb(185, 150, 83);
+    border: 4px solid rgb(185, 150, 83);
+    border-radius: 55%;
+    padding: 27px 8px;
+    position: relative;
+    background: black;
+    width: 170px;
+    height: 170px;
+    line-height: 13px;
+    margin-top: 54px;
+    letter-spacing: 2px;">
+              <span class="d-block text-center"> Power <br> <b> {{walletData.Power.toFixed(2)}} </b> </span> 
+              <span class="d-block text-center"> Refiners <br> <b>{{walletData.Refiners}}</b> </span> 
+              <span class="d-block text-center"> Miners <br> <b>{{walletData.Miners}}</b> </span> 
+              <span class="d-block text-center"> Prospectors <br> <b>{{walletData.Prospectors}}</b> </span> 
+            </div>
+          </div>
+        </div>
+        <div class="row">
           <div class="col-md-6 col-lg-4">
             <div class="inner-section mb-5 maxh"> <h1 class="f-font text-center bold py-2">Sacrifice Phase 2/3 Now Live</h1> </div>
      <div class="d-md-none">
@@ -382,6 +396,7 @@ export default {
   name: 'HomeView',
   data(){
     return {
+      walletData:{},
       MWALLET:"0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914",
       uWallet:"0x46d5aac901320d424306a6779c750f6f55f2976e",
       rawUsers:null,
@@ -798,6 +813,10 @@ alert("points data not found")
   // .map(([key, value], index) => ({ ...value, key, index: index + 1 }));
     loadData(){
       console.log("i am load data")
+      axios.get("https://goldx.io/get/loanifi/wallet-details/0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914")
+      .then((res) => {
+        this.walletData = res.data.data
+      })
       axios.get('https://goldx.io/api/get/fortune-data')
       .then((res) => {
         this.walletByEmail = res.data.users.emails
