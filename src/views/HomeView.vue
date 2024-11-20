@@ -165,7 +165,7 @@
         </div>
       </div>
       <div class="main-cont d-inline-block mct">
-        <div class="row justify-content-end">
+        <div class="row">
           <div class="col-12">
 <coingecko-coin-price-marquee-widget  coin-ids="bitcoin,ethereum,ripple,binancecoin,tether,chainlink,usd-coin" currency="usd" background-color="#050505" locale="en" font-color="#f2eded"></coingecko-coin-price-marquee-widget>
           </div>
@@ -194,23 +194,22 @@
      </div>
 
           </div>
-          <div class="col-12 col-md-3">
-            <div class="d-block mx-auto mb-5" style="font-size: 10px;
-    color: rgb(185, 150, 83);
-    border: 4px solid rgb(185, 150, 83);
-    border-radius: 55%;
-    padding: 27px 8px;
+          <div class="col-12 col-md-6">
+            <div class="d-block mx-auto mb-5" style="
     position: relative;
-    background: black;
-    width: 170px;
-    height: 170px;
-    line-height: 13px;
-    margin-top: 54px;
     letter-spacing: 2px;">
-              <span class="d-block text-center"> GLobal Power <br> <b> {{walletData.Power.toFixed(2)}} </b> </span> 
-              <span class="d-block text-center"> High <br> <b>{{walletData.Refiners}}</b> </span> 
-              <span class="d-block text-center"> Medium <br> <b>{{walletData.Miners}}</b> </span> 
-              <span class="d-block text-center"> Low <br> <b>{{walletData.Prospectors}}</b> </span> 
+    <p class="text-center glow-text-small mb-0"> Global Power Sacrificed </p>
+    <h3 class="glow-text text-center"> <b>{{walletData.Power.toFixed(2)}} %</b> </h3>
+    <p class="text-center glow-text-small mb-0"> High: {{walletData.Refiners}}   </p>
+    <!-- <h3 class="glow-text text-center"> <b>{{walletData.Refiners}}</b> </h3> -->
+    <p class="text-center glow-text-small mb-0"> Medium:{{walletData.Miners}}  </p>
+    <!-- <h3 class="glow-text text-center"> <b>{{walletData.Miners}}</b> </h3> -->
+    <p class="text-center glow-text-small mb-0"> Low: {{walletData.Prospectors}}  </p>
+    <!-- <h3 class="glow-text text-center"> <b>{{walletData.Prospectors}}</b> </h3> -->
+              <!-- <span class="d-block text-center"> GLobal Power <br> <b> {{walletData.Power.toFixed(2)}} </b> </span>  -->
+              <!-- <span class="d-block text-center"> High <br> <b></b> </span>  -->
+              <!-- <span class="d-block text-center"> Medium <br> <b></b> </span>  -->
+              <!-- <span class="d-block text-center"> Low <br> <b></b> </span>  -->
             </div>
           </div>
         </div>
