@@ -195,7 +195,7 @@
 
           </div>
           <div class="col-12 col-md-3">
-            <div style="font-size: 10px;
+            <div class="d-block mx-auto mb-5" style="font-size: 10px;
     color: rgb(185, 150, 83);
     border: 4px solid rgb(185, 150, 83);
     border-radius: 55%;
@@ -207,10 +207,10 @@
     line-height: 13px;
     margin-top: 54px;
     letter-spacing: 2px;">
-              <span class="d-block text-center"> Power <br> <b> {{walletData.Power.toFixed(2)}} </b> </span> 
-              <span class="d-block text-center"> Refiners <br> <b>{{walletData.Refiners}}</b> </span> 
-              <span class="d-block text-center"> Miners <br> <b>{{walletData.Miners}}</b> </span> 
-              <span class="d-block text-center"> Prospectors <br> <b>{{walletData.Prospectors}}</b> </span> 
+              <span class="d-block text-center"> GLobal Power <br> <b> {{walletData.Power.toFixed(2)}} </b> </span> 
+              <span class="d-block text-center"> High <br> <b>{{walletData.Refiners}}</b> </span> 
+              <span class="d-block text-center"> Medium <br> <b>{{walletData.Miners}}</b> </span> 
+              <span class="d-block text-center"> Low <br> <b>{{walletData.Prospectors}}</b> </span> 
             </div>
           </div>
         </div>
