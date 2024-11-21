@@ -165,7 +165,7 @@
         </div>
       </div>
       <div class="main-cont d-inline-block mct">
-        <div class="row">
+        <div class="row justify-content-end">
           <div class="col-12">
 <coingecko-coin-price-marquee-widget  coin-ids="bitcoin,ethereum,ripple,binancecoin,tether,chainlink,usd-coin" currency="usd" background-color="#050505" locale="en" font-color="#f2eded"></coingecko-coin-price-marquee-widget>
           </div>
@@ -194,10 +194,14 @@
      </div>
 
           </div>
-          <div class="col-12 col-md-6">
-            <div class="d-block mx-auto mb-5" style="
-    position: relative;
-    letter-spacing: 2px;">
+          <div class="col-12 col-md-3">
+            <div class="d-block mx-auto mb-5" style="position: relative;
+    letter-spacing: 2px;
+    border: 5px solid #B99653;
+    border-radius: 55%;
+    padding: 79px 66px;
+    transform: scale(0.5);
+    ">
     <p class="text-center glow-text-small mb-0"> Global Power Sacrificed </p>
     <h3 class="glow-text text-center"> <b>{{walletData.Power.toFixed(2)}} %</b> </h3>
     <p class="text-center glow-text-small mb-0"> High: {{walletData.Refiners}}   </p>
