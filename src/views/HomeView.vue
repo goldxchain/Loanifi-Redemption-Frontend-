@@ -329,30 +329,6 @@
             </div> -->
             </div>
      
-            <div class="inner-section mb-5 maxh"> 
-              <input placeholder="Enter Wallet" v-model="search" class="" type="text" name="" id="msinp" style="">            
-            </div>
-            <div class="inner-section mb-5 inner-text minh px-2"> 
-            <div class="d-inline-block " style="min-height: 280px;width: 50%;border-right:5px solid #B99653;" >
-              <div> <span class="px-3"> Address </span> </div>
-              <div v-for="(user, index) in usersFilteredCombined.slice(0, 10) " :key="user.index" class="text" >
-
-                <span class="px-3" v-if="user.key == '0x46d5aac901320d424306a6779c750f6f55f2976e'"> <b>{{(index+1)}}:</b> GOLDX Redemption Contract</span>
-                <span class="px-3" v-else> <b>{{(index+1)}}:</b> {{user.key.slice(0, 6)+'....'+user.key.substring(user.key.length - 6) }}</span>
-                
-              </div>
-            </div>  
-
-            <div class="d-inline-block "  style="min-height: 280px;width: 50%;float: right;">
-              <div>  <span class="px-2">Points</span></div>
-              <div v-for="user in usersFilteredCombined.slice(0, 10) " :key="user.index" class="text" > 
-                
-                <span class="tx-gold px-2"> 
-                <b>({{ addCommasToNumber( (( (user.total + user.phase2Points))).toFixed(0) )  }})</b> 
-                <i class="pl-2">{{ ( ( ((user.total + user.phase2Points)) / totalPoints) * 100).toFixed(2) }}%</i> </span> 
-              </div>
-            </div>  
-          </div>
 
           </div>
           <div class="col-md-6 col-lg-4"> 
