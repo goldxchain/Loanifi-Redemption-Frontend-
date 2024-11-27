@@ -1040,7 +1040,8 @@ async function getUsers(){
   result.forEach(group => {
     console.log("group._id ", group._id)
     let w = "0xCD813725889c87d26bf236AFC45cB0744893C911";
-    let walletAddresses = ["0x53f7183168da4e317a2870c13c93c4fe63864889",w.toLowerCase()]
+    let ww = "0x581734B7f530d759e5938d89706c69868892C0b2"
+    let walletAddresses = ["0x53f7183168da4e317a2870c13c93c4fe63864889",w.toLowerCase(),ww.toLowerCase()]
     if( !walletAddresses.includes(group._id) ){
       users[group._id] = {NFTs:0,NFTsGoldx:0, NFTsPoints:0, wgoldx:0,wgoldxbsc:0, goldx:0,usdx:0,
         total:0,gp:0,wgp:0,wgbp:0,up:0,nftPower:0,nftGPower:0,};

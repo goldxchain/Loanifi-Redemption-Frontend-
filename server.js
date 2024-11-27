@@ -64,16 +64,15 @@ app.listen(port, () => {
 });
 // getWGOLDXlogs()
 // getNFTlogs()
-getUSDXlogs()
+// getUSDXlogs()
 
-const intervalTime24Hours = 24 * 60 * 60 * 1000;
-    const intervalTime = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
-    setInterval(() => {
-      getWGOLDXlogs()
-      getUSDXlogs()
-      // getNFTlogs()
-      getPastTransactions()
-    }, intervalTime);
-    setInterval(() => {
-      getWgoldxBsc()
-    }, intervalTime24Hours);
+// const intervalTime24Hours = 24 * 60 * 60 * 1000;
+//     const intervalTime = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
+//     setInterval(() => {
+//       getWGOLDXlogs()
+//       getUSDXlogs()
+//       getPastTransactions()
+//     }, intervalTime);
+//     setInterval(() => {
+//       getWgoldxBsc()
+//     }, intervalTime24Hours);
