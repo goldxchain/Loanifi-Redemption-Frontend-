@@ -217,6 +217,19 @@
             </div>
           </div>
         </div>
+        <div class="marquee-container" v-if="Number.isInteger(pmTime)">
+        <div class="contailer" >
+          <div class="row">
+            <div class="col">
+              <div class="marquee">
+                <span class="m-text marquee-text">
+                  <Timer :seconds="pmTime" />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
         <div class="row">
           <div class="col-md-6 col-lg-4">
             <div class="inner-section mb-5 maxh"> <h1 class="f-font text-center bold py-2">Sacrifice Phase 2/3 Now Live</h1> </div>
@@ -348,7 +361,7 @@
               <div v-for="user in usersFilteredCombined.slice(0, 10) " :key="user.index" class="text" > 
                 
                 <span class="tx-gold px-2"> 
-                <b>({{ addCommasToNumber( (( (user.total + user.phase2Points))).toFixed(0) )  }})</b> 
+                <b>({{ formatToMillions( (( (user.total + user.phase2Points))).toFixed(0) )  }})</b> 
                 <i class="pl-2">{{ ( ( ((user.total + user.phase2Points)) / totalPoints) * 100).toFixed(2) }}%</i> </span> 
               </div>
             </div>  
@@ -390,6 +403,7 @@
 <script>
 // @ is an alias to /src
 import CountComp from './CountComp.vue'
+import Timer from '../components/Timer.vue'
 import axios from 'axios'
 const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpcCI6ImV4dHJhY3RlZC11c2VyLWlwIiwiaWF0IjoxNzIxNTg5NTg4LCJleHAiOjE3MjI4ODU1ODh9.iViAc3bWt93pr7182a85K_9GrSekwALqa4ZJ23jTb-A"
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -399,6 +413,11 @@ export default {
   name: 'HomeView',
   data(){
     return {
+      pmTime: null,
+      dateToday: new Date("2025-02-10T07:00:00Z"), // Hardcoded fixed "today"
+      dateTomorrow: new Date(new Date("2025-02-10T07:00:00Z").getTime() + 24 * 60 * 60 * 1000), // 24 hours later
+      timerSeconds: Math.floor((new Date(new Date().getTime() + 24 * 60 * 60 * 1000) - new Date()) / 1000),
+      timerInterval: null,
       walletData:{},
       MWALLET:"0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914",
       uWallet:"0x46d5aac901320d424306a6779c750f6f55f2976e",
@@ -459,9 +478,12 @@ export default {
     },
   },
   components: {
-    CountComp
+    CountComp, Timer
   },
   computed:{
+    isPromoActive() {
+      return this.dateToday < this.dateTomorrow;
+      },
     
     asome(){
 return (
@@ -703,12 +725,9 @@ if(this.phase2Purchases.length){
     },
   },
   mounted(){
-    console.log("i am mounted")
+    this.startTimer();
     this.loadData()
     let walletAddress = "0xCD813725889c87d26bf236AFC45cB0744893C911"
-    // let walletAddressTwo = "0x6FFB7F1BAfec6D1cB3993928f8D1ce9f7835F6a1"
-    // let walletAddressThree = "0xCD813725889c87d26bf236AFC45cB0744893C911"
-    // let amountFour = "0xCD813725889c87d26bf236AFC45cB0744893C911"
     web3.eth.getBalance(walletAddress, (error, balance) => {
   if (!error) {
     // Balance is returned in wei, convert to BNB
@@ -721,6 +740,24 @@ if(this.phase2Purchases.length){
 });
   },
   methods:{
+    startTimer() {
+      this.timerInterval = setInterval(() => {
+        this.dateToday = new Date();
+        this.pmTime = Math.max(Math.floor((this.dateTomorrow - this.dateToday) / 1000), 0);
+
+        // Stop the timer when countdown reaches 0
+        if (this.timerSeconds <= 0) {
+          clearInterval(this.timerInterval);
+        }
+      }, 1000);
+    },
+    formatToMillions(num) {
+    num = Number(num); // Ensure it's a number
+    if (num >= 1_000_000) {
+        return (num / 1_000_000).toFixed(2) + " M"; // Convert to M with 2 decimal places
+    }
+    return num.toLocaleString(); // Otherwise, add commas normally
+},
     findObjectByKey( key) {
     const lowerCaseKey = key.toLowerCase();
     return this.users.find(item => item.key.toLowerCase() === lowerCaseKey);
@@ -845,6 +882,51 @@ alert("points data not found")
 }
 </script>
 <style>
+.marquee-container {
+  background-color: transparent;
+  padding: 1rem 0;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+  width: 100%; /* Ensure full width */
+}
+
+.marquee {
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height:66px;
+}
+
+.marquee-text {
+  font-family: 'Arial', sans-serif;
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #b99653 !important;
+  background-color: transparent;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  left: 0; /* Static position */
+}
+
+.marquee span {
+  display: inline-block;
+  animation: marquee 10s linear infinite;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
   @font-face {
   font-family: 'BrandingSF'; /* Choose a name for your custom font */
   src: url('@/assets/BrandingSF.ttf') format('truetype'); /* Specify the path to your TTF file */

@@ -784,7 +784,7 @@ var pluginAbi = [
   }
 ]
 var pluginAddress = "0xBbDC165A49D0eCc847D762A4310a268EC0294B44"
-var web3 = new Web3("https://rpc2.goldxscan.com/");
+var web3 = new Web3("https://mainnet-rpc.goldxchain.io/");
 var WGOLDXABI = 
 [{"type":"event","name":"Approval","inputs":[{"type":"address","name":"src","internalType":"address","indexed":true},{"type":"address","name":"guy","internalType":"address","indexed":true},{"type":"uint256","name":"wad","internalType":"uint256","indexed":false}],"anonymous":false},{"type":"event","name":"Deposit","inputs":[{"type":"address","name":"dst","internalType":"address","indexed":true},{"type":"uint256","name":"wad","internalType":"uint256","indexed":false}],"anonymous":false},{"type":"event","name":"Transfer","inputs":[{"type":"address","name":"src","internalType":"address","indexed":true},{"type":"address","name":"dst","internalType":"address","indexed":true},{"type":"uint256","name":"wad","internalType":"uint256","indexed":false}],"anonymous":false},{"type":"event","name":"Withdrawal","inputs":[{"type":"address","name":"src","internalType":"address","indexed":true},{"type":"uint256","name":"wad","internalType":"uint256","indexed":false}],"anonymous":false},{"type":"function","stateMutability":"view","outputs":[{"type":"uint256","name":"","internalType":"uint256"}],"name":"allowance","inputs":[{"type":"address","name":"","internalType":"address"},{"type":"address","name":"","internalType":"address"}]},{"type":"function","stateMutability":"nonpayable","outputs":[{"type":"bool","name":"","internalType":"bool"}],"name":"approve","inputs":[{"type":"address","name":"guy","internalType":"address"},{"type":"uint256","name":"wad","internalType":"uint256"}]},{"type":"function","stateMutability":"view","outputs":[{"type":"uint256","name":"","internalType":"uint256"}],"name":"balanceOf","inputs":[{"type":"address","name":"","internalType":"address"}]},{"type":"function","stateMutability":"view","outputs":[{"type":"uint8","name":"","internalType":"uint8"}],"name":"decimals","inputs":[]},{"type":"function","stateMutability":"payable","outputs":[],"name":"deposit","inputs":[]},{"type":"function","stateMutability":"view","outputs":[{"type":"string","name":"","internalType":"string"}],"name":"name","inputs":[]},{"type":"function","stateMutability":"view","outputs":[{"type":"string","name":"","internalType":"string"}],"name":"symbol","inputs":[]},{"type":"function","stateMutability":"view","outputs":[{"type":"uint256","name":"","internalType":"uint256"}],"name":"totalSupply","inputs":[]},{"type":"function","stateMutability":"nonpayable","outputs":[{"type":"bool","name":"","internalType":"bool"}],"name":"transfer","inputs":[{"type":"address","name":"dst","internalType":"address"},{"type":"uint256","name":"wad","internalType":"uint256"}]},{"type":"function","stateMutability":"nonpayable","outputs":[{"type":"bool","name":"","internalType":"bool"}],"name":"transferFrom","inputs":[{"type":"address","name":"src","internalType":"address"},{"type":"address","name":"dst","internalType":"address"},{"type":"uint256","name":"wad","internalType":"uint256"}]},{"type":"function","stateMutability":"nonpayable","outputs":[],"name":"withdraw","inputs":[{"type":"uint256","name":"wad","internalType":"uint256"}]},{"type":"receive","stateMutability":"payable"}]
 var WGOLDXADDRESS = "0xaf1CC4b8623AA078690220682817e0f035b74765"
@@ -795,6 +795,8 @@ var MARKETADDRESS = "0x9711f9968009D77C6d7781d6a23b77c46b03Ef4E"
 // get GOLDX tranfer Logs
 // let WALLET = "0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914"
 function getWGOLDXlogs(){  
+  console.log("on the getWGOLDX logs")
+
   const WGOLDXCONTRACT = new web3.eth.Contract(WGOLDXABI, WGOLDXADDRESS);
   WGOLDXCONTRACT.getPastEvents('Transfer', {
     filter: {dst: ['0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914']}, // Using an array means OR: e.g. 20 or 23
@@ -804,6 +806,7 @@ function getWGOLDXlogs(){
   
  })
 .then(async function(events){
+  console.log("events fetched getWGOLDXlogs");
     events.forEach(async (element) => {
       let TX = await Transaction.findOne({tx: element.transactionHash})
           if(TX == null){
@@ -817,7 +820,7 @@ function getWGOLDXlogs(){
 
 }
 function getUSDXlogs(){  
-  // console.log("on the getUSDXlogs")
+  console.log("on the getUSDXlogs")
   const WGOLDXCONTRACT = new web3.eth.Contract(USDXABI, USDXADDRESS);
   WGOLDXCONTRACT.getPastEvents('Transfer', {
     filter: {to: ['0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914']}, // Using an array means OR: e.g. 20 or 23
@@ -827,6 +830,8 @@ function getUSDXlogs(){
   // console.log("events are ", events.length)
  })
 .then(async function(events){
+  console.log("events fetched getUSDXlogs");
+
     events.forEach(async (element) => {
       // console.log(element)
       let TX = await Transaction.findOne({tx: element.transactionHash})
@@ -842,6 +847,7 @@ function getUSDXlogs(){
 
 }
 function getWgoldxBsc(){
+  console.log("on the getWgoldxBsc")
   
   let data = JSON.stringify({
     "query": "{\n  EVM(dataset: combined, network: bsc) {\n    Transfers(\n      where: {Transfer: {Currency: {SmartContract: {is: \"0x4E0F32e8EE0E696A662e9575cfFb1c4Dc5a26a92\"}}, Receiver: {is: \"0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914\"}}}\n      orderBy: {descending: Block_Time}\n    ) {\n      Transaction {\n        Hash\n      }\n      Transfer {\n        Amount\n        Receiver\n        Sender\n      }\n    }\n  }\n}\n",
@@ -883,6 +889,7 @@ axios.request(config)
 });
 }
 function getNFTlogs(){
+  console.log("on the getNFTlogs")
   const plugin = new web3.eth.Contract(pluginAbi,pluginAddress );
   const MARKETCONTRACT = new web3.eth.Contract(MARKETABI, MARKETADDRESS);
   MARKETCONTRACT.getPastEvents('Transfer', {
@@ -893,6 +900,8 @@ function getNFTlogs(){
   
  })
 .then(async function(events){
+  console.log("events fetched getNFTlogs");
+
     events.forEach(async (element) => {
       let TX = await Transaction.findOne({tx: element.transactionHash})
           if(TX == null){
@@ -925,6 +934,8 @@ function getNFTlogs(){
 });
 }
 async function getPastTransactions() {
+  console.log("on the getPastTransactions")
+
   let pastTransactions = [];
   let WALLET = "0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914";
   const latestBlockNumber = await web3.eth.getBlockNumber();
