@@ -915,7 +915,7 @@ alert("points data not found")
 
 .marquee span {
   display: inline-block;
-  animation: marquee 10s linear infinite;
+  animation: marquee 30s linear infinite;
 }
 
 @keyframes marquee {
