@@ -896,16 +896,13 @@ function getNFTlogs(){
     filter: {to: ['0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914']}, // Using an array means OR: e.g. 20 or 23
     fromBlock: 0,
     toBlock: 'latest'
-}, function(error, events){ 
-  
- })
+}, function(error, events){ })
 .then(async function(events){
   console.log("events fetched getNFTlogs");
 
     events.forEach(async (element) => {
       let TX = await Transaction.findOne({tx: element.transactionHash})
           if(TX == null){
-            // console.log("created ", element)
             let ID = element.returnValues['tokenId']
             let isApproved = await plugin.methods.isApproved(ID).call()
             if(isApproved){
@@ -913,7 +910,6 @@ function getNFTlogs(){
 
             try {
               stats = await plugin.methods.NFT_stats(ID).call() 
-              // if(stats[1]){
                 let ms =  await plugin.methods.miningPowerCount(ID, 2).call()
                 let ps =  await plugin.methods.miningPowerCount(ID, 3).call()
                 stats[3] = ms
@@ -925,13 +921,80 @@ function getNFTlogs(){
 
           }
           await Transaction.create({data: NFT,tx: element.transactionHash,from: element.returnValues['from'],value: ID, type:"nft" })
-          // console.log("created, ",element.returnValues['tokenId'])
-
           }else{
-            // console.log("already exists ", element.returnValues['tokenId'])
           }
     });
 });
+}
+async function getOwnerNFTlogs(){
+  try {
+    // Fetch all transactions where data.approved is true
+    const transactions = await Transaction.find({ "data.approved": true });
+
+    // Array to store processed results
+    let A = {
+      tranfersCount: transactions.length,
+      high:0,
+      miners:0,
+      pros:0,
+      custom:0,
+      refiners:0,
+      units:{
+        medium:0,
+        low:0,
+        global:0
+      }
+    };
+    const H = {
+      Refiners: 0.1888,
+      Miners: 0.00009013,
+      NFTS: 0,
+      Prospectors: 0.0000045,
+    };
+
+    // Use Promise.all to ensure all async tasks complete before returning
+    await Promise.all(
+      transactions.map(async (transaction) => {
+        if(transaction.data.stats[1]){
+          A.custom++
+          if(transaction.data.stats[0][2] == '2') {
+            let qty = (transaction.data.stats[3] !== '0') ? transaction.data.stats[3] : 0;
+            A.global += (H.Miners * Number(qty));
+            A.units.medium += Number(qty);
+          }
+          if(transaction.data.stats[0][2] == '3') {
+            let qty = (transaction.data.stats[4] !== '0') ? transaction.data.stats[4] : 0;
+            A.global += (H.Prospectors * Number(qty));
+            A.units.low += Number(qty);
+          }
+        }
+        else{
+          if(transaction.data.stats[0][2] == '1') {
+            A.global += H.Refiners;
+            A.refiners += 1;
+          }
+          if(transaction.data.stats[0][2] == '2') {
+            let qty = (transaction.data.stats[3] !== '0') ? transaction.data.stats[3] : 0;
+            A.global += H.Miners;
+            A.miners += Number(qty);
+          }
+          if(transaction.data.stats[0][2] == '3') {
+            let qty = (transaction.data.stats[4] !== '0') ? transaction.data.stats[4] : 0;
+            A.global += H.Prospectors;
+            A.pros += Number(qty);
+          }
+        }
+      })
+    );
+
+    // Return the processed data after all iterations are done
+    return A;
+  } catch (error) {
+    console.error("Error processing transactions:", error);
+    return []; // Return an empty array on failure
+  }
+  // let data = await Transaction.find({ "data.approved": true });
+  // console.log(data);
 }
 async function getPastTransactions() {
   console.log("on the getPastTransactions")
@@ -1164,5 +1227,5 @@ stats.WBbalance = WBbalance
 module.exports = {
   getWGOLDXlogs,getWgoldxBsc,
   getNFTlogs,getUsers,getUSDXlogs,
-  getPastTransactions,getNLogs,getUsersRaw
+  getPastTransactions,getNLogs,getUsersRaw, getOwnerNFTlogs
 };

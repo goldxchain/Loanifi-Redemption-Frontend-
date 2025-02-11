@@ -5,7 +5,7 @@ const TEST_DB = "mongodb://localhost:27017/fusegbackend";
 const PRO_DB = `mongodb+srv://doadmin:k0P19s34E5em2H8U@pro-db-fusegold-54c0a5f4.mongo.ondigitalocean.com/admin?tls=true&authSource=admin`
 const express = require('express');
 const { getWGOLDXlogs,
-getUSDXlogs,
+getUSDXlogs,getOwnerNFTlogs,
 getNFTlogs,getUsersRaw,
     getNLogs,getUsers,getWgoldxBsc,
     getPastTransactions, } = require('./helper');
@@ -31,8 +31,15 @@ if(ENV == "dev")
     useNewUrlParser: true,
     tls: true,
     // tlsCAFile: path.join(__dirname, '/ca-certificate.crt')
-}).then(() => {
+}).then(async () => {
   console.log('Pro Database connected!')
+  // await getNFTlogs();
+  getOwnerNFTlogs().then((result) => {
+    console.log("Processed Transactions:", result);
+  });
+      // await getUSDXlogs()
+      // await getPastTransactions()
+      // await getWgoldxBsc()
 },
 error => {
     console.log(error)

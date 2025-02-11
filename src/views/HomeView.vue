@@ -217,7 +217,7 @@
             </div>
           </div>
         </div>
-        <div class="marquee-container" v-if="Number.isInteger(pmTime)">
+        <!-- <div class="marquee-container" v-if="Number.isInteger(pmTime)">
         <div class="contailer" >
           <div class="row">
             <div class="col">
@@ -229,7 +229,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
         <div class="row">
           <div class="col-md-6 col-lg-4">
             <div class="inner-section mb-5 maxh"> <h1 class="f-font text-center bold py-2">Sacrifice Phase 2/3 Now Live</h1> </div>
