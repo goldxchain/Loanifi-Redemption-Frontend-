@@ -16,7 +16,7 @@ let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 app.use(cors())
 
-app.use(express.static(path.join(__dirname, 'dist')));
+app.use(express.static(path.join(__dirname, 'build')));
 if(ENV == "dev")
 {
   let DB = TEST_DB
@@ -34,9 +34,9 @@ if(ENV == "dev")
 }).then(async () => {
   console.log('Pro Database connected!')
   // await getNFTlogs();
-  getOwnerNFTlogs().then((result) => {
-    console.log("Processed Transactions:", result);
-  });
+  // getOwnerNFTlogs().then((result) => {
+  //   console.log("Processed Transactions:", result);
+  // });
       // await getUSDXlogs()
       // await getPastTransactions()
       // await getWgoldxBsc()
