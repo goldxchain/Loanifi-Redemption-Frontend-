@@ -934,15 +934,15 @@ async function getOwnerNFTlogs(){
     // Array to store processed results
     let A = {
       tranfersCount: transactions.length,
-      high:0,
       miners:0,
       pros:0,
+      global:0,
       custom:0,
       refiners:0,
       units:{
         medium:0,
         low:0,
-        global:0
+        high:0,
       }
     };
     const H = {
@@ -955,6 +955,7 @@ async function getOwnerNFTlogs(){
     // Use Promise.all to ensure all async tasks complete before returning
     await Promise.all(
       transactions.map(async (transaction) => {
+        // console.log("global value is", A.global)
         if(transaction.data.stats[1]){
           A.custom++
           if(transaction.data.stats[0][2] == '2') {
@@ -974,14 +975,14 @@ async function getOwnerNFTlogs(){
             A.refiners += 1;
           }
           if(transaction.data.stats[0][2] == '2') {
-            let qty = (transaction.data.stats[3] !== '0') ? transaction.data.stats[3] : 0;
+            // let qty = (transaction.data.stats[3] !== '0') ? transaction.data.stats[3] : 0;
             A.global += H.Miners;
-            A.miners += Number(qty);
+            A.miners ++
           }
           if(transaction.data.stats[0][2] == '3') {
-            let qty = (transaction.data.stats[4] !== '0') ? transaction.data.stats[4] : 0;
+            // let qty = (transaction.data.stats[4] !== '0') ? transaction.data.stats[4] : 0;
             A.global += H.Prospectors;
-            A.pros += Number(qty);
+            A.pros ++
           }
         }
       })
