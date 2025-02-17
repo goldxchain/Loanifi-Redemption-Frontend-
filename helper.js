@@ -1230,3 +1230,4 @@ module.exports = {
   getNFTlogs,getUsers,getUSDXlogs,
   getPastTransactions,getNLogs,getUsersRaw, getOwnerNFTlogs
 };
+
