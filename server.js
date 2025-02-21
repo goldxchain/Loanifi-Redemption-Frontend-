@@ -5,8 +5,8 @@ const TEST_DB = "mongodb://localhost:27017/fusegbackend";
 const PRO_DB = `mongodb+srv://doadmin:k0P19s34E5em2H8U@pro-db-fusegold-54c0a5f4.mongo.ondigitalocean.com/admin?tls=true&authSource=admin`
 const express = require('express');
 const { getWGOLDXlogs,
-getUSDXlogs,getOwnerNFTlogs,
-getNFTlogs,getUsersRaw,
+getUSDXlogs,getOwnerNFTlogs,fetchKarmaRecords,fetchAndProcessTransactions,
+getNFTlogs,getUsersRaw,getSacrificeRecords,
     getNLogs,getUsers,getWgoldxBsc,
     getPastTransactions, } = require('./helper');
     const path = require('path');
@@ -37,6 +37,9 @@ if(ENV == "dev")
   // getOwnerNFTlogs().then((result) => {
   //   console.log("Processed Transactions:", result);
   // });
+// getWGOLDXlogs()
+
+      // await getPastTransactions()
       // await getUSDXlogs()
       // await getPastTransactions()
       // await getWgoldxBsc()
@@ -51,6 +54,16 @@ app.get('/get/users', async (req, res) => {
   let data = await getUsers();
   res.send({data})
 });
+app.get('/get/karma-rewards', async (req, res) => {
+  let data = await fetchAndProcessTransactions();
+  res.send({data})
+});
+app.get('/get/user-karma-rewards/:wallet', async (req, res) => {
+  console.log(req.params.wallet)
+  let data = await getSacrificeRecords(req.params.wallet);
+  res.send({data})
+});
+
 app.get('/get/users-raw', async (req, res) => {
   let data = await getUsersRaw();
   res.send({data})
@@ -60,11 +73,11 @@ app.get('/get/nft-logs', async (req, res) => {
   res.send({data})
 });
 
-app.use(express.static(path.join(__dirname, 'dist')));
+app.use(express.static(path.join(__dirname, 'build')));
 
 // Serve the index.html file for all other requests
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);

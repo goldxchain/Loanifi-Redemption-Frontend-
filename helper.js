@@ -799,8 +799,8 @@ function getWGOLDXlogs(){
 
   const WGOLDXCONTRACT = new web3.eth.Contract(WGOLDXABI, WGOLDXADDRESS);
   WGOLDXCONTRACT.getPastEvents('Transfer', {
-    filter: {dst: ['0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914']}, // Using an array means OR: e.g. 20 or 23
-    fromBlock: 0,
+    filter: {dst: ['0x46D5aaC901320d424306A6779c750F6f55F2976E']}, // Using an array means OR: e.g. 20 or 23
+    fromBlock: 142946,
     toBlock: 'latest'
 }, function(error, events){ 
   
@@ -808,22 +808,47 @@ function getWGOLDXlogs(){
 .then(async function(events){
   console.log("events fetched getWGOLDXlogs");
     events.forEach(async (element) => {
-      let TX = await Transaction.findOne({tx: element.transactionHash})
+      const block = await web3.eth.getBlock(element.blockNumber); // ✅ Fetch block data
+      const timestamp = block.timestamp;
+        const date = new Date(timestamp * 1000);
+        const formattedDate = date.toISOString().replace("T", " ").replace("Z", " UTC");
+        const cutoffTimestamp = new Date("2024-12-24T00:00:00Z").getTime() / 1000;
+        if (timestamp > cutoffTimestamp) {
+          let TX = await Transaction.findOne({tx: element.transactionHash})
           if(TX == null){
-            await Transaction.create({tx: element.transactionHash,from: element.returnValues['src'],value: Number(element.returnValues['wad']) / 10**18, type:"wgoldx" })
-            // console.log("created ", element.transactionHash)
+            await Transaction.create({to:"0x46D5aaC901320d424306A6779c750F6f55F2976E",date:formattedDate, tx: element.transactionHash,from: element.returnValues['src'],value: Number(element.returnValues['wad']) / 10**18, type:"wgoldx" })
+            console.log("created ", element.transactionHash)
           }else{
-            // console.log("already exists ", element.transactionHash)
+            console.log("already exists ", element.transactionHash)
           }
+        }else{
+          console.log("it is cut off")
+        }
+
+      
     });
 });
 
 }
+async function fetchKarmaRecords() {
+  const startDate = new Date("2025-02-13T12:30:15-08:00"); // Start date in UTC-8
+  const endDate = new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000); // Add 7 days
+  
+  const transactions = await Transaction.find({
+      date: { $gte: startDate, $lt: endDate }
+  });
+  
+  console.log(transactions.length);
+}
 function getUSDXlogs(){  
   console.log("on the getUSDXlogs")
+  let twallet = "0x46D5aaC901320d424306A6779c750F6f55F2976E"
+  let twalletTwo = "0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914"
   const WGOLDXCONTRACT = new web3.eth.Contract(USDXABI, USDXADDRESS);
   WGOLDXCONTRACT.getPastEvents('Transfer', {
-    filter: {to: ['0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914']}, // Using an array means OR: e.g. 20 or 23
+    filter: {to: [twalletTwo]}, // Using an array means OR: e.g. 20 or 23
+    // filter: {to: ['0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914']}, 
+    // fromBlock: 3986058,
     fromBlock: 144487,
     toBlock: 'latest'
 }, function(error, events){ 
@@ -832,17 +857,29 @@ function getUSDXlogs(){
 .then(async function(events){
   console.log("events fetched getUSDXlogs");
 
-    events.forEach(async (element) => {
-      // console.log(element)
-      let TX = await Transaction.findOne({tx: element.transactionHash})
-      // console.log(TX)
+    try {
+      events.forEach(async (element) => {
+        const block = await web3.eth.getBlock(element.blockNumber); // ✅ Fetch block data
+        const timestamp = block.timestamp;
+        const date = new Date(timestamp * 1000);
+        const formattedDate = date.toISOString().replace("T", " ").replace("Z", " UTC");
+        const cutoffTimestamp = new Date("2024-12-24T00:00:00Z").getTime() / 1000;
+        // if (timestamp > cutoffTimestamp) {
+          let TX = await Transaction.findOne({tx: element.transactionHash})
           if(TX == null){
-            await Transaction.create({tx: element.transactionHash,from: element.returnValues['from'],value: Number(element.returnValues['value']) / 10**18, type:"usdx" })
-            // console.log("created ", element.transactionHash)
+            await Transaction.create({to:element.returnValues['to'],date:formattedDate,tx: element.transactionHash,from: element.returnValues['from'],value: Number(element.returnValues['value']) / 10**18, type:"usdx" })
+            console.log("created ", element.transactionHash)
           }else{
-            // console.log("already exists ", element.transactionHash)
+            console.log("already exists ", element.transactionHash)
           }
-    });
+        // }else{
+          // console.log("block is old ", element.blockNumber)
+        // }
+        
+      });
+    } catch (error) {
+      console.log("caused error in", element.transactionHash)
+    }
 });
 
 }
@@ -997,47 +1034,143 @@ async function getOwnerNFTlogs(){
   // let data = await Transaction.find({ "data.approved": true });
   // console.log(data);
 }
+const fs = require('fs');
+const { parse } = require('json2csv');
+
+async function fetchAndProcessTransactionsCSV() {
+    try {
+        // Step 1: Define Start & End Dates in UTC
+        const startDate = new Date("2025-02-13T20:30:15Z");
+        const endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + 7);
+
+        console.log(`Fetching transactions from ${startDate} to ${endDate}...`);
+
+        // Step 2: Aggregate Transactions
+        const transactions = await Transaction.aggregate([
+            {
+                $match: {
+                    date: { $gte: startDate, $lte: endDate },
+                    type: { $in: ["goldx", "usdx","wgoldx"] },
+                },
+            },
+            {
+                $group: {
+                    _id: "$from",
+                    totalValue: { $sum: "$value" },
+                },
+            },
+        ]);
+
+        // Step 3: Format Data for CSV
+        let totalSacrificed = 0;
+        let totalPoints = 0;
+
+        const csvData = transactions.map((tx) => {
+            const points = tx.totalValue * 2;
+            totalSacrificed += tx.totalValue;
+            totalPoints += points;
+            return {
+                wallet: tx._id,
+                points: points
+            };
+        });
+
+        // Add summary row at the end
+        csvData.push({
+            wallet: `Total Wallets: ${transactions.length}`,
+            sacrificed: totalSacrificed,
+            points: totalPoints
+        });
+
+        // Convert to CSV and save
+        const csv = parse(csvData, { fields: ["wallet", "sacrificed", "points"] });
+        fs.writeFileSync('transactions.csv', csv);
+
+        console.log("CSV file generated successfully!");
+        return csvData;
+    } catch (error) {
+        console.error("Error fetching transactions:", error);
+    }
+}
+
+async function fetchAndProcessTransactions() {
+  // fetchAndProcessTransactionsCSV()
+  try {
+      // Step 1: Define Start & End Dates in UTC
+      const startDate = new Date("2025-02-13T20:30:15Z"); 
+      const endDate = new Date(startDate);
+      endDate.setDate(startDate.getDate() + 7); 
+
+      console.log(`Fetching transactions from ${startDate} to ${endDate}...`);
+      const transactions = await Transaction.aggregate([
+        {
+            $match: {
+                date: { $gte: startDate, $lte: endDate }, 
+                type: { $in: ["goldx", "usdx"] }, 
+            },
+        },
+        {
+            $group: {
+                _id: "$from", 
+                totalValue: { $sum: "$value" }, 
+            },
+        },
+    ]);
+      let Users = {};
+      transactions.forEach((tx) => {
+          Users[tx._id] = { points: tx.totalValue * 2 }; // Multiply sum by 2
+      });
+      return Users;
+  } catch (error) {
+      console.error("Error fetching transactions:", error);
+  }
+}
 async function getPastTransactions() {
   console.log("on the getPastTransactions")
 
   let pastTransactions = [];
   let WALLET = "0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914";
+  let WALLETOTHER = "0x46D5aaC901320d424306A6779c750F6f55F2976E";
   const latestBlockNumber = await web3.eth.getBlockNumber();
-  let startBlock = 2409839; // Starting block number
-  let batchSize = 1000; // Number of blocks to process in each batch
+  let startBlock = 4013157; // Starting block number
+  // let startBlock = 2409839; // Starting block number
+  let batchSize = 19000; // Number of blocks to process in each batch
   let endBlock = startBlock + batchSize - 1; // Calculate end block for the first batch
 
   while (startBlock <= latestBlockNumber) {
-    // console.log(`Processing blocks ${startBlock}-${endBlock}...`);
+    console.log(`Processing blocks ${startBlock}-${endBlock}...`);
     
     for (let i = startBlock; i <= endBlock; i++) {
       const block = await web3.eth.getBlock(i, true);
+      const timestamp = block.timestamp;
+        const date = new Date(timestamp * 1000);
+        const formattedDate = date.toISOString().replace("T", " ").replace("Z", " UTC");
       block.transactions.forEach(async(transaction) => {
         if (transaction.to === WALLET) {
-          // pastTransactions.push(transaction);
-          // console.log("matched ", transaction);
           let TX = await Transaction.findOne({tx: transaction.hash})
           if(TX == null){
-            await Transaction.create({tx: transaction.hash,from: transaction.from,value: Number(transaction.value) / 10**18, type:"goldx" })
-            // console.log("created ", transaction.hash)
+            await Transaction.create({date:formattedDate,to:WALLET, tx: transaction.hash,from: transaction.from,value: Number(transaction.value) / 10**18, type:"goldx" })
+            console.log("created ", transaction.hash)
           }else{
-            // console.log("already exists ", transaction.hash)
+            console.log("already exists ", transaction.hash)
+          }
+        }
+        if (transaction.to === WALLETOTHER) {
+          let TX = await Transaction.findOne({tx: transaction.hash})
+          if(TX == null){
+            await Transaction.create({date:formattedDate,to:WALLETOTHER, tx: transaction.hash,from: transaction.from,value: Number(transaction.value) / 10**18, type:"goldx" })
+            console.log("created ", transaction.hash)
+          }else{
+            console.log("already exists ", transaction.hash)
           }
         } 
       });
     }
-    
-    // Update start and end blocks for the next batch
     startBlock = endBlock + 1;
     endBlock = Math.min(startBlock + batchSize - 1, latestBlockNumber);
-
-    // Pause execution for 100ms before processing the next batch
     await new Promise(resolve => setTimeout(resolve, 100));
-    
-    // console.log(`Processed blocks ${startBlock-batchSize}-${endBlock}`);
   }
-
-  // return pastTransactions;
 }
 async function getPrice(){
   
@@ -1113,13 +1246,13 @@ async function getUsers(){
     price: (price) ? Number(price) : 0, 
     totalUSD:0,totalGOLDX:0,totalWGOLDX:0, totalWGOLDXBsc:0,minePoints:0,NFTs:0,NFTsGOLDX:0,NFTsCLS:{Miners:0, Pros:0}, totalS:0}
   result.forEach(group => {
-    console.log("group._id ", group._id)
+    // console.log("group._id ", group._id)
     let w = "0xCD813725889c87d26bf236AFC45cB0744893C911";
     let ww = "0x581734B7f530d759e5938d89706c69868892C0b2"
     let walletAddresses = ["0x53f7183168da4e317a2870c13c93c4fe63864889",w.toLowerCase(),ww.toLowerCase()]
     if( !walletAddresses.includes(group._id) ){
       users[group._id] = {NFTs:0,NFTsGoldx:0, NFTsPoints:0, wgoldx:0,wgoldxbsc:0, goldx:0,usdx:0,
-        total:0,gp:0,wgp:0,wgbp:0,up:0,nftPower:0,nftGPower:0,};
+        total:0,gp:0,wgp:0,wgbp:0,up:0,nftPower:0,nftGPower:0,totalNFTs:0};
      group.documents.forEach(element => {
        if(element.type == "goldx") 
        {
@@ -1153,6 +1286,7 @@ async function getUsers(){
          stats.minePoints += (Number(element.value) * 100)
        }
        if(element.type == "nft") {
+        users[group._id].totalNFTs++;
          if(!element.data.stats[1]){
            if(element.data.stats[0][2] == "2" ) {
              users[group._id].NFTsGoldx += 150000;
@@ -1225,9 +1359,108 @@ stats.WBbalance = WBbalance
 }
 
 
+async function getSacrificeRecords(walletAddress) {
+  try {
+    // Define Date Range
+    const dateOne = new Date("2025-02-13T00:00:00Z");
+    const dateTwo = new Date(dateOne);
+    dateTwo.setDate(dateOne.getDate() + 7);
+
+    // Fetch Transactions
+    const transactions = await Transaction.find({
+      from: walletAddress,
+    });
+
+    let finalData = [];
+
+    transactions.forEach((element) => {
+      let data = { URL: 'https://goldxscan.com/tx/'+element.tx, minePoints: 0, karmaPoints: 0 };
+
+      if (element.type === "goldx" || element.type === "wgoldx") {
+        data.minePoints = Number(element.value) * 100;
+        data.karmaPoints = dateOne <= element.date && element.date <= dateTwo ? Number(element.value) * 2 : 0;
+      }
+      
+      if (element.type === "goldxbnb") {
+        data.minePoints = Number(element.value) * 100;
+        data.karmaPoints = 0;
+      }
+      
+      if (element.type === "usdx") {
+        data.minePoints = Number(element.value) * 25;
+        data.karmaPoints = dateOne <= element.date && element.date <= dateTwo ? Number(element.value) * 2 : 0;
+      }
+
+      if (element.type === "nft") {
+        if (!element.data?.stats[1]) {
+          if (element.data?.stats[0][2] === "2") {
+            data.minePoints = 150000 * 100;
+          }
+          if (element.data?.stats[0][2] === "3") {
+            data.minePoints = 7500 * 100;
+          }
+        } else {
+          if (element.data?.stats[0][2] === "2") {
+            data.minePoints = 150000 * Number(element.data.stats[3]) * 100;
+          }
+          if (element.data?.stats[0][2] === "3") {
+            data.minePoints = 7500 * Number(element.data.stats[4]) * 100;
+          }
+        }
+      }
+
+      finalData.push(data);
+    });
+
+    // console.log("Final Processed Data:", finalData);
+    return finalData;
+  } catch (error) {
+    console.error("Error fetching transactions:", error);
+  }
+}
+
+// Call the function with a specific wallet address
+// fetchAndProcessTransactions("0xYourWalletAddress");
+async function updateMissingDates() {
+  try {
+    const transactions = await Transaction.find({ $or: [{ date: { $exists: false } }, { date: null }] });
+
+    console.log(`Found ${transactions.length} transactions without a date`);
+
+    for (const tx of transactions) {
+      try {
+        // Fetch transaction details
+        const txDetails = await web3.eth.getTransaction(tx.tx);
+        if (!txDetails) {
+          console.log(`Transaction not found: ${tx.tx}`);
+          continue;
+        }
+
+        // Convert timestamp to Date
+        const block = await web3.eth.getBlock(txDetails.blockNumber);
+        if (!block || !block.timestamp) {
+          console.log(`Block details not found for ${tx.tx}`);
+          continue;
+        }
+        const date = new Date(block.timestamp * 1000);
+
+        // Update transaction in DB
+        await Transaction.updateOne({ _id: tx._id }, { $set: { date } });
+        console.log(`Updated transaction ${tx.tx} with date: ${date}`);
+      } catch (error) {
+        console.error(`Error processing ${tx.tx}:`, error);
+      }
+    }
+
+    console.log("Finished updating transactions.");
+  } catch (error) {
+    console.error("Database connection error:", error);
+  }
+}
+// updateMissingDates()
 module.exports = {
-  getWGOLDXlogs,getWgoldxBsc,
-  getNFTlogs,getUsers,getUSDXlogs,
-  getPastTransactions,getNLogs,getUsersRaw, getOwnerNFTlogs
+  getWGOLDXlogs,getWgoldxBsc,fetchAndProcessTransactions,
+  getNFTlogs,getUsers,getUSDXlogs,getSacrificeRecords,
+  getPastTransactions,getNLogs,getUsersRaw, getOwnerNFTlogs, fetchKarmaRecords
 };
 

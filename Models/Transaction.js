@@ -5,6 +5,10 @@ let us = mongoose.Schema({
         type: String,
         required: true
     },
+    to:{
+        type: String,
+        required: true
+    },
     tx:{
         type: String,
         required: true
@@ -19,6 +23,16 @@ let us = mongoose.Schema({
     },
     data:{
         type: Object,
+        required: false
+    },
+    createDate:{
+        type: Date,
+        default: Date.now(),
+        required: false
+    },
+    date:{
+        type: Date,
+        default: null,
         required: false
     }
     })

@@ -7,13 +7,22 @@
   height: 40vmin;
   pointer-events: none;
 }
+.btn-prm{
+
+}
+.m-div{
+  display: inline-block;
+  width:250px;
+}
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
 }
-
+body{
+  width: 110vw !important;
+}
 .App-header {
   background-color: #282c34;
   min-height: 100vh;

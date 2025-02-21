@@ -3,8 +3,13 @@ import { useMemo } from "react";
 
 import styled from "styled-components";
 import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
-import { Button } from "@mui/material";
-import { loadData, userWalletFormatted, totalPoints, circulatingSupply } from "../../../../data";
+// import { loadData, userWalletFormatted, totalPoints, circulatingSupply } from "../../../../data";
+import { useData } from "../../../../contexts/DataContext";
+import ActionButton from "../../../../components/Buttons/ActionButton/ActionButton";
+import { ArrowTransformIcon, CloseIcon } from "../../../../assets/icons";
+import {fetchKarmaPointsHistory} from '../../../../data'
+import { Modal, Box, Button, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+
 
 import {
     ChevronLeftIcon,
@@ -107,6 +112,10 @@ const data = [
     { "name": "Frontend Providers", "value": 1 },
     { "name": "XBridge", "value": 7 }
 ];
+const globalData = [
+    { "name": "Sacrificed", "value": 3 },
+    { "name": "Other", "value": 97 }
+];
 
 const COLORS = [
     "#E6B078", // Light Orange
@@ -118,53 +127,19 @@ const COLORS = [
     "#FF70C3", // Pink
     "#C4D3FF", // Light Purple
 ];
+const GLOBALCOLORS = [
+    "#E6B078", // Light Orange
+    "#C4D3FF", // Light Purple
+];
 interface NFTsListProps {}
 
 const BalanceBox = () => {
-    const [loading, setLoading] = useState(true);
-    const [datas, setDatas] = useState<any>(null);
-    const [cSupply, setSupply] = useState<any>(null);
     const isFetched = useRef(false); // ✅ Prevent duplicate calls
-
-    useEffect(() => {
-        if (isFetched.current) return; // ✅ Prevent re-execution
-        isFetched.current = true;
-
-        const fetchData = async () => {
-            try {
-                const result = await loadData();
-                console.log("data is ", result);
-                setDatas(result);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
-
-        const fetchCirculatingSupply = async () => {
-            try {
-                const supply = await circulatingSupply();
-                console.log("circulating supply is ", supply);
-                setSupply(supply);
-            } catch (error) {
-                console.error("Error fetching circulating supply:", error);
-            }
-        };
-
-        const fetchAll = async () => {
-            await Promise.all([fetchData(), fetchCirculatingSupply()]); // ✅ Fetch both in parallel
-            setLoading(false); // ✅ Mark loading as complete
-        };
-
-        fetchAll();
-    }, []);
-
-    
+    const { datas, cSupply } = useData();
     const { windowDimensions } = useContext(SiteVariablesContext);
-    // const uniqueS = datas?.users.filter((item: { key: string }) => item.key !== "0x53f7183168da4e317a2870c13c93c4fe63864889");
     const uniqueS = datas?.mergedUsers 
   ? Array.from(new Set(datas.mergedUsers.map((item: { key: string }) => item.key))) 
   : [];
-    
     const NFTsGOLDXVal = useMemo(() => {
         let units = 0;
         if (datas?.stats?.NFTsCLS) {
@@ -212,9 +187,6 @@ const BalanceBox = () => {
             </>
         );
     };
-    if (loading) {
-        return <div>Loading...</div>; // ✅ Delay rendering until data fetching is complete
-    }
     return (
         <BalanceBoxWrapper>
             <DotIconWrapper>
@@ -237,6 +209,205 @@ const BalanceBox = () => {
                 </BalanceDataRow>
             </ContentWrapper>
         </BalanceBoxWrapper>
+    );
+};
+const StyledModalBox = styled(Box)`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 800px;
+    height: 80vh;
+    background-color: #121212; /* Dark background */
+    color: #ffffff; /* White text */
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+
+    @media (max-width: 600px) {
+        width: 90%;
+        height: 90vh;
+        padding: 15px;
+    }
+`;
+
+const ModalContent = styled.div`
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 10px;
+    color: #e0e0e0; /* Light gray text for better readability */
+`;
+
+const MyBalanceBox = () => {
+    const isFetched = useRef(false); // ✅ Prevent duplicate calls
+    const { datas, cSupply } = useData();
+    const [open, setOpen] = useState(false);
+    const { setWallet, wallet } = useData();
+    const [transactions, setTxs] = useState<
+  { URL: string; minePoints: number; karmaPoints: number }[]
+>([]);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    const { windowDimensions } = useContext(SiteVariablesContext);
+    // const wallet = "0x46d5aac901320d424306a6779c750f6f55f2976e"
+    const myData = wallet && datas?.mergedUsers
+    ? datas.mergedUsers.find((item: { key: string }) => item.key === wallet) || null
+    : null;
+    useEffect(() => {
+        const fetchData = async () => {
+            if (!wallet || isFetched.current) return; // ✅ Prevent fetch if wallet is null/empty
+            isFetched.current = true;
+    
+            try {
+                const [pointsHistory] = await Promise.all([
+                    fetchKarmaPointsHistory(wallet), // ✅ Fetch only if wallet is valid
+                ]);
+                setTxs(pointsHistory);
+            } catch (error) {
+                console.error("Error fetching points history:", error);
+            }
+        };
+    
+        if (wallet) fetchData(); // ✅ Ensure wallet is set before calling
+    }, [wallet]);
+  console.log("my wallet is", myData, transactions)
+      const data = [
+        { label: "GOLDX", value: myData ? Number(myData.goldx).toLocaleString() : 0 },
+        { label: "WGOLDX–BNB", value: myData ? Number(myData.wgoldxbsc).toLocaleString() : 0 },
+        { label: "WGOLDX–GOLDXCHAIN", value: myData ? Number(myData.wgoldx).toLocaleString() : 0 },
+        { label: "USDX–GOLDXCHAIN", value: myData ? Number(myData.usdx).toLocaleString() : 0 },
+        { label: "Mine Points", value: myData ? Number(myData.grandTotal).toLocaleString() : 0 },
+        { label: "NFT’s Sacrificed", value: myData ? Number(myData.totalNFTs).toLocaleString() : 0 },
+    ];
+
+    const DataRows = () => {
+        return (
+            <>
+                {data.map((item, index) => (
+                    <Row key={index}>
+                        <div className="left">{item.label}</div>
+                        <div className="right">{item.value}</div>
+                    </Row>
+                ))}
+            </>
+        );
+    };
+    return (
+        <MyBalanceBoxWrapper>
+            <DotIconWrapper>
+                <ThreeDotsIcon />
+            </DotIconWrapper>
+            <div className="cardbg">
+                {windowDimensions?.width > mobileBreakpoint ? (
+                    <img src="images/common/bg/balance_bg.png" alt="" />
+                ) : (
+                    <DashboardBalanceMobileBG />
+                )}
+            </div>
+            <ContentWrapper>
+                <BoxHeader>
+                    <h3>My BALANCES</h3>
+                  <div className="m-div">
+                  <ActionButton
+                    label="View My Sacrifices"
+                    variant="primary"
+                    className="btnwidth100"
+                    // @ts-ignore
+                    icon={<ArrowTransformIcon />}
+                    onClick={handleOpen}
+                />
+                  </div>
+                    {/* <h6>Last updated 2h ago</h6> */}
+                </BoxHeader>
+                <BalanceDataRow>
+                    <DataRows />
+                </BalanceDataRow>
+            </ContentWrapper>
+            <Modal open={open} onClose={handleClose}>
+                <StyledModalBox>
+                    <Button
+                        onClick={handleClose}
+                        variant="contained"
+                        sx={{
+                            alignSelf: "flex-end", // Align to right
+                            minWidth: 40,
+                            width: 40,
+                            height: 40,
+                            background: 'transparent',
+                            padding: '0px 0px',
+                            borderRadius: "50%", // Make it circular
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <CloseIcon />
+                    </Button>
+                    <ModalContent>
+                    <TableContainer>
+                    <Table sx={{ color: "white" }}>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell
+                                    sx={{
+                                        fontFamily: "Conthrax",
+                                        fontWeight: 600,
+                                        textTransform: "uppercase",
+                                        color: "white",
+                                    }}
+                                >
+                                    <strong>Transaction</strong>
+                                </TableCell>
+                                <TableCell
+                                    sx={{
+                                        fontFamily: "Conthrax",
+                                        fontWeight: 600,
+                                        textTransform: "uppercase",
+                                        color: "white",
+                                    }}
+                                >
+                                    <strong>Mine Points</strong>
+                                </TableCell>
+                                <TableCell
+                                    sx={{
+                                        fontFamily: "Conthrax",
+                                        fontWeight: 600,
+                                        textTransform: "uppercase",
+                                        color: "white",
+                                    }}
+                                >
+                                    <strong>Karma Points</strong>
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {transactions.map((tx, index) => (
+                                <TableRow key={index}>
+                                    <TableCell sx={{ color: "white" }}>
+                                        <a
+                                            href={tx.URL}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            style={{ color: "#00BFFF" }} // Anchor tag color (blue)
+                                        >
+                                            View Transaction
+                                        </a>
+                                    </TableCell>
+                                    <TableCell sx={{ color: "white" }}>{tx.minePoints.toLocaleString()}</TableCell>
+                                    <TableCell sx={{ color: "white" }}>{tx.karmaPoints.toLocaleString()}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                    </TableContainer>
+                    </ModalContent>
+
+                </StyledModalBox>
+            </Modal>
+        </MyBalanceBoxWrapper>
     );
 };
 
@@ -276,7 +447,7 @@ const MiningPowerBox = ({ setChartContainersHeight }: any) => {
             </div>
             <ContentWrapper>
                 <BoxHeader>
-                    <h3>Stat Title</h3>
+                    <h3>MINE Token Allocation</h3>
                     <h6>Last updated 2h ago</h6>
                 </BoxHeader>
                 <MiningPowerRow>
@@ -285,12 +456,8 @@ const MiningPowerBox = ({ setChartContainersHeight }: any) => {
                             <div className="perc">
                                 100<span>%</span>
                             </div>
-                            <div className="title">stat name</div>
-                            <div className="para">
-                                Lorem ipsum dolor sit amet, consectetur
-                                adipiscing elit, sed do eiusmod tempor
-                                incididunt ut labore et dolore magna aliqua.{" "}
-                            </div>
+                            <div className="title">MINE Token Allocation</div>
+                           
                         </div>
                         <div className="right" ref={pieChartWrapperRef}>
                             <PieChartBox
@@ -321,6 +488,85 @@ const MiningPowerBox = ({ setChartContainersHeight }: any) => {
                 </MiningPowerRow>
             </ContentWrapper>
         </MiningPowerBoxWrapper>
+    );
+};
+const GlobalMiningPowerBox = ({ setChartContainersHeight }: any) => {
+    const pieChartWrapperRef = useRef(null); // Ref to attach to the CardWrapper
+    const { windowDimensions } = useContext(SiteVariablesContext);
+    const [piechartwidth, setPiechartwidth] = useState(0); // State for bottom icon width
+    useEffect(() => {
+        // Function to update width
+        const updateWidth = () => {
+            const width = pieChartWrapperRef.current
+                ? // @ts-ignore
+                  pieChartWrapperRef.current.offsetWidth
+                : 0;
+            setPiechartwidth(width); // Example: set bottom icon width as half of card wrapper
+        };
+
+        updateWidth(); // Initial check
+
+        window.addEventListener("resize", updateWidth); // Adjust on window resize
+
+        return () => {
+            window.removeEventListener("resize", updateWidth); // Cleanup listener
+        };
+    }, []);
+    return (
+        <MiningPowerBoxWrapperGlobal>
+            <DotIconWrapper>
+                <ThreeDotsIcon />
+            </DotIconWrapper>
+            <div className="cardbg">
+                {windowDimensions?.width > mobileBreakpoint ? (
+                    <img src="/images/common/bg/stat_bg.png" alt="" />
+                ) : (
+                    <MiningPowerMobileBG />
+                )}
+            </div>
+            <ContentWrapper>
+                <BoxHeader>
+                    <h3>Total Global Mining Power Sacrificed</h3>
+                    <h6>Last updated 2h ago</h6>
+                </BoxHeader>
+                <MiningPowerRow>
+                    <div className="chartdetails">
+                        <div className="left">
+                            <div className="perc">
+                                3<span>%</span>
+                            </div>
+                            <div className="title">Total Global Mining Power Sacrificed</div>
+                            
+                        </div>
+                        <div className="right" ref={pieChartWrapperRef}>
+                            <PieChartBoxGlobal
+                                width={piechartwidth}
+                                setChartContainersHeight={
+                                    setChartContainersHeight
+                                }
+                            />
+                        </div>
+                    </div>
+                    <div className="content">
+                        {globalData.map(
+                            (item, index) =>
+                                index < globalData.length - 1 && (
+                                    <div className="row" key={index}>
+                                        <div className="label">{item.name}</div>
+                                        <div
+                                            className="box"
+                                            style={{
+                                                background: `${GLOBALCOLORS[index]}`,
+                                                boxShadow: `0px 0px 10px 1px ${GLOBALCOLORS[index]}`,
+                                            }}
+                                        ></div>
+                                    </div>
+                                )
+                        )}
+                    </div>
+                </MiningPowerRow>
+            </ContentWrapper>
+        </MiningPowerBoxWrapperGlobal>
     );
 };
 const MiningPowerRow = styled.div`
@@ -548,6 +794,80 @@ const PieChartBox = ({ width, setChartContainersHeight }: any) => {
         </PieChartBoxWrapper>
     );
 };
+const PieChartBoxGlobal = ({ width, setChartContainersHeight }: any) => {
+    const chartheightRowRef = useRef(null);
+
+    useEffect(() => {
+        let timeoutId: any; // Declare a variable to hold the timeout ID
+
+        const updateHeight = () => {
+            // Clear any existing timeout to prevent overlapping calls
+            clearTimeout(timeoutId);
+
+            // Add a delay before updating the height
+            timeoutId = setTimeout(() => {
+                if (chartheightRowRef.current && setChartContainersHeight) {
+                    // @ts-ignore
+                    const height = chartheightRowRef.current.offsetHeight;
+                    setChartContainersHeight(height);
+                }
+            }, 1000); // Delay of 100 milliseconds
+        };
+
+        updateHeight();
+
+        window.addEventListener("resize", updateHeight);
+
+        return () => {
+            clearTimeout(timeoutId);
+            window.addEventListener("resize", updateHeight);
+        };
+    }, []);
+    return (
+        <PieChartBoxWrapper ref={chartheightRowRef}>
+            <PieChart
+                width={width}
+                height={width}
+                style={{ transform: "rotate(-90deg)scaleY(-1)" }}
+                ref={chartheightRowRef}
+            >
+                <Pie
+                    data={globalData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    // outerRadius={0}
+                    innerRadius={width / 3.5}
+                    stroke="transparent"
+                    fill="#8884d8"
+                    dataKey="value"
+                >
+                    {globalData.map((entry, index) => (
+                        <Cell
+                            key={`cell-${index}`}
+                            fill={COLORS[index % COLORS.length]}
+                            style={{
+                                filter: `drop-shadow(0px 0px 1px ${
+                                    COLORS[index % COLORS.length]
+                                }) 
+                                       drop-shadow(0px 0px 4px ${
+                                           COLORS[index % COLORS.length]
+                                       }) 
+                                         drop-shadow(0px 0px 10px ${
+                                             COLORS[index % COLORS.length]
+                                         }) 
+                                        drop-shadow(0px 0px 40px ${
+                                            COLORS[index % COLORS.length]
+                                        }) 
+                                      `,
+                            }}
+                        />
+                    ))}
+                </Pie>
+            </PieChart>
+        </PieChartBoxWrapper>
+    );
+};
 const PieChartBoxWrapper = styled.div`
     svg {
         overflow: visible !important;
@@ -582,6 +902,7 @@ function SamplePrevArrow(props: any) {
 const GoldXStats: React.FC<NFTsListProps> = ({}) => {
     const [layoutSelector, setLayoutSelector] = React.useState("grid");
     const [chartContainersHeight, setChartContainersHeight] = useState(null);
+    const { wallet } = useData();
 
     const sliderRef = useRef(null);
     const settings = {
@@ -609,9 +930,10 @@ const GoldXStats: React.FC<NFTsListProps> = ({}) => {
         // @ts-ignore
         sliderRef?.current.slickPrev();
     };
-    const [activeButtons, setActiveButtons] = useState(["All"]);
+    const [activeButtons, setActiveButtons] = useState(["Global Stats"]);
 
-    const buttons = ["All", "Global Stats", "My Stats"];
+    // const buttons = ["All", "Global Stats", "My Stats"];
+    const buttons = wallet ? ["All", "Global Stats", "My Stats"] : ["Global Stats"];
 
     const handleButtonClick = (buttonName: string) => {
         if (buttonName === "All") {
@@ -638,6 +960,7 @@ const GoldXStats: React.FC<NFTsListProps> = ({}) => {
             }
         }
     };
+    // handleButtonClick("Global Stats")
 
     return (
         <Layout>
@@ -691,14 +1014,17 @@ const GoldXStats: React.FC<NFTsListProps> = ({}) => {
                     <DataRows className="row2 ">
                         <ChartDataRow>
                             <LeftColumn>
-                                <BalanceBox />
+                                {(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && <BalanceBox />}
+                                {(activeButtons.includes("My Stats") || activeButtons.includes("All")) && <MyBalanceBox />}
                             </LeftColumn>
                             <RightColumn>
-                                <MiningPowerBox
-                                    setChartContainersHeight={
-                                        setChartContainersHeight
-                                    }
-                                />
+                                {(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && (
+    <MiningPowerBox setChartContainersHeight={setChartContainersHeight} />
+)}
+
+{(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && (
+    <GlobalMiningPowerBox setChartContainersHeight={setChartContainersHeight} />
+)}
                             </RightColumn>
                         </ChartDataRow>
                     </DataRows>
@@ -708,34 +1034,43 @@ const GoldXStats: React.FC<NFTsListProps> = ({}) => {
                     <div className="slider-container">
                         <SliderStyled ref={sliderRef} {...settings}>
                             <SliderCardWrapper className="balancebox">
-                                <BalanceBox />
+                                {(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && <BalanceBox />}
+                                {(activeButtons.includes("My Stats") || activeButtons.includes("All")) && <MyBalanceBox />}
                             </SliderCardWrapper>
                             <SliderCardWrapper>
-                                <MiningPowerBox
-                                    setChartContainersHeight={
-                                        setChartContainersHeight
-                                    }
-                                />
+                                {(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && (
+    <MiningPowerBox setChartContainersHeight={setChartContainersHeight} />
+)}
+
+{(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && (
+    <GlobalMiningPowerBox setChartContainersHeight={setChartContainersHeight} />
+)}
                             </SliderCardWrapper>
                             <SliderCardWrapper>
-                                <BalanceBox />
+                                {(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && <BalanceBox />}
+                                {(activeButtons.includes("My Stats") || activeButtons.includes("All")) && <MyBalanceBox />}
                             </SliderCardWrapper>
                             <SliderCardWrapper className="balancebox">
-                                <MiningPowerBox
-                                    setChartContainersHeight={
-                                        setChartContainersHeight
-                                    }
-                                />
+                                {(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && (
+    <MiningPowerBox setChartContainersHeight={setChartContainersHeight} />
+)}
+
+{(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && (
+    <GlobalMiningPowerBox setChartContainersHeight={setChartContainersHeight} />
+)}
                             </SliderCardWrapper>
                             <SliderCardWrapper>
-                                <BalanceBox />
+                                {(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && <BalanceBox />}
+                                {(activeButtons.includes("My Stats") || activeButtons.includes("All")) && <MyBalanceBox />}
                             </SliderCardWrapper>
                             <SliderCardWrapper>
-                                <MiningPowerBox
-                                    setChartContainersHeight={
-                                        setChartContainersHeight
-                                    }
-                                />
+                                {(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && (
+    <MiningPowerBox setChartContainersHeight={setChartContainersHeight} />
+)}
+
+{(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && (
+    <GlobalMiningPowerBox setChartContainersHeight={setChartContainersHeight} />
+)}
                             </SliderCardWrapper>
                         </SliderStyled>
                     </div>
@@ -992,9 +1327,38 @@ const BalanceBoxWrapper = styled(BoxWrapper)`
         }
     }
 `;
+const MyBalanceBoxWrapper = styled(BoxWrapper)`
+    margin-top: 20px;
+    @media screen and (max-width: ${mobileBreakpoint}px) {
+        min-width: 85vw;
+        ${BalanceDataRow} {
+            flex-direction: column;
+            ${Col} {
+                width: 100%;
+                box-sizing: border-box;
+                display: flex;
+                align-items: flex-end;
+                justify-content: space-between;
+                h1 {
+                    margin: 0;
+                }
+                h6 {
+                    transform: translateY(-10px);
+                }
+            }
+        }
+    }
+`;
 
 const MiningPowerBoxWrapper = styled(BoxWrapper)`
     // min-width: 600px;
+    @media screen and (max-width: ${mobileBreakpoint}px) {
+        min-width: 85vw;
+    }
+`;
+const MiningPowerBoxWrapperGlobal = styled(BoxWrapper)`
+    // min-width: 600px;
+    margin-top: 20px;
     @media screen and (max-width: ${mobileBreakpoint}px) {
         min-width: 85vw;
     }

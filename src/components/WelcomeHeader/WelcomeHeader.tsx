@@ -68,12 +68,13 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({
     const navigate = useNavigate();
     const [showList, setShowList] = React.useState(false);
     const address = "0x5442...be5914"; // Address to copy
+    const addressToCopy = "0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914"; // Address to copy
 
     const copyToClipboard = () => {
         navigator.clipboard
-            .writeText(address)
+            .writeText(addressToCopy)
             .then(() => {
-                alert("Copied to clipboard: " + address); // Show confirmation (optional)
+                alert("Copied to clipboard: " + addressToCopy); // Show confirmation (optional)
             })
             .catch((err) => console.error("Failed to copy:", err));
     };
@@ -81,7 +82,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({
         <DashboardContainer className={`paddinglayoutx paddinglayouty `}>
             <>
                 <HeaderContainer>
-                    <WelcomeMessage>Welcome Back, {username}!</WelcomeMessage>
+                    <WelcomeMessage>Welcome Back</WelcomeMessage>
                     <DashboardTitle>{heading}</DashboardTitle>
                 </HeaderContainer>
             </>

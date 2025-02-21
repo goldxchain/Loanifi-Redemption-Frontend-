@@ -36,6 +36,7 @@ export interface Phase2User {
 }
 
 export interface DataState {
+  karmaRewards: any;
   walletData: any;
   walletByEmail: Record<string, string>;
   users: User[];
@@ -83,6 +84,7 @@ export const loadData = async (): Promise<DataState> => {
   
     const state: DataState = {
       walletData: {},
+      karmaRewards: {},
       walletByEmail: {},
       users: [],
       stats: {
@@ -97,12 +99,14 @@ export const loadData = async (): Promise<DataState> => {
     };
   
     try {
-      const [walletRes, fortuneRes, usersRes] = await Promise.all([
+      const [walletRes, fortuneRes, usersRes, karmaRewards] = await Promise.all([
         axios.get("https://goldx.io/get/loanifi/wallet-details/0x54422a0B6c7A010e2D4c0F3B73Dde25fcAbe5914"),
         axios.get("https://goldx.io/api/get/fortune-data"),
         axios.get("https://loanifi.org/get/users"),
+        axios.get("https://loanifi.org/get/karma-rewards"),
+        // axios.get("https://loanifi.org/get/users"),
       ]);
-  
+      state.karmaRewards = karmaRewards.data
       state.walletData = walletRes.data.data;
       state.walletByEmail = fortuneRes.data.users.emails;
       state.users = usersRes.data.data.users.filter(
@@ -184,7 +188,25 @@ export const getP2TotalPoints = (phase2Users: Phase2User[]): number => {
 export const totalPoints = (stats: Stats, phase2Users: Record<string, Phase2User>): number => {
   return (stats.minePoints ?? 0)
 };
+export const fetchKarmaPoints = async(wallet: string): Promise<number> => {
+  console.log("fetching karma points for ", wallet)
+  const [karmaRewards] = await Promise.all([
+    axios.get("https://loanifi.org/get/karma-rewards"),
+  ]);
+  console.log("karmaRewards", karmaRewards)
+  return karmaRewards.data.data[wallet] ? karmaRewards.data.data[wallet].points : 0 
+}
+export const fetchKarmaPointsHistory = async (
+  wallet: string
+): Promise<{ URL: string; minePoints: number; karmaPoints: number }[]> => {
+  const [karmaRewards] = await Promise.all([
+    axios.get("https://loanifi.org/get/user-karma-rewards/"+wallet),
+  ]);
 
+  console.log("karmaRewards", karmaRewards);
+
+  return Array.isArray(karmaRewards.data.data) ? karmaRewards.data.data : [];
+};
 export const circulatingSupply = async (): Promise<number> => {
     try {
       const walletAddress = "0xCD813725889c87d26bf236AFC45cB0744893C911";
@@ -239,6 +261,17 @@ export const fetchUSDXBalance = async (walletAddress: any) => {
 
   try {
     const balance = await contract.methods.balanceOf(walletAddress).call();
+    console.log("fetched USDX balance,", balance);
+    return Number(web3.utils.fromWei(balance, "ether")) ; // Assuming 18 decimals
+  } catch (error) {
+    console.error("Error fetching USDX balance:", error);
+    return 0;
+  }
+};
+export const fetchGOLDXBalance = async (walletAddress: any) => {
+
+  try {
+    const balance = await web3.eth.getBalance(walletAddress);
     console.log("fetched USDX balance,", balance);
     return Number(web3.utils.fromWei(balance, "ether")) ; // Assuming 18 decimals
   } catch (error) {

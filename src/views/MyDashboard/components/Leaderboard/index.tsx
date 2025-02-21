@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { loadData, userWalletFormatted, totalPoints, circulatingSupply, getP2TotalPoints } from "../../../../data";
+import {  getP2TotalPoints } from "../../../../data";
+import { useData } from "../../../../contexts/DataContext";
 
 import styled from "styled-components";
 import { createGlobalStyle } from "styled-components";
@@ -10,42 +11,7 @@ import { Percent } from "@mui/icons-material";
 
 const Leaderboard: React.FC = () => {
     const [loading, setLoading] = useState(true);
-    const [datas, setDatas] = useState<any>(null);
-    const [cSupply, setSupply] = useState<any>(null);
-    const isFetched = useRef(false); // ✅ Prevent duplicate calls
-    
-        useEffect(() => {
-            if (isFetched.current) return; // ✅ Prevent re-execution
-            isFetched.current = true;
-    
-            const fetchData = async () => {
-                try {
-                    const result = await loadData();
-                    console.log("data is ", result);
-                    setDatas(result);
-                } catch (error) {
-                    console.error("Error fetching data:", error);
-                }
-            };
-    
-            const fetchCirculatingSupply = async () => {
-                try {
-                    const supply = await circulatingSupply();
-                    console.log("circulating supply is ", supply);
-                    setSupply(supply);
-                } catch (error) {
-                    console.error("Error fetching circulating supply:", error);
-                }
-            };
-    
-            const fetchAll = async () => {
-                await Promise.all([fetchData(), fetchCirculatingSupply()]); // ✅ Fetch both in parallel
-                setLoading(false); // ✅ Mark loading as complete
-            };
-    
-            fetchAll();
-        }, []);
-    
+        const { datas } = useData();
     
         const NFTsGOLDXVal = useMemo(() => {
             let units = 0;
@@ -69,7 +35,7 @@ const Leaderboard: React.FC = () => {
             return (totalSac * (datas?.stats?.price || 0)).toFixed(0);
           }, [totalSac, datas?.stats]);
           const totalMinePoints = useMemo(() => {
-            if (loading || !datas) return null; // Wait until data is ready
+            if (!datas) return null; // Wait until data is ready
         
             const mPoints = datas.stats.minePoints; 
             const p2Points = getP2TotalPoints(datas.phase2Users);
@@ -101,7 +67,7 @@ const additionalData = datas?.mergedUsers?.slice(3, 6).map((user: any, index: an
     percentage: `${((user.grandTotal || 0) / totalMinePoints * 100).toFixed(2)}%`,
 }));
     // if (loading) {
-    if(loading || !datas) {
+    if(!datas) {
         return <div>Loading...</div>; // ✅ Delay rendering until data fetching is complete
     }
     return (

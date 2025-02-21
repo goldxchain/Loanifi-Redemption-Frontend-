@@ -3,16 +3,20 @@ import styled from "styled-components";
 import { UserIcon, ButonDollarIconL } from "../../assets/icons";
 import { useNavigate } from "react-router-dom";
 import { mobileBreakpoint } from "../../const";
-import { connectWallet, fetchUSDXBalance, fetchMinePoints } from "../../data";
+import { connectWallet, fetchUSDXBalance, fetchMinePoints, fetchKarmaPoints, fetchGOLDXBalance } from "../../data";
+import { useData } from "../../contexts/DataContext";
+
 interface ProfileButtonProps {}
 interface DashboardHeaderProps {}
 
 const DashboardHeader: React.FC<DashboardHeaderProps> = () => {
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 800);
     const [USDX, setUSDX] = useState(0);
+    const [GOLDX, setGOLDX] = useState(0);
+    const [karma, setKarma] = useState(0);
     const [minePoints, setMinePoints] = useState(0);
-    const [wallet, setWallet] = useState<string | null>(null);
     const [isConnecting, setIsConnecting] = useState(false);
+    const { setWallet, wallet } = useData();
     useEffect(() => {
         const handleResize = () => {
             setIsMobile(window.innerWidth <= 800);
@@ -20,21 +24,29 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = () => {
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
-    const handleConnectWallet = async () => {
-        setIsConnecting(true);
-        var walletAddress = await connectWallet();
-        if (walletAddress) {
-            setWallet(walletAddress);
-            // Fetch USDX and minePoints after wallet is connected
-            const [usdxBalance, mineBalance] = await Promise.all([
-                fetchUSDXBalance(walletAddress),
-                fetchMinePoints(walletAddress),
-            ]);
-            setUSDX(usdxBalance);
-            setMinePoints(mineBalance);
-        }
-        setIsConnecting(false);
-    };
+    
+        const handleConnectWallet = async () => {
+            setIsConnecting(true);
+            var walletAddress = await connectWallet();
+            
+            if (walletAddress) {
+                setWallet(walletAddress); // ✅ Save wallet in DataContext
+
+                // Fetch USDX and minePoints after wallet is connected
+                const [goldxBalance, usdxBalance, mineBalance, karmaPoints] = await Promise.all([
+                    fetchGOLDXBalance(walletAddress),
+                    fetchUSDXBalance(walletAddress),
+                    fetchMinePoints(walletAddress),
+                    fetchKarmaPoints("0xD4939EE7c6766Fe7F4ec2236fE7f6d0eb2aa85C4"),
+                ]);
+
+                setGOLDX(goldxBalance);
+                setUSDX(usdxBalance);
+                setMinePoints(mineBalance);
+                setKarma(karmaPoints);
+            }
+            setIsConnecting(false);
+        };
     return (
         <Header className="paddinglayoutx">
             <HeaderContent>
@@ -50,6 +62,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = () => {
                                     <div className="left">
                                         <h3>USDX</h3>
                                         <h4>{Number(USDX.toFixed(0)).toLocaleString() }</h4>
+                                        
                                     </div>
                                     <div className="right">
                                         <ButonDollarIconL />
@@ -59,8 +72,8 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = () => {
                             <ActionButtonsContainer>
                                 <div className="wrappedbutton">
                                     <div className="left">
-                                        <h3>MINE</h3>
-                                        <h4>{minePoints.toLocaleString() }</h4>
+                                        <h3>GOLDX</h3>
+                                        <h4>{Number(GOLDX.toFixed(0)).toLocaleString() }</h4>
                                     </div>
                                     <div className="right">
                                         <ButonDollarIconL />
@@ -70,8 +83,8 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = () => {
                             <ActionButtonsContainer>
                                 <div className="wrappedbutton">
                                     <div className="left">
-                                        <h3>Other Assets</h3>
-                                        <h4>1,752.13</h4>
+                                        <h3>Karma Points</h3>
+                                        <h4>{karma}</h4>
                                     </div>
                                     <div className="right">
                                         <ButonDollarIconL />

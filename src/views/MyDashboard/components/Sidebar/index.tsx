@@ -139,7 +139,7 @@ const SidebarContainer = styled.aside<{ isOpen: boolean }>`
     z-index: 999;
     left: 0;
     top: 0;
-    width: 350px;
+    width: 330px;
     height: 100vh;
     background: #111;
     padding: 0px;

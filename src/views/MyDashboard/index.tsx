@@ -16,7 +16,7 @@ import Leaderboard from "./components/Leaderboard";
 import Currency from "./components/Currency";
 import Sidebar from "./components/Sidebar";
 import { loadData, userWalletFormatted, totalPoints, circulatingSupply } from "../../data";
-
+import CoingGeckoMarquee from "./CoingGeckoMarquee";
 interface TabPanelProps {
     children?: React.ReactNode;
     index: number;
@@ -128,6 +128,9 @@ const MyDashboard: React.FC<MyNFTProps> = ({}) => {
                 </LeftWrapper>
                 <RightWrapper>
                     <DashboardHeader />
+                    {/* //add marquee here */}
+                    <CoingGeckoMarquee />
+
                     <WelcomeHeader heading="Dashboard" username="John" />
                     <div className="paddinglayoutx">
                         <AmountValueBox>
@@ -140,19 +143,19 @@ const MyDashboard: React.FC<MyNFTProps> = ({}) => {
                                 <div className="row row1">
                                     <div className="col">
                                         <h1>${Number(totalSacUSD).toLocaleString()}</h1>
-                                        <p>Total $USD Value Sacrificed</p>
+                                        <p>Total $USDX Value Sacrficed</p>
                                     </div>
                                     <div className="col">
                                         <h1>${Number(datas?.stats?.price).toFixed(5) }</h1>
-                                        <p>GOLDX Price</p>
+                                        <p>GOLDX - USDX Price</p>
                                     </div>
                                 </div>
                                 <div className="row row2">
                                     <div className="col">
                                         <h1>Buy Mining Rights</h1>
                                         <p>
-                                            Lorem ipsum dolor sit amet,
-                                            consectetur adipiscing elit, sed do
+                                        This is where you can Purchase <br />
+                                        GOLDX Mining Rights
                                         </p>
                                     </div>
                                     <div className="col">
