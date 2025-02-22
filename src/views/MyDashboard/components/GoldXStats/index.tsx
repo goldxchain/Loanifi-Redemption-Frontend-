@@ -273,7 +273,7 @@ const MyBalanceBox = () => {
     
         if (wallet) fetchData(); // ✅ Ensure wallet is set before calling
     }, [wallet]);
-  console.log("my wallet is", myData, transactions)
+//   console.log("my wallet is", myData, transactions)
       const data = [
         { label: "GOLDX", value: myData ? Number(myData.goldx).toLocaleString() : 0 },
         { label: "WGOLDX–BNB", value: myData ? Number(myData.wgoldxbsc).toLocaleString() : 0 },

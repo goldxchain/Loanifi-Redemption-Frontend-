@@ -37,7 +37,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = () => {
                     fetchGOLDXBalance(walletAddress),
                     fetchUSDXBalance(walletAddress),
                     fetchMinePoints(walletAddress),
-                    fetchKarmaPoints("0xD4939EE7c6766Fe7F4ec2236fE7f6d0eb2aa85C4"),
+                    fetchKarmaPoints(walletAddress),
                 ]);
 
                 setGOLDX(goldxBalance);
