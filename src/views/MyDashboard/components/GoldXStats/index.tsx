@@ -7,6 +7,8 @@ import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { useData } from "../../../../contexts/DataContext";
 import ActionButton from "../../../../components/Buttons/ActionButton/ActionButton";
 import { ArrowTransformIcon, CloseIcon } from "../../../../assets/icons";
+// import { fetchKarmaPoints } from "../";
+
 import {fetchKarmaPointsHistory} from '../../../../data'
 import { Modal, Box, Button, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 
@@ -201,7 +203,7 @@ const BalanceBox = () => {
             </div>
             <ContentWrapper>
                 <BoxHeader>
-                    <h3>BALANCES</h3>
+                    <h3>Global Sacrifices </h3>
                     <h6>Last updated 2h ago</h6>
                 </BoxHeader>
                 <BalanceDataRow>
@@ -246,6 +248,7 @@ const MyBalanceBox = () => {
     const { datas, cSupply } = useData();
     const [open, setOpen] = useState(false);
     const { setWallet, wallet } = useData();
+    const [karma, setTxsTotal] = useState(0)
     const [transactions, setTxs] = useState<
   { URL: string; minePoints: number; karmaPoints: number }[]
 >([]);
@@ -266,6 +269,8 @@ const MyBalanceBox = () => {
                     fetchKarmaPointsHistory(wallet), // ✅ Fetch only if wallet is valid
                 ]);
                 setTxs(pointsHistory);
+                const totalKarmaPoints = pointsHistory.reduce((sum, tx) => sum + tx.karmaPoints, 0);
+                setTxsTotal(totalKarmaPoints);
             } catch (error) {
                 console.error("Error fetching points history:", error);
             }
@@ -277,6 +282,7 @@ const MyBalanceBox = () => {
       const data = [
         { label: "GOLDX", value: myData ? Number(myData.goldx).toLocaleString() : 0 },
         { label: "WGOLDX–BNB", value: myData ? Number(myData.wgoldxbsc).toLocaleString() : 0 },
+        { label: "KARMA POINTS", value: karma ? karma : 0 },
         { label: "WGOLDX–GOLDXCHAIN", value: myData ? Number(myData.wgoldx).toLocaleString() : 0 },
         { label: "USDX–GOLDXCHAIN", value: myData ? Number(myData.usdx).toLocaleString() : 0 },
         { label: "Mine Points", value: myData ? Number(myData.grandTotal).toLocaleString() : 0 },
@@ -309,7 +315,7 @@ const MyBalanceBox = () => {
             </div>
             <ContentWrapper>
                 <BoxHeader>
-                    <h3>My BALANCES</h3>
+                    <h3>My Sacrifices</h3>
                   <div className="m-div">
                   <ActionButton
                     label="View My Sacrifices"
@@ -1034,43 +1040,55 @@ const GoldXStats: React.FC<NFTsListProps> = ({}) => {
                     <div className="slider-container">
                         <SliderStyled ref={sliderRef} {...settings}>
                             <SliderCardWrapper className="balancebox">
-                                {(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && <BalanceBox />}
-                                {(activeButtons.includes("My Stats") || activeButtons.includes("All")) && <MyBalanceBox />}
-                            </SliderCardWrapper>
-                            <SliderCardWrapper>
-                                {(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && (
-    <MiningPowerBox setChartContainersHeight={setChartContainersHeight} />
-)}
-
-{(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && (
-    <GlobalMiningPowerBox setChartContainersHeight={setChartContainersHeight} />
-)}
-                            </SliderCardWrapper>
-                            <SliderCardWrapper>
-                                {(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && <BalanceBox />}
                                 {(activeButtons.includes("My Stats") || activeButtons.includes("All")) && <MyBalanceBox />}
                             </SliderCardWrapper>
                             <SliderCardWrapper className="balancebox">
-                                {(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && (
-    <MiningPowerBox setChartContainersHeight={setChartContainersHeight} />
-)}
-
-{(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && (
-    <GlobalMiningPowerBox setChartContainersHeight={setChartContainersHeight} />
-)}
+                                {(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && <BalanceBox />}
                             </SliderCardWrapper>
                             <SliderCardWrapper>
-                                {(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && <BalanceBox />}
+                                {(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && (
+                                    <GlobalMiningPowerBox setChartContainersHeight={setChartContainersHeight} />
+                                )}
+                            </SliderCardWrapper>
+                            <SliderCardWrapper>
+                                {(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && (
+                                    <MiningPowerBox setChartContainersHeight={setChartContainersHeight} />
+                                )}
+                            </SliderCardWrapper>
+                            <SliderCardWrapper>
                                 {(activeButtons.includes("My Stats") || activeButtons.includes("All")) && <MyBalanceBox />}
                             </SliderCardWrapper>
                             <SliderCardWrapper>
+                                {(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && <BalanceBox />}
+                            </SliderCardWrapper>
+                            <SliderCardWrapper className="balancebox">
                                 {(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && (
-    <MiningPowerBox setChartContainersHeight={setChartContainersHeight} />
-)}
+                                    <MiningPowerBox setChartContainersHeight={setChartContainersHeight} />
+                                )}
+                            </SliderCardWrapper>
 
-{(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && (
-    <GlobalMiningPowerBox setChartContainersHeight={setChartContainersHeight} />
-)}
+                            <SliderCardWrapper className="balancebox">
+
+                                {(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && (
+                                    <GlobalMiningPowerBox setChartContainersHeight={setChartContainersHeight} />
+                                )}
+                            </SliderCardWrapper>
+                            <SliderCardWrapper>
+                                {(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && <BalanceBox />}
+                            </SliderCardWrapper>
+                            <SliderCardWrapper>
+                            {(activeButtons.includes("My Stats") || activeButtons.includes("All")) && <MyBalanceBox />}                            
+                            </SliderCardWrapper>
+                            <SliderCardWrapper>
+                                {(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && (
+                                    <MiningPowerBox setChartContainersHeight={setChartContainersHeight} />
+                                )}
+                            </SliderCardWrapper>
+                            <SliderCardWrapper>
+
+                                {(activeButtons.includes("Global Stats") || activeButtons.includes("All")) && (
+                                    <GlobalMiningPowerBox setChartContainersHeight={setChartContainersHeight} />
+                                )}
                             </SliderCardWrapper>
                         </SliderStyled>
                     </div>
