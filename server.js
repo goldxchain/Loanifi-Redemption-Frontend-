@@ -6,7 +6,7 @@ const PRO_DB = `mongodb+srv://doadmin:k0P19s34E5em2H8U@pro-db-fusegold-54c0a5f4.
 const express = require('express');
 const { getWGOLDXlogs,
 getUSDXlogs,getOwnerNFTlogs,fetchKarmaRecords,fetchAndProcessTransactions,
-getNFTlogs,getUsersRaw,getSacrificeRecords,
+getNFTlogs,getUsersRaw,getSacrificeRecords,updateMissingDates,
     getNLogs,getUsers,getWgoldxBsc,
     getPastTransactions, } = require('./helper');
     const path = require('path');
@@ -34,6 +34,7 @@ if(ENV == "dev")
 }).then(async () => {
   console.log('Pro Database connected!')
   // await getNFTlogs();
+  // updateMissingDates()
   // getOwnerNFTlogs().then((result) => {
   //   console.log("Processed Transactions:", result);
   // });

@@ -1374,7 +1374,8 @@ async function getSacrificeRecords(walletAddress) {
     let finalData = [];
 
     transactions.forEach((element) => {
-      let data = { URL: 'https://goldxscan.com/tx/'+element.tx, minePoints: 0, karmaPoints: 0 };
+      let domain = (element.type == 'goldxbnb') ? 'https://bscscan.com/tx/' : 'https://goldxscan.com/tx/';
+      let data = { URL: domain+element.tx, minePoints: 0, karmaPoints: 0 };
 
       if (element.type === "goldx" || element.type === "wgoldx") {
         data.minePoints = Number(element.value) * 100;
@@ -1432,7 +1433,7 @@ async function updateMissingDates() {
         // Fetch transaction details
         const txDetails = await web3.eth.getTransaction(tx.tx);
         if (!txDetails) {
-          console.log(`Transaction not found: ${tx.tx}`);
+          console.log(`Transaction not found: ${tx.type} -- ${tx.tx}`);
           continue;
         }
 
@@ -1445,7 +1446,7 @@ async function updateMissingDates() {
         const date = new Date(block.timestamp * 1000);
 
         // Update transaction in DB
-        await Transaction.updateOne({ _id: tx._id }, { $set: { date } });
+        // await Transaction.updateOne({ _id: tx._id }, { $set: { date } });
         console.log(`Updated transaction ${tx.tx} with date: ${date}`);
       } catch (error) {
         console.error(`Error processing ${tx.tx}:`, error);
@@ -1461,6 +1462,6 @@ async function updateMissingDates() {
 module.exports = {
   getWGOLDXlogs,getWgoldxBsc,fetchAndProcessTransactions,
   getNFTlogs,getUsers,getUSDXlogs,getSacrificeRecords,
-  getPastTransactions,getNLogs,getUsersRaw, getOwnerNFTlogs, fetchKarmaRecords
+  getPastTransactions,getNLogs,getUsersRaw, getOwnerNFTlogs, fetchKarmaRecords, updateMissingDates
 };
 
