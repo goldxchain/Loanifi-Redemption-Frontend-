@@ -838,7 +838,7 @@ async function fetchKarmaRecords() {
       date: { $gte: startDate, $lt: endDate }
   });
   
-  console.log(transactions.length);
+  console.log(transactions);
 }
 function getUSDXlogs(){  
   console.log("on the getUSDXlogs")
@@ -1093,7 +1093,7 @@ async function fetchAndProcessTransactionsCSV() {
         console.error("Error fetching transactions:", error);
     }
 }
-
+fetchAndProcessTransactionsCSV()
 async function fetchAndProcessTransactions() {
   // fetchAndProcessTransactionsCSV()
   try {
